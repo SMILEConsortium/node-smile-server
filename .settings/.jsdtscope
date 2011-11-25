@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="node_modules/|poc/base64/" kind="src" path=""/>
+	<classpathentry kind="src" path="node_modules"/>
+	<classpathentry kind="src" path="poc/base64"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
