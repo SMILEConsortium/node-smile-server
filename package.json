@@ -1,7 +1,13 @@
 {
   "name": "smileplug-server",
-  "description": "NodeJS server version for JunctionQuiz.",
   "author": "Juan Pinazo <juan.pinazo@actminds.com>",
   "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "2.5.1",
+    "vows": "0.6.0",
+    "request": "2.2.5",
+    "jade": ">= 0.0.1"
+  },
   "engine": "node 0.6.2"
 }
