@@ -17,6 +17,7 @@ js.CONFIG = {
 js.put('/smile/currentmessage', routes.handleCurrentMessagePut);
 js.get('/smile/currentmessage', routes.handleCurrentMessageGet);
 js.put('/smile/startmakequestion', routes.handleStartMakeQuestionPut);
+js.put('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 
 // Backward compatibility with JunctionQuiz
 js.get('/JunctionServerExecution/current/MSG/smsg.txt',
