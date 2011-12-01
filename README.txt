@@ -1,9 +1,12 @@
  * Pre-requisites:
-  - NodeJS 0.6.2
+  - NodeJS 0.4.12
   - NPM >= 1.0
 
  * Install dependencies:
   $ npm install -d
 
  * Run application
-  $ node app.js
+  $ node smileplug.js
+
+ * Run tests
+  $ node tests/*.js

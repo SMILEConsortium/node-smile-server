@@ -1,7 +1,7 @@
 assert = require('assert');
 vows = require('vows');
 request = require('request');
-app = require('../app');
+app = require('../smileplug');
 
 var port = 3001;
 app.runServer(port);
@@ -45,12 +45,15 @@ function configureBatch(suite, context, uri, bodyContent) {
   });
 };
 
-var suite = vows.describe('Tests currentMessage');
-suite = configureBatch(suite,
-    "A PUT to /smileplug/currentMessage without data",
-    "/smileplug/currentMessage", {});
-suite = configureBatch(suite, "A PUT to /smileplug/currentMessage with data",
-    "/smileplug/currentMessage", {
+var suite = vows.describe('Tests currentmessage');
+suite = configureBatch(suite, "A PUT to /smile/currentmessage without data",
+    "/smile/currentmessage", {});
+suite = configureBatch(suite, "A PUT to /smile/currentmessage with data",
+    "/smile/currentmessage", {
+      "PING" : "PONG"
+    });
+suite = configureBatch(suite, "A PUT to /JunctionServerExection/current/MSG/smsg.txt with data",
+    "/smile/currentmessage", {
       "PING" : "PONG"
     });
 suite.addBatch({

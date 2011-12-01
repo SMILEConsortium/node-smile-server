@@ -1,5 +1,16 @@
 OK = 'OK';
+
+HTTP_STATUS_OK = '200';
+
 var messages = {};
+
+function setCurrentMessage(message) {
+  messages.current = message;
+}
+
+function getCurrentMessage() {
+  return messages.current;
+}
 
 exports.index = function(req, res) {
   res.render('index', {
@@ -7,11 +18,13 @@ exports.index = function(req, res) {
   });
 };
 
-exports.setCurrentMessage = function(req, res) {
-  messages.current = req.body;
-  res.send(OK);
-};
-
-exports.getCurrentMessage = function(req, res) {
-  res.send(messages.current);
+exports.handleCurrentMessage = function(req, res) {
+  var method = req.method;
+  switch (method) {
+    case 'PUT':
+      setCurrentMessage(req.body);
+      res.sendText(HTTP_STATUS_OK, OK);
+    case 'GET':
+      res.sendJSON(HTTP_STATUS_OK, getCurrentMessage());
+  }
 };
