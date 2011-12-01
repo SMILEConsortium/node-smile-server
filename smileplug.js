@@ -11,13 +11,16 @@ js.CONFIG = {
   'SLIDE_DIR' : './'
 };
 
-js.ROUTE_MAP = {
-  '/smile/currentmessage' : routes.handleCurrentMessage,
-  
-  
-  // Backward compatibility with JunctionQuiz
-  '/JunctionServerExecution/current/MSG/smsg.txt' : routes.handleCurrentMessage,
-};
+//
+// Routes
+//
+js.put('/smile/currentmessage', routes.handleCurrentMessagePut);
+js.get('/smile/currentmessage', routes.handleCurrentMessageGet);
+js.put('/smile/startmakequestion', routes.handleStartMakeQuestionPut);
+
+// Backward compatibility with JunctionQuiz
+js.get('/JunctionServerExecution/current/MSG/smsg.txt',
+    routes.handleCurrentMessageGet);
 
 var app = module.exports = createServer(function(req, res) {
   parseJSON = function(req, res, next) {
@@ -43,37 +46,44 @@ var app = module.exports = createServer(function(req, res) {
   sendJSON = function(code, obj) {
     var body = JSON.stringify(obj);
     res.writeHead(code, {
-      "Content-Type" : "text/json",
+      "Content-Type" : "application/json",
       "Content-Length" : body.length
     });
     res.end(body);
   };
-  
+
   try {
     var handler;
     pathname = url.parse(req.url).pathname;
-    handler = js.ROUTE_MAP[pathname];
+    handler = js.ROUTE_MAP[req.method][pathname];
     if (!handler) {
-      for ( var expr in js.RE_MAP) {
-        if (js.RE_MAP[expr]
-            && js.RE_MAP[expr].test(url.parse(req.url).pathname)) {
-          handler = js.ROUTE_MAP[js.RE_MAP[expr].toString()];
-          break;
-        } else {
-          handler = js.notFound;
+      if (req.method === "GET") {
+        for ( var expr in js.RE_MAP) {
+          if (js.RE_MAP[expr]
+              && js.RE_MAP[expr].test(url.parse(req.url).pathname)) {
+            handler = js.ROUTE_MAP[js.RE_MAP[expr].toString()];
+            break;
+          } else {
+            handler = js.notFound;
+            console.warn(pathname);
+          }
         }
+      } else {
+        handler = js.notFound;
       }
     }
 
     res.sendText = sendText;
     res.sendJSON = sendJSON;
     
-    if (req.method === 'PUT') {
-      parseJSON(req, res, handler);
-    } else {
-      handler(req, res);
+    if (handler) {
+      if (req.method === 'PUT') {
+        parseJSON(req, res, handler);
+      } else {
+        handler(req, res);
+      }
     }
-    
+
   } catch (e) {
     console
         .error("Caught a server-side Node.js exception.  Ouch!  Here's what happened: "
