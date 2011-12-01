@@ -3,6 +3,7 @@ OK = 'OK';
 HTTP_STATUS_OK = '200';
 
 var messages = {};
+messages.current = JSON.stringify({});
 
 function setCurrentMessage(message) {
   messages.current = message;
