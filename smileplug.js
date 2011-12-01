@@ -60,7 +60,7 @@ var app = module.exports = createServer(function(req, res) {
           handler = js.ROUTE_MAP[js.RE_MAP[expr].toString()];
           break;
         } else {
-          handler = notFound;
+          handler = js.notFound;
         }
       }
     }
