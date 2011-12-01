@@ -13,6 +13,7 @@ HEADERS = {
 
 function configureBatch(suite, context, uri, bodyContent) {
   var url = BASE_URL + uri;
+  var context = context;
   return suite.addBatch({
     context : {
       topic : function() {
@@ -42,6 +43,18 @@ function configureBatch(suite, context, uri, bodyContent) {
         assert.equal(res.body, JSON.stringify(bodyContent));
       }
     }
+  }).addBatch({
+    context : {
+      topic : function() {
+        request({
+          uri : BASE_URL + "/JunctionServerExecution/current/MSG/smsg.txt",
+          method : 'GET'
+        }, this.callback);
+      },
+      "should have supplied data" : function(err, res, body) {
+        assert.equal(res.body, JSON.stringify(bodyContent));
+      }
+    }
   });
 };
 
@@ -49,10 +62,6 @@ var suite = vows.describe('Tests currentmessage');
 suite = configureBatch(suite, "A PUT to /smile/currentmessage without data",
     "/smile/currentmessage", {});
 suite = configureBatch(suite, "A PUT to /smile/currentmessage with data",
-    "/smile/currentmessage", {
-      "PING" : "PONG"
-    });
-suite = configureBatch(suite, "A PUT to /JunctionServerExection/current/MSG/smsg.txt with data",
     "/smile/currentmessage", {
       "PING" : "PONG"
     });
