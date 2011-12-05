@@ -1,7 +1,7 @@
 assert = require('assert');
 vows = require('vows');
 request = require('request');
-app = require('../smileplug');
+app = require('../../smileplug');
 
 var port = 3001;
 app.runServer(port);
@@ -11,12 +11,9 @@ HEADERS = {
   'Content-Type' : 'application/json'
 };
 
-var MESSAGE_START_MAKE_QUESTION = JSON.stringify({
-  'TYPE' : 'START_MAKE'
-});
-
 function configureBatch(suite, context, uri, bodyContent) {
   var url = BASE_URL + uri;
+  var context = context;
   return suite.addBatch({
     context : {
       topic : function() {
@@ -38,12 +35,12 @@ function configureBatch(suite, context, uri, bodyContent) {
     context : {
       topic : function() {
         request({
-          uri : BASE_URL + "/smile/currentmessage",
-          method : 'GET',
+          uri : url,
+          method : 'GET'
         }, this.callback);
       },
       "should have supplied data" : function(err, res, body) {
-        assert.equal(res.body, MESSAGE_START_MAKE_QUESTION);
+        assert.equal(res.body, JSON.stringify(bodyContent));
       }
     }
   }).addBatch({
@@ -55,17 +52,17 @@ function configureBatch(suite, context, uri, bodyContent) {
         }, this.callback);
       },
       "should have supplied data" : function(err, res, body) {
-        assert.equal(res.body, MESSAGE_START_MAKE_QUESTION);
+        assert.equal(res.body, JSON.stringify(bodyContent));
       }
     }
   });
 };
 
-var suite = vows.describe('Tests startmakequestion');
-suite = configureBatch(suite, "A PUT to /smile/startmakequestion without data",
-    "/smile/startmakequestion", {});
-suite = configureBatch(suite, "A PUT to /smile/startmakequestion with data",
-    "/smile/startmakequestion", {
+var suite = vows.describe('Tests currentmessage');
+suite = configureBatch(suite, "A PUT to /smile/currentmessage without data",
+    "/smile/currentmessage", {});
+suite = configureBatch(suite, "A PUT to /smile/currentmessage with data",
+    "/smile/currentmessage", {
       "PING" : "PONG"
     });
 suite.addBatch({

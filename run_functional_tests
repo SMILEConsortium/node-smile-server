@@ -1,0 +1,2 @@
+#!/bin/sh
+ls tests/functional/* | while read f; do node $f; done 
