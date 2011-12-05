@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+var path = require('path');
+var testrunner = require('nodeunit').testrunner
+testrunner.run([path.join('tests', 'unit')]);

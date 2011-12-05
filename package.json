@@ -5,7 +5,8 @@
   "private": true,
   "dependencies": {
     "vows": "0.6.0",
-    "request": "2.2.5"
+    "request": "2.2.5",
+    "nodeunit": "0.2.1"
   },
   "engine": "node 0.4.12"
 }
