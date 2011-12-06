@@ -8,5 +8,8 @@
     "request": "2.2.5",
     "nodeunit": "0.2.1"
   },
+	"directories": {
+		"lib": ".",
+	}
   "engine": "node 0.4.12"
 }
