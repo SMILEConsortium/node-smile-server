@@ -1,2 +1,3 @@
 #!/bin/sh
-ls tests/functional/* | while read f; do node $f; done 
+export TEST="true"
+ls tests/functional/* | while read f; do echo "--- Running tests of" $f; node $f; done 

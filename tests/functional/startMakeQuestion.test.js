@@ -3,9 +3,8 @@ vows = require('vows');
 request = require('request');
 app = require('../../smileplug');
 
-var port = 3001;
-app.runServer(port);
-BASE_URL = "http://localhost:" + port;
+PORT = 3001;
+BASE_URL = "http://localhost:" + PORT;
 
 HEADERS = {
   'Content-Type' : 'application/json'
@@ -62,6 +61,11 @@ function configureBatch(suite, context, uri, bodyContent) {
 };
 
 var suite = vows.describe('Tests startmakequestion');
+suite.addBatch({
+  "startup" : function() {
+    app.runServer(PORT);
+  }
+});
 suite = configureBatch(suite, "A PUT to /smile/startmakequestion without data",
     "/smile/startmakequestion", {});
 suite = configureBatch(suite, "A PUT to /smile/startmakequestion with data",
