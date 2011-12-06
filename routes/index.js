@@ -1,4 +1,5 @@
 var Questions = require('../lib/smile/question').Questions;
+var Students = require('../lib/smile/student').Students;
 
 OK = 'OK';
 
@@ -12,6 +13,7 @@ messages.current = {};
 messages.past = []
 
 var questions = new Questions();
+var students = new Students();
 
 function setCurrentMessage(message) {
   messages.current = message;
@@ -26,7 +28,12 @@ exports.handleQuestionGet = function(req, res) {
   res.sendJSON(HTTP_STATUS_OK, questions.getQuestions(req.id));
 };
 
-exports.handleQuestionPut = function(req, res) {
+exports.handleQuestionGetAll = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, questions.getAll());
+};
+
+
+exports.handlePushMessage = function(req, res) {
   var message = req.body;
   var type = message.TYPE || null;
   switch (type) {
@@ -39,7 +46,10 @@ exports.handleQuestionPut = function(req, res) {
     break;
   case 'QUESTION_PIC':
     questions.addQuestion(message);
-    break; 
+    break;
+  case 'HAIL':
+    students.addStudent(message);
+    break;
   default:
     // TODO: Raise error
     console.warn("Unrecognized type: " + type)
@@ -55,7 +65,7 @@ exports.handleQuestionPut = function(req, res) {
 exports.handlePushMsgPost = function(req, res) {
   var message = req.body.MSG;
   req.body = JSON.parse(message);
-  exports.handleQuestionPut(req, res);
+  exports.handlePushMessage(req, res);
 };
 
 exports.handleCurrentMessageGet = function(req, res) {
@@ -76,3 +86,9 @@ exports.handleSendInitMessagePut = function(req, res) {
   setCurrentMessage(MESSAGE_WAIT_CONNECT);
   res.sendText(HTTP_STATUS_OK, OK);
 };
+
+exports.handleStudentGetAll = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, students.getAll());
+};
+
+

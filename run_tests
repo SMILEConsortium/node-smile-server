@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "### Functional Tests ###"
+./run_functional_tests
+echo
+echo "### Unit Tests ###"
+./run_unit_tests
