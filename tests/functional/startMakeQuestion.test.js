@@ -60,7 +60,7 @@ function configureBatch(suite, context, uri, bodyContent) {
   });
 };
 
-var suite = vows.describe('Tests startmakequestion');
+var suite = vows.describe('Tests "Start Make Question"');
 suite.addBatch({
   "startup" : function() {
     app.runServer(PORT);

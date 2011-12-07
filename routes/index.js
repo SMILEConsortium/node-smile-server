@@ -91,4 +91,19 @@ exports.handleStudentGetAll = function(req, res) {
   res.sendJSON(HTTP_STATUS_OK, students.getAll());
 };
 
-
+exports.handleStartSolveQuestionPut = function(req, res) {
+  var timeLimit = 10; // The same time limit of old implementation.
+  if (req.body.TIME_LIMIT) {
+    timeLimit = req.body.TIME_LIMIT;
+  }
+  var numberOfQuestions = questions.getNumberOfQuestions();
+  var rightAnswers = questions.getRightAnswers();
+  var message = {};
+  message['TYPE'] = 'START_SOLVE';
+  message['NUMQ'] = numberOfQuestions;
+  message['RANSWER'] = rightAnswers;
+  message['TIME_LIMIT'] = timeLimit;
+  
+  setCurrentMessage(message);
+  res.sendText(HTTP_STATUS_OK, OK);
+};
