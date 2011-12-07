@@ -60,7 +60,7 @@ function configureBatch(suite, context, uri, bodyContent) {
   });
 };
 
-var suite = vows.describe('Tests startmakequestion');
+var suite = vows.describe('Tests "Send Init Message"');
 
 suite.addBatch({
   "startup" : function() {

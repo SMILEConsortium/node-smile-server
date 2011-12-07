@@ -20,6 +20,9 @@ js.get('/smile/currentmessage', routes.handleCurrentMessageGet);
 js.put('/smile/startmakequestion', routes.handleStartMakeQuestionPut);
 js.post('/smile/startmakequestion', routes.handleStartMakeQuestionPut);
 
+js.put('/smile/startsolvequestion', routes.handleStartSolveQuestionPut);
+js.post('/smile/startsolvequestion', routes.handleStartSolveQuestionPut);
+
 js.put('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 js.post('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 

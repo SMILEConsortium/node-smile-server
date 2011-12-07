@@ -31,7 +31,7 @@ var studentId2 = 'test2-172.16.129.242';
 var students = {};
 students["test-172.16.129.242"] = student;
 
-var suite = vows.describe('Tests "Receive Questions"');
+var suite = vows.describe('Tests "Register Student"');
 var url = BASE_URL + '/JunctionServerExecution/pushmsg.php';
 
 suite.addBatch({
@@ -58,6 +58,7 @@ suite.addBatch({
     },
   }
 });
+
 suite.addBatch({
   "A GET to /smile/student should return the posted student" : {
     topic : function() {
@@ -104,24 +105,6 @@ suite.addBatch({
     },
   }
 });
-
-
-//suite
-//    .addBatch({
-//      "A GET to /smile/question should return a list containing the posted question" : {
-//        topic : function() {
-//          request({
-//            uri : BASE_URL + '/smile/question',
-//            method : 'GET'
-//          }, this.callback);
-//        },
-//        "should have registered the question" : function(err, res, body) {
-//          var obj = {};
-//          obj[questionOwner] = [ question ];
-//          assert.equal(res.body, JSON.stringify(obj));
-//        },
-//      }
-//    });
 
 suite.addBatch({
   "shutdown" : function() {
