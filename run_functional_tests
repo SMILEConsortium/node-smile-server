@@ -1,0 +1,7 @@
+#!/bin/sh
+echo SMILE Junction Server Functional Tests `date` 
+ls tests/functional/* | while read f; 
+do 
+	echo Running test case $f
+	node $f; 
+done 
