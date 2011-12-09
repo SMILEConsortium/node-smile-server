@@ -1,5 +1,6 @@
 #!/bin/sh
-echo SMILE Junction Server Functional Tests `date` 
+echo SMILE Junction Server Functional Tests `date`
+export TEST="true"
 ls tests/functional/* | while read f; 
 do 
 	echo Running test case $f

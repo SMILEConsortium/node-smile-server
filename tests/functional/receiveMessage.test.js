@@ -3,9 +3,8 @@ vows = require('vows');
 request = require('request');
 app = require('../../smileplug');
 
-var port = 3001;
-app.runServer(port);
-BASE_URL = "http://localhost:" + port;
+PORT = 3001;
+BASE_URL = "http://localhost:" + PORT;
 
 HEADERS_JSON = {
   'Content-Type' : 'application/json'
@@ -32,6 +31,13 @@ var encodedQuestion = 'MSG=%7B%22NAME%22%3A%22default.15%22%2C%22Q%22%3A%22qwert
 
 var suite = vows.describe('Tests "Receive Questions"');
 var url = BASE_URL + '/JunctionServerExecution/pushmsg.php';
+
+
+suite.addBatch({
+  "startup" : function() {
+    app.runServer(PORT);
+  }
+});
 
 suite.addBatch({
   "A POST to /JunctionServerExecution/pushmsg.php with data" : {
@@ -61,6 +67,22 @@ suite.addBatch({
     },
     "should have registered the question" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify([ question ]));
+    },
+  }
+});
+
+suite.addBatch({
+  "A GET to /smile/question should return a list containing the posted question" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/question',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should have registered the question" : function(err, res, body) {
+      var obj = {};
+      obj[questionOwner] = [ question ];
+      assert.equal(res.body, JSON.stringify(obj));
     },
   }
 });

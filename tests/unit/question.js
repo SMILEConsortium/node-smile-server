@@ -13,6 +13,35 @@ var q1 = {
   "A" : 2
 }
 
+var q2 = {
+  "NAME" : "test",
+  "Q" : "qwerty",
+  "O1" : "Q",
+  "O2" : "W",
+  "O3" : "E",
+  "O4" : "R",
+  "A" : 3
+}
+
+var q3 = {
+  "NAME" : "test2",
+  "Q" : "qwerty",
+  "O1" : "Q",
+  "O2" : "W",
+  "O3" : "E",
+  "O4" : "R",
+  "A" : 1
+}
+
+var qNoName = {
+  "Q" : "Quem roeu a roupa do rei de Roma?",
+  "O1" : "A Aranha",
+  "O2" : "O Rato",
+  "O3" : "O Pato",
+  "O4" : "O Tigre",
+  "A" : 2
+}
+
 exports.testEmptyQuestions = function(test) {
   test.expect(1);
   var myQuestions = new Questions();
@@ -24,7 +53,37 @@ exports.testOneQuestion = function(test) {
   test.expect(2);
   var myQuestions = new Questions();
   myQuestions.addQuestion(q1);
-  test.ok(true, myQuestions.getQuestions("marco") === [q1]);
+  test.ok(true, myQuestions.getQuestions("marco") === [ q1 ]);
   test.equal(1, myQuestions.getQuestions("marco").length);
+  test.done();
+};
+
+exports.testMissingMandatoryProperties = function(test) {
+  test.expect(1);
+  var myQuestions = new Questions();
+  test.throws(function() {
+    myQuestions.addQuestion(qNoName);
+  });
+  test.done();
+};
+
+exports.testRightAnswers = function(test) {
+  test.expect(2);
+  var myQuestions = new Questions();
+  myQuestions.addQuestion(q1);
+  myQuestions.addQuestion(q2);
+  myQuestions.addQuestion(q3);
+  test.equal(JSON.stringify([ 2, 3, 1 ]), JSON.stringify(myQuestions.getRightAnswers()));
+  test.notEqual(JSON.stringify([ 3, 2, 1 ]), JSON.stringify(myQuestions.getRightAnswers()));
+  test.done();
+};
+
+exports.testNumberOfQuestions = function(test) {
+  test.expect(1);
+  var myQuestions = new Questions();
+  myQuestions.addQuestion(q1);
+  myQuestions.addQuestion(q2);
+  myQuestions.addQuestion(q3);
+  test.equal(3, myQuestions.getNumberOfQuestions());
   test.done();
 };
