@@ -7,6 +7,7 @@
   "dependencies": {
     "vows": "0.6.0",
     "request": "2.2.5",
+    "nlogger": "0.3.0",
     "nodeunit": "0.2.1"
   },
 	"directories": {

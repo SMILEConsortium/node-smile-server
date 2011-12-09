@@ -1,4 +1,6 @@
 #!/usr/bin/env node
 var path = require('path');
-var testrunner = require('nodeunit').testrunner
+var logger = require('nlogger').logger(module);
+var testrunner = require('nodeunit').testrunner;
+logger.debug("Running unit tests with nodeunit");
 testrunner.run([path.join('tests', 'unit')]);
