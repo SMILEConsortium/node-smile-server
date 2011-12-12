@@ -107,3 +107,11 @@ exports.handleStartSolveQuestionPut = function(req, res) {
   setCurrentMessage(message);
   res.sendText(HTTP_STATUS_OK, OK);
 };
+
+exports.handleStudentStatusGet = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatusById(req.id));
+};
+
+exports.handleStudentStatusGetByIP = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatus(req.id));
+};
