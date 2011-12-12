@@ -15,18 +15,18 @@ HEADERS_ENCODED = {
 };
 
 var msgOK = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.242%22%2C%22NAME%22%3A%22test%22%7D"
-var msgOK2 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.242%22%2C%22NAME%22%3A%22test2%22%7D"
+var msgOK2 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.243%22%2C%22NAME%22%3A%22test2%22%7D"
 
 var student =  {
     "IP" : "172.16.129.242",
     "NAME" : "test"
 } 
 var student2 =  {
-    "IP" : "172.16.129.242",
+    "IP" : "172.16.129.243",
     "NAME" : "test2"
 } 
 var studentId = 'test-172.16.129.242';
-var studentId2 = 'test2-172.16.129.242';
+var studentId2 = 'test2-172.16.129.243';
 
 var students = {};
 students["test-172.16.129.242"] = student;
@@ -67,7 +67,7 @@ suite.addBatch({
         method : 'GET'
       }, this.callback);
     },
-    "should have registered the question" : function(err, res, body) {
+    "should have registered the student" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify(students));
     },
   }
@@ -99,9 +99,35 @@ suite.addBatch({
         method : 'GET'
       }, this.callback);
     },
-    "should have registered the question" : function(err, res, body) {
-      students["test2-172.16.129.242"] = student2;
+    "should have registered the student" : function(err, res, body) {
+      students["test2-172.16.129.243"] = student2;
       assert.equal(res.body, JSON.stringify(students));
+    },
+  }
+});
+suite.addBatch({
+  "A GET to /smile/student/id/status should return the posted student" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/student/test-172.16.129.242/status',
+        method : 'GET'
+      }, this.callback);
+    },
+    "student should have status" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify({"NAME":"test","MADE":"N","SOLVED":"N"}));
+    },
+  }
+});
+suite.addBatch({
+  "A GET to /JunctionServerExecution/current/MSG/IP.txt should return the posted student" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/current/MSG/172.16.129.242.txt',
+        method : 'GET'
+      }, this.callback);
+    },
+    "student should have status" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify({"NAME":"test","MADE":"N","SOLVED":"N"}));
     },
   }
 });
