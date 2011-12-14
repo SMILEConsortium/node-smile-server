@@ -1,5 +1,6 @@
 var Questions = require('../lib/smile/question').Questions;
 var Students = require('../lib/smile/student').Students;
+var StudentsWrapper = require('../lib/smile/student').StudentsWrapper;
 
 OK = 'OK';
 
@@ -14,6 +15,8 @@ messages.past = []
 
 var questions = new Questions();
 var students = new Students();
+
+var studentsWrapper = new StudentsWrapper(students);
 
 function setCurrentMessage(message) {
   messages.current = message;
@@ -30,42 +33,6 @@ exports.handleQuestionGet = function(req, res) {
 
 exports.handleQuestionGetAll = function(req, res) {
   res.sendJSON(HTTP_STATUS_OK, questions.getAll());
-};
-
-
-exports.handlePushMessage = function(req, res) {
-  var message = req.body;
-  var type = message.TYPE || null;
-  switch (type) {
-  case null:
-    // Ignoring the message does not have a type
-    console.warn("Unrecognized type: " + type)
-    break;
-  case 'QUESTION':
-    questions.addQuestion(message);
-    break;
-  case 'QUESTION_PIC':
-    questions.addQuestion(message);
-    break;
-  case 'HAIL':
-    students.addStudent(message);
-    break;
-  default:
-    // TODO: Raise error
-    console.warn("Unrecognized type: " + type)
-    break;
-  }
-  if (req.id) {
-    res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
-  } else {
-    res.sendText(HTTP_STATUS_OK, OK);
-  }
-};
-
-exports.handlePushMsgPost = function(req, res) {
-  var message = req.body.MSG;
-  req.body = JSON.parse(message);
-  exports.handlePushMessage(req, res);
 };
 
 exports.handleCurrentMessageGet = function(req, res) {
@@ -109,9 +76,49 @@ exports.handleStartSolveQuestionPut = function(req, res) {
 };
 
 exports.handleStudentStatusGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatusById(req.id));
+  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatus(req.id));
+};
+
+
+//
+// Backward compatibility
+//
+
+exports.handlePushMessage = function(req, res) {
+  var message = req.body;
+  var type = message.TYPE || null;
+  switch (type) {
+  case null:
+    // Ignoring the message does not have a type
+    console.warn("Unrecognized type: " + type)
+    break;
+  case 'QUESTION':
+    questions.addQuestion(message);
+    break;
+  case 'QUESTION_PIC':
+    questions.addQuestion(message);
+    break;
+  case 'HAIL':
+    studentsWrapper.addStudent(message);
+    break;
+  default:
+    // TODO: Raise error
+    console.warn("Unrecognized type: " + type)
+    break;
+  }
+  if (req.id) {
+    res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
+  } else {
+    res.sendText(HTTP_STATUS_OK, OK);
+  }
+};
+
+exports.handlePushMsgPost = function(req, res) {
+  var message = req.body.MSG;
+  req.body = JSON.parse(message);
+  exports.handlePushMessage(req, res);
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatus(req.id));
+  res.sendJSON(HTTP_STATUS_OK, studentsWrapper.getStudentStatus(req.id));
 };

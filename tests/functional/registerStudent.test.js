@@ -17,19 +17,25 @@ HEADERS_ENCODED = {
 var msgOK = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.242%22%2C%22NAME%22%3A%22test%22%7D"
 var msgOK2 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.243%22%2C%22NAME%22%3A%22test2%22%7D"
 
+
 var student =  {
-    "IP" : "172.16.129.242",
-    "NAME" : "test"
+    "name" : "test",
+    "ip" : "172.16.129.242",
+    "status": {"made":false,"solved":false},
+    "answers":[]
 } 
 var student2 =  {
-    "IP" : "172.16.129.243",
-    "NAME" : "test2"
+    "name" : "test2",
+    "ip" : "172.16.129.243",
+    "status": {"made":false,"solved":false},
+    "answers":[]
 } 
-var studentId = 'test-172.16.129.242';
-var studentId2 = 'test2-172.16.129.243';
+
+var studentId = '172.16.129.242';
+var studentId2 = '172.16.129.243';
 
 var students = {};
-students["test-172.16.129.242"] = student;
+students["172.16.129.242"] = student;
 
 var suite = vows.describe('Tests "Register Student"');
 var url = BASE_URL + '/JunctionServerExecution/pushmsg.php';
@@ -100,7 +106,7 @@ suite.addBatch({
       }, this.callback);
     },
     "should have registered the student" : function(err, res, body) {
-      students["test2-172.16.129.243"] = student2;
+      students["172.16.129.243"] = student2;
       assert.equal(res.body, JSON.stringify(students));
     },
   }
@@ -109,12 +115,12 @@ suite.addBatch({
   "A GET to /smile/student/id/status should return the posted student" : {
     topic : function() {
       request({
-        uri : BASE_URL + '/smile/student/test-172.16.129.242/status',
+        uri : BASE_URL + '/smile/student/172.16.129.242/status',
         method : 'GET'
       }, this.callback);
     },
     "student should have status" : function(err, res, body) {
-      assert.equal(res.body, JSON.stringify({"NAME":"test","MADE":"N","SOLVED":"N"}));
+      assert.equal(res.body, JSON.stringify({"made":false,"solved":false}));
     },
   }
 });
