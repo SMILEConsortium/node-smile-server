@@ -46,6 +46,8 @@ js.post('/JunctionServerExecution/pushmsg.php',
     routes.handlePushMsgPost);
 js.get('/JunctionServerExecution/current/MSG/:id.txt', routes.handleStudentStatusGetByIP, true);
 js.get('/JunctionServerExecution/current/:id.html', routes.handleQuestionHtmlGet, true);
+js.get('/JunctionServerExecution/current/:id.jpg', routes.handleQuestionImageGet, true);
+
 
 //console.info(js.ROUTE_MAP);
 //console.info(js.RE_MAP);

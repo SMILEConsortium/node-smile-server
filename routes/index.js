@@ -155,7 +155,6 @@ exports.handleQuestionHtmlGet = function(req, res) {
   res.write(question.Q);
   res.write("\n</P>\n");
 
-  // TODO: handle image
   if (question.hasOwnProperty("PIC")) {
     res.write("<img class=\"main\" src=\"" + questionNumber
         + ".jpg\" width=\"200\" height=\"180\"/>\n");
@@ -167,5 +166,16 @@ exports.handleQuestionHtmlGet = function(req, res) {
   res.write("(3) " + question.O3 + "<br>\n");
   res.write("(4) " + question.O4 + "<br>\n");
   res.write("</P>\n</body></html>\n");
+  res.end();
+};
+
+exports.handleQuestionImageGet = function(req, res) {
+  var questionNumber = parseInt(req.id);
+  var question = questions.getList()[questionNumber];
+  var dataBuffer = new Buffer(question.PIC, 'base64');
+  res.writeHead(200, {
+    'Content-Type' : 'image/jpeg',
+  });
+  res.write(dataBuffer);
   res.end();
 };
