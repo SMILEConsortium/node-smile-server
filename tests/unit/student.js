@@ -112,3 +112,23 @@ exports.testStatusOfStudents = function(test) {
   test.done();
 };
 
+exports.testAnswerQuestions = function(test) {
+  test.expect(3);
+  var myStudents = new StudentsWrapper(new Students());
+  myStudents.addStudent(msgOK);
+  myStudents.addStudent(msgOK2);
+  myStudents.students.getStudent("172.16.129.242").registerAnswer([3,4]);
+  myStudents.students.getStudent("172.16.129.242").registerRating([4,5]);
+  var obj = {};
+  obj["172.16.129.242"] = msgOK;
+  obj["172.16.129.243"] = msgOK2;
+  var status1 = {"NAME":"test","MADE":"N","SOLVED":"Y","NUMQ":1,"YOUR_ANSWERS":[3,4]}
+  var status2 = {"NAME":"test2","MADE":"N","SOLVED":"N"}
+  test.equal(JSON.stringify(status1), JSON.stringify(myStudents.getStudentStatus("172.16.129.242", 1)));
+  test.equal(JSON.stringify(status2), JSON.stringify(myStudents.getStudentStatus("172.16.129.243", 1)));
+  test.throws(function() {
+    myStudents.getStudentStatusById("foo");
+  });
+  test.done();
+};
+

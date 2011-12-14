@@ -35,6 +35,8 @@ js.post('/smile/question/:id', routes.handlePushMessage, true);
 js.get('/smile/question/:id', routes.handleQuestionGet, true);
 
 js.get('/smile/student', routes.handleStudentGetAll);
+js.put('/smile/student', routes.handleStudentPut);
+js.post('/smile/student', routes.handleStudentPut);
 js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
 
 // Backward compatibility with JunctionQuiz
@@ -43,6 +45,7 @@ js.get('/JunctionServerExecution/current/MSG/smsg.txt',
 js.post('/JunctionServerExecution/pushmsg.php',
     routes.handlePushMsgPost);
 js.get('/JunctionServerExecution/current/MSG/:id.txt', routes.handleStudentStatusGetByIP, true);
+js.get('/JunctionServerExecution/current/:id.html', routes.handleQuestionHtmlGet, true);
 
 //console.info(js.ROUTE_MAP);
 //console.info(js.RE_MAP);
