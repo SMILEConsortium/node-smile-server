@@ -1,7 +1,5 @@
-var Questions = require('../lib/smile/question').Questions;
-var Students = require('../lib/smile/student').Students;
+var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
-var StudentsWrapper = require('../lib/smile/student').StudentsWrapper;
 
 OK = 'OK';
 
@@ -14,53 +12,37 @@ var MESSAGE_WAIT_CONNECT = {
   'TYPE' : 'WAIT_CONNECT'
 };
 
-var messages = {};
-messages.current = {};
-messages.past = []
-
-var questions = new Questions();
-var students = new Students();
-
-var studentsWrapper = new StudentsWrapper(students);
-
-function setCurrentMessage(message) {
-  messages.current = message;
-  messages.past.push(message);
-}
-
-function getCurrentMessage() {
-  return messages.current;
-}
+var game = new Game();
 
 exports.handleQuestionGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, questions.getQuestions(req.id));
+  res.sendJSON(HTTP_STATUS_OK, game.questions.getQuestions(req.id));
 };
 
 exports.handleQuestionGetAll = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, questions.getAll());
+  res.sendJSON(HTTP_STATUS_OK, game.questions.getAll());
 };
 
 exports.handleCurrentMessageGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, getCurrentMessage());
+  res.sendJSON(HTTP_STATUS_OK, game.getCurrentMessage());
 };
 
 exports.handleCurrentMessagePut = function(req, res) {
-  setCurrentMessage(req.body);
+  game.setCurrentMessage(req.body);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStartMakeQuestionPut = function(req, res) {
-  setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
+  game.setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleSendInitMessagePut = function(req, res) {
-  setCurrentMessage(MESSAGE_WAIT_CONNECT);
+  game.setCurrentMessage(MESSAGE_WAIT_CONNECT);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStudentGetAll = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, students.getAll());
+  res.sendJSON(HTTP_STATUS_OK, game.students.getAll());
 };
 
 exports.handleStartSolveQuestionPut = function(req, res) {
@@ -68,26 +50,26 @@ exports.handleStartSolveQuestionPut = function(req, res) {
   if (req.body.TIME_LIMIT) {
     timeLimit = req.body.TIME_LIMIT;
   }
-  var numberOfQuestions = questions.getNumberOfQuestions();
-  var rightAnswers = questions.getRightAnswers();
+  var numberOfQuestions = game.questions.getNumberOfQuestions();
+  var rightAnswers = game.questions.getRightAnswers();
   var message = {};
   message['TYPE'] = 'START_SOLVE';
   message['NUMQ'] = numberOfQuestions;
   message['RANSWER'] = rightAnswers;
   message['TIME_LIMIT'] = timeLimit;
 
-  setCurrentMessage(message);
+  game.setCurrentMessage(message);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStudentStatusGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatus(req.id));
+  res.sendJSON(HTTP_STATUS_OK, game.students.getStudentStatus(req.id));
 };
 
 exports.handleStudentPut = function(req, res) {
   var message = req.body;
   var student = new Student(message.name, message.ip);
-  students.addStudent(student);
+  game.students.addStudent(student);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -104,16 +86,16 @@ exports.handlePushMessage = function(req, res) {
     console.warn("Unrecognized type: " + type)
     break;
   case 'QUESTION':
-    questions.addQuestion(message);
+    game.questions.addQuestion(message);
     break;
   case 'QUESTION_PIC':
-    questions.addQuestion(message);
+    game.questions.addQuestion(message);
     break;
   case 'HAIL':
-    studentsWrapper.addStudent(message);
+    game.studentsWrapper.addStudent(message);
     break;
   case 'ANSWER':
-    studentsWrapper.registerAnswer(message);
+    game.registerAnswer(message);
     break;
   default:
     console.warn("Unrecognized type: " + type)
@@ -138,12 +120,12 @@ exports.handlePushMsgPost = function(req, res) {
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, studentsWrapper.getStudentStatus(req.id, questions.getNumberOfQuestions()));
+  res.sendJSON(HTTP_STATUS_OK, game.studentsWrapper.getStudentStatus(req.id, game.questions.getNumberOfQuestions()));
 };
 
 exports.handleQuestionHtmlGet = function(req, res) {
   var questionNumber = parseInt(req.id);
-  var question = questions.getList()[questionNumber];
+  var question = game.questions.getList()[questionNumber];
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
     'Content-Type' : 'text/html',
@@ -171,7 +153,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
 
 exports.handleQuestionImageGet = function(req, res) {
   var questionNumber = parseInt(req.id);
-  var question = questions.getList()[questionNumber];
+  var question = game.questions.getList()[questionNumber];
   var dataBuffer = new Buffer(question.PIC, 'base64');
   res.writeHead(200, {
     'Content-Type' : 'image/jpeg',

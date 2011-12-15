@@ -41,9 +41,19 @@ var question2 = {
 }
 
 var student = {
-  "name" : "default.15",
-  "ip" : "10.0.2.15",
+  name : "default.15",
+  ip : "10.0.2.15",
+  status : {
+    made : false,
+    solved : true
+  },
+  answers : [ 3, 3 ],
+  ratings : [ 4, 4 ],
+  score : 0
 }
+
+var students = {};
+students["10.0.2.15"] = student;
 
 var status = {
   "NAME" : "default.15",
@@ -155,7 +165,8 @@ suite
           html += question.Q;
           html += "\n</P>\n";
 
-          html += "<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n";
+          html += "<img class=\"main\" src=\"" + questionNumber
+              + ".jpg\" width=\"200\" height=\"180\"/>\n";
 
           html += "<P>\n";
           html += "(1) " + question.O1 + "<br>\n";
@@ -169,20 +180,21 @@ suite
       }
     });
 suite
-.addBatch({
-  "A GET to /JunctionServerExecution/current/0.jpg should return an image" : {
-    topic : function() {
-      request({
-        uri : BASE_URL + '/JunctionServerExecution/current/0.jpg',
-        method : 'GET'
-      }, this.callback);
-    },
-    "should be able to show the registered the question to the user" : function(err, res, body) {
-      var dataBuffer = new Buffer(question.PIC, 'base64');
-      assert.equal(res.body, dataBuffer);
-    },
-  }
-});
+    .addBatch({
+      "A GET to /JunctionServerExecution/current/0.jpg should return an image" : {
+        topic : function() {
+          request({
+            uri : BASE_URL + '/JunctionServerExecution/current/0.jpg',
+            method : 'GET'
+          }, this.callback);
+        },
+        "should be able to show the registered the question to the user" : function(
+            err, res, body) {
+          var dataBuffer = new Buffer(question.PIC, 'base64');
+          assert.equal(res.body, dataBuffer);
+        },
+      }
+    });
 suite.addBatch({
   "A POST to /JunctionServerExecution/pushmsg.php with an answer" : {
     topic : function() {
@@ -216,6 +228,21 @@ suite
         },
       }
     });
+suite.addBatch({
+  "A GET to /smile/student should return the posted student with updated score" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/student',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should have registered the student" : function(err, res, body) {
+      student['score'] = 1;
+      assert.equal(res.body, JSON.stringify(students));
+    },
+  }
+});
+
 
 suite.addBatch({
   "shutdown" : function() {
