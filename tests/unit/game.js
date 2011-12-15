@@ -48,17 +48,42 @@ exports.testcalcScoreAndRating = function(test) {
   test.ok(JSON.stringify(myStudents.getStudent("172.16.129.243")) === JSON.stringify(msgOK2));
   var student1 = myStudents.students.getStudent("172.16.129.242");
   var student2 = myStudents.students.getStudent("172.16.129.243");
-  student1.registerAnswers([2,4]);
-  student1.registerRatings([4,5]);
-  student2.registerAnswers([3,4]);
-  student2.registerRatings([3,2]);
+  student1.registerAnswers([ 2, 4 ]);
+  student1.registerRatings([ 4, 5 ]);
+  student2.registerAnswers([ 3, 4 ]);
+  student2.registerRatings([ 3, 1 ]);
   game.calcScoreAndRating(student1)
   game.calcScoreAndRating(student2)
   test.equals(1, student1.getScore());
   test.equals(0, student2.getScore());
-  test.equals(JSON.stringify([4,3]), JSON.stringify(game.questionRatings[0]));
-  test.equals(JSON.stringify([5,2]), JSON.stringify(game.questionRatings[1]));
-  test.equals((4+3)/2, game.getQuestionAverageRating(0));
-  test.equals((5+2)/2, game.getQuestionAverageRating(1));
+  test.equals(JSON.stringify([ 4, 3 ]), JSON.stringify(game.questionRatings[0]));
+  test.equals(JSON.stringify([ 5, 1 ]), JSON.stringify(game.questionRatings[1]));
+  test.equals((4 + 3) / 2, game.getQuestionAverageRating(0));
+  test.equals((5 + 1) / 2, game.getQuestionAverageRating(1));
+  test.done();
+};
+
+exports.testResults = function(test) {
+  test.expect(1);
+  var game = new Game();
+  game.questions.addQuestion(q1);
+  game.questions.addQuestion(q2);
+  var myStudents = game.studentsWrapper;
+  myStudents.addStudent(msgOK);
+  myStudents.addStudent(msgOK2);
+  var student1 = myStudents.students.getStudent("172.16.129.242");
+  var student2 = myStudents.students.getStudent("172.16.129.243");
+  student1.registerAnswers([ 2, 4 ]);
+  student1.registerRatings([ 4, 5 ]);
+  student2.registerAnswers([ 3, 4 ]);
+  student2.registerRatings([ 3, 1 ]);
+  expectedResult = {};
+  expectedResult["winnerScore"] = 1;
+  expectedResult["winnerRating"] = 3.5;
+  expectedResult["bestScoredStudentNames"] = [ "test" ];
+  expectedResult["bestRatedQuestionStudentNames"] = [ "marco" ];
+  expectedResult["numberOfQuestions"] = 2;
+  expectedResult["rightAnswers"] = [ 2, 3 ];
+  test.equals(JSON.stringify(expectedResult), JSON.stringify(game.calculateResults()));
   test.done();
 };
