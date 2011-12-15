@@ -73,6 +73,10 @@ exports.handleStudentPut = function(req, res) {
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleResultsGet = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
+};
+
 //
 // Backward compatibility
 //
@@ -86,10 +90,10 @@ exports.handlePushMessage = function(req, res) {
     console.warn("Unrecognized type: " + type)
     break;
   case 'QUESTION':
-    game.questions.addQuestion(message);
+    game.addQuestion(message);
     break;
   case 'QUESTION_PIC':
-    game.questions.addQuestion(message);
+    game.addQuestion(message);
     break;
   case 'HAIL':
     game.studentsWrapper.addStudent(message);

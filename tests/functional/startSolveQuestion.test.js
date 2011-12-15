@@ -103,7 +103,7 @@ suite.addBatch({
   });
 
 suite.addBatch({
-  "A PUT to /smile/startsolvequestion without data" : {
+  "A PUT to /smile/startsolvequestion with data" : {
       topic : function() {
         request({
           uri : BASE_URL + '/smile/startsolvequestion',

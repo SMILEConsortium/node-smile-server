@@ -77,7 +77,7 @@ exports.testResults = function(test) {
   student1.registerRatings([ 4, 5 ]);
   student2.registerAnswers([ 3, 4 ]);
   student2.registerRatings([ 3, 1 ]);
-  expectedResult = {};
+  var expectedResult = {};
   expectedResult["winnerScore"] = 1;
   expectedResult["winnerRating"] = 3.5;
   expectedResult["bestScoredStudentNames"] = [ "test" ];
