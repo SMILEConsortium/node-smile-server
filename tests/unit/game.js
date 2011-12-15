@@ -37,7 +37,7 @@ var msgOK2 = {
 }
 
 exports.testcalcScoreAndRating = function(test) {
-  //test.expect(3);
+  test.expect(8);
   var game = new Game();
   game.questions.addQuestion(q1);
   game.questions.addQuestion(q2);
