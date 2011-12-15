@@ -26,6 +26,9 @@ js.post('/smile/startsolvequestion', routes.handleStartSolveQuestionPut);
 js.put('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 js.post('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 
+js.put('/smile/sendshowresults', routes.handleSendShowResultsPut);
+js.post('/smile/sendshowresults', routes.handleSendShowResultsPut);
+
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 js.get('/smile/question', routes.handleQuestionGetAll);

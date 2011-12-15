@@ -10,12 +10,16 @@ HEADERS = {
   'Content-Type' : 'application/json'
 };
 
+HEADERS_ENCODED = {
+  'Content-Type' : 'application/x-www-form-urlencoded'
+};
+
 var url = BASE_URL + "/smile/currentmessage";
 var bodyContent = {};
 var startSolveQuestionMessage = {
     'TYPE' : 'START_SOLVE',
     'NUMQ' : 1,
-    'RANSWER' : ["3"]
+    'RANSWER' : [3]
 }
 
 var question = {
@@ -38,6 +42,25 @@ suite.addBatch({
   }
 });
 
+var encodedStudent1 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%2210.0.2.15%22%2C%22NAME%22%3A%22test%22%7D";
+suite.addBatch({
+  "Register Student 1" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + "/JunctionServerExecution/pushmsg.php",
+        method : 'POST',
+        headers : HEADERS_ENCODED,
+        body : encodedStudent1,
+      }, this.callback);
+    },
+    "should respond with 200" : function(err, res, body) {
+      assert.equal(res.statusCode, 200);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, "OK");
+    },
+  }
+});
 suite.addBatch({
   "Insert a question" : {
     topic : function() {

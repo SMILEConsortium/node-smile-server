@@ -44,7 +44,7 @@ var student = {
   name : "default.15",
   ip : "10.0.2.15",
   status : {
-    made : false,
+    made : true,
     solved : true
   },
   answers : [ 3, 3 ],
@@ -57,7 +57,7 @@ students["10.0.2.15"] = student;
 
 var status = {
   "NAME" : "default.15",
-  "MADE" : "N",
+  "MADE" : "Y",
   "SOLVED" : "Y",
   "NUMQ" : 2,
   "YOUR_ANSWERS" : [ 3, 3 ]

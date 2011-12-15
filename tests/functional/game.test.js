@@ -486,6 +486,49 @@ suite.addBatch({
 
 // Results
 
+var MESSAGE_SEND_SHOW_RESULTS = JSON.stringify({
+  'TYPE' : 'START_SHOW',
+  'WINSCORE' : 1,
+  'WINRATING' : 3.5,
+  'HIGHSCORE' : [ "test" ],
+  'HIGHRATING' : [ "test2" ],
+  'NUMQ' : 2,
+  'RANSWER' : [ 3, 2 ]
+});
+
+suite.addBatch({
+  "Send Show Results" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/sendshowresults',
+        method : 'PUT',
+        headers : HEADERS_JSON,
+        body : JSON.stringify({})
+      }, this.callback);
+    },
+    "should respond with 200" : function(err, res, body) {
+      assert.equal(res.statusCode, 200);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, "OK");
+    }
+  }
+});
+
+suite.addBatch({
+  "A GET to /JunctionServerExecution/current/MSG/smsg.txt" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + "/JunctionServerExecution/current/MSG/smsg.txt",
+        method : 'GET'
+      }, this.callback);
+    },
+    "should return the 'start make question' message" : function(err, res, body) {
+      assert.equal(res.body, MESSAGE_SEND_SHOW_RESULTS);
+    }
+  }
+});
+
 var expectedResult = {};
 expectedResult["winnerScore"] = 1;
 expectedResult["winnerRating"] = 3.5;

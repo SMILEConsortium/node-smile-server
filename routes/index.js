@@ -77,6 +77,20 @@ exports.handleResultsGet = function(req, res) {
   res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
 };
 
+exports.handleSendShowResultsPut = function(req, res) {
+  var result = game.calculateResults();
+  var message = {};
+  message['TYPE'] = 'START_SHOW';
+  message['WINSCORE'] = result.winnerScore;
+  message['WINRATING'] = result.winnerRating;
+  message['HIGHSCORE'] = result.bestScoredStudentNames;
+  message['HIGHRATING'] = result.bestRatedQuestionStudentNames;
+  message['NUMQ'] = result.numberOfQuestions;
+  message['RANSWER'] = result.rightAnswers;
+  game.setCurrentMessage(message);
+  res.sendText(HTTP_STATUS_OK, OK);
+};
+
 //
 // Backward compatibility
 //
