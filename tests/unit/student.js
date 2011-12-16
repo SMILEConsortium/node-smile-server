@@ -69,7 +69,7 @@ exports.testOneStudent = function(test) {
 };
 
 exports.testTwoStudents = function(test) {
-  test.expect(3);
+  test.expect(4);
   var myStudents = new StudentsWrapper(new Students());
   myStudents.addStudent(msgOK);
   myStudents.addStudent(msgOK2);
@@ -79,6 +79,9 @@ exports.testTwoStudents = function(test) {
   obj["172.16.129.242"] = msgOK;
   obj["172.16.129.243"] = msgOK2;
   test.equal(JSON.stringify(myStudents.getAll()), JSON.stringify(obj));
+  // If student already exists, it is replaced.
+  myStudents.addStudent(msgOK2);
+  test.equal(2, myStudents.students.getNumberOfStudents());
   test.done();
 };
 
