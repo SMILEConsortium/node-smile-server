@@ -81,12 +81,14 @@ exports.handleSendShowResultsPut = function(req, res) {
   var result = game.calculateResults();
   var message = {};
   message['TYPE'] = 'START_SHOW';
-  message['WINSCORE'] = result.winnerScore;
-  message['WINRATING'] = result.winnerRating;
-  message['HIGHSCORE'] = result.bestScoredStudentNames;
-  message['HIGHRATING'] = result.bestRatedQuestionStudentNames;
+  message['WINSCORE'] = result.bestScoredStudentNames;
+  message['WINRATING'] = result.bestRatedQuestionStudentNames;
+  message['HIGHSCORE'] = result.winnerScore;
+  message['HIGHRATING'] = result.winnerRating;
   message['NUMQ'] = result.numberOfQuestions;
   message['RANSWER'] = result.rightAnswers;
+  message["AVG_RATINGS"] = result.averageRatings;
+  message["RPERCENT"] = result.questionsCorrectPercentage;
   game.setCurrentMessage(message);
   res.sendText(HTTP_STATUS_OK, OK);
 };
@@ -113,19 +115,17 @@ exports.handlePushMessage = function(req, res) {
     game.studentsWrapper.addStudent(message);
     break;
   case 'ANSWER':
-    game.registerAnswer(message);
+    game.registerAnswerByMessage(message);
     break;
   default:
     console.warn("Unrecognized type: " + type)
-    res.sendJSON(404, { 'error' : "Unrecognized type: " + type})
+    res.sendJSON(404, {
+      'error' : "Unrecognized type: " + type
+    })
     break;
   }
   if (req.id) {
-    res
-        .sendText(
-            HTTP_STATUS_OK,
-            "This server does not support question update. The question you sent has been added to: "
-                + req.id);
+    res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
   } else {
     res.sendText(HTTP_STATUS_OK, OK);
   }
@@ -148,16 +148,14 @@ exports.handleQuestionHtmlGet = function(req, res) {
   res.writeHead(200, {
     'Content-Type' : 'text/html',
   });
-  res.write("<html>\n<head>Question No." + questionNumber
-      + " </head>\n<body>\n");
+  res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
   res.write("<p>(Question created by " + studentName + ")</p>\n");
   res.write("<P>Question:\n");
   res.write(question.Q);
   res.write("\n</P>\n");
 
   if (question.hasOwnProperty("PIC")) {
-    res.write("<img class=\"main\" src=\"" + questionNumber
-        + ".jpg\" width=\"200\" height=\"180\"/>\n");
+    res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
   }
 
   res.write("<P>\n");
@@ -177,5 +175,37 @@ exports.handleQuestionImageGet = function(req, res) {
     'Content-Type' : 'image/jpeg',
   });
   res.write(dataBuffer);
+  res.end();
+};
+
+exports.handleQuestionResultHtmlGet = function(req, res) {
+  var questionNumber = parseInt(req.id);
+  var question = game.questions.getList()[questionNumber];
+  var studentName = question.NAME; // XXX
+  res.writeHead(200, {
+    'Content-Type' : 'text/html',
+  });
+  res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
+  res.write("<p>(Question created by " + studentName + ")</p>\n");
+  res.write("<P>Question:\n");
+  res.write(question.Q);
+  res.write("\n</P>\n");
+
+  if (question.hasOwnProperty("PIC")) {
+    res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
+  }
+
+  res.write("<P>\n");
+  res.write("(1) " + question.O1 + (parseInt(question.A) === 1 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("(2) " + question.O2 + (parseInt(question.A) === 2 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("(3) " + question.O3 + (parseInt(question.A) === 3 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("(4) " + question.O4 + (parseInt(question.A) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("</P>\n");
+  res.write("Correct Answer: " + question.A + "<br>\n");
+  res.write("<P> Num correct people: " + game.questionCorrectCountMap[questionNumber] + " / " + game.students.getNumberOfStudents() + "<br>\n");
+  res.write("Average rating: " + game.getQuestionAverageRating(questionNumber) + "<br>\n");
+
+  res.write("</body></html>\n");
+
   res.end();
 };

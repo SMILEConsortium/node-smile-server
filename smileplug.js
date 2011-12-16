@@ -50,6 +50,7 @@ js.get('/JunctionServerExecution/current/MSG/smsg.txt',
 js.post('/JunctionServerExecution/pushmsg.php',
     routes.handlePushMsgPost);
 js.get('/JunctionServerExecution/current/MSG/:id.txt', routes.handleStudentStatusGetByIP, true);
+js.get('/JunctionServerExecution/current/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/JunctionServerExecution/current/:id.html', routes.handleQuestionHtmlGet, true);
 js.get('/JunctionServerExecution/current/:id.jpg', routes.handleQuestionImageGet, true);
 

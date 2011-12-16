@@ -73,10 +73,8 @@ exports.testResults = function(test) {
   myStudents.addStudent(msgOK2);
   var student1 = myStudents.students.getStudent("172.16.129.242");
   var student2 = myStudents.students.getStudent("172.16.129.243");
-  student1.registerAnswers([ 2, 4 ]);
-  student1.registerRatings([ 4, 5 ]);
-  student2.registerAnswers([ 3, 4 ]);
-  student2.registerRatings([ 3, 1 ]);
+  game.registerAnswer(student1, [ 2, 4 ], [ 4, 5 ]);
+  game.registerAnswer(student2, [ 3, 4 ], [ 3, 1 ]);
   var expectedResult = {};
   expectedResult["winnerScore"] = 1;
   expectedResult["winnerRating"] = 3.5;
@@ -84,6 +82,8 @@ exports.testResults = function(test) {
   expectedResult["bestRatedQuestionStudentNames"] = [ "marco" ];
   expectedResult["numberOfQuestions"] = 2;
   expectedResult["rightAnswers"] = [ 2, 3 ];
+  expectedResult["averageRatings"] = [3.5, 3];
+  expectedResult["questionsCorrectPercentage"] = [50, 0];
   test.equals(JSON.stringify(expectedResult), JSON.stringify(game.calculateResults()));
   test.done();
 };

@@ -127,74 +127,67 @@ suite.addBatch({
     },
   }
 });
-suite
-    .addBatch({
-      "A GET to /smile/question should return a list containing the posted question" : {
-        topic : function() {
-          request({
-            uri : BASE_URL + '/smile/question',
-            method : 'GET'
-          }, this.callback);
-        },
-        "should have registered the question" : function(err, res, body) {
-          var obj = {};
-          obj[questionOwner] = [ question, question2 ];
-          assert.equal(res.body, JSON.stringify(obj));
-        },
-      }
-    });
+suite.addBatch({
+  "A GET to /smile/question should return a list containing the posted question" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/question',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should have registered the question" : function(err, res, body) {
+      var obj = {};
+      obj[questionOwner] = [ question, question2 ];
+      assert.equal(res.body, JSON.stringify(obj));
+    },
+  }
+});
 
-suite
-    .addBatch({
-      "A GET to /JunctionServerExecution/current/0.html should return a html with the posted question" : {
-        topic : function() {
-          request({
-            uri : BASE_URL + '/JunctionServerExecution/current/0.html',
-            method : 'GET'
-          }, this.callback);
-        },
-        "should be able to show the registered the question to the user" : function(
-            err, res, body) {
-          var questionNumber = 0;
-          var studentName = question.NAME;
-          var html = "";
-          html += "<html>\n<head>Question No." + questionNumber
-              + " </head>\n<body>\n";
-          html += "<p>(Question created by " + studentName + ")</p>\n";
-          html += "<P>Question:\n";
-          html += question.Q;
-          html += "\n</P>\n";
+suite.addBatch({
+  "A GET to /JunctionServerExecution/current/0.html should return a html with the posted question" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/current/0.html',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should be able to show the registered the question to the user" : function(err, res, body) {
+      var questionNumber = 0;
+      var studentName = question.NAME;
+      var html = "";
+      html += "<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n";
+      html += "<p>(Question created by " + studentName + ")</p>\n";
+      html += "<P>Question:\n";
+      html += question.Q;
+      html += "\n</P>\n";
 
-          html += "<img class=\"main\" src=\"" + questionNumber
-              + ".jpg\" width=\"200\" height=\"180\"/>\n";
+      html += "<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n";
 
-          html += "<P>\n";
-          html += "(1) " + question.O1 + "<br>\n";
-          html += "(2) " + question.O2 + "<br>\n";
-          html += "(3) " + question.O3 + "<br>\n";
-          html += "(4) " + question.O4 + "<br>\n";
-          html += "</P>\n</body></html>\n";
-          assert.equal(res.body, html);
+      html += "<P>\n";
+      html += "(1) " + question.O1 + "<br>\n";
+      html += "(2) " + question.O2 + "<br>\n";
+      html += "(3) " + question.O3 + "<br>\n";
+      html += "(4) " + question.O4 + "<br>\n";
+      html += "</P>\n</body></html>\n";
+      assert.equal(res.body, html);
 
-        },
-      }
-    });
-suite
-    .addBatch({
-      "A GET to /JunctionServerExecution/current/0.jpg should return an image" : {
-        topic : function() {
-          request({
-            uri : BASE_URL + '/JunctionServerExecution/current/0.jpg',
-            method : 'GET'
-          }, this.callback);
-        },
-        "should be able to show the registered the question to the user" : function(
-            err, res, body) {
-          var dataBuffer = new Buffer(question.PIC, 'base64');
-          assert.equal(res.body, dataBuffer);
-        },
-      }
-    });
+    },
+  }
+});
+suite.addBatch({
+  "A GET to /JunctionServerExecution/current/0.jpg should return an image" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/current/0.jpg',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should be able to show the registered the question to the user" : function(err, res, body) {
+      var dataBuffer = new Buffer(question.PIC, 'base64');
+      assert.equal(res.body, dataBuffer);
+    },
+  }
+});
 suite.addBatch({
   "A POST to /JunctionServerExecution/pushmsg.php with an answer" : {
     topic : function() {
@@ -213,21 +206,19 @@ suite.addBatch({
     },
   }
 });
-suite
-    .addBatch({
-      "A GET to /JunctionServerExecution/current/MSG/10.0.2.15.txt should return the posted student" : {
-        topic : function() {
-          request({
-            uri : BASE_URL
-                + '/JunctionServerExecution/current/MSG/10.0.2.15.txt',
-            method : 'GET'
-          }, this.callback);
-        },
-        "student should have status" : function(err, res, body) {
-          assert.equal(res.body, JSON.stringify(status));
-        },
-      }
-    });
+suite.addBatch({
+  "A GET to /JunctionServerExecution/current/MSG/10.0.2.15.txt should return the posted student" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/current/MSG/10.0.2.15.txt',
+        method : 'GET'
+      }, this.callback);
+    },
+    "student should have status" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify(status));
+    },
+  }
+});
 suite.addBatch({
   "A GET to /smile/student should return the posted student with updated score" : {
     topic : function() {
@@ -242,7 +233,6 @@ suite.addBatch({
     },
   }
 });
-
 
 suite.addBatch({
   "shutdown" : function() {

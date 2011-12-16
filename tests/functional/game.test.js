@@ -326,7 +326,7 @@ suite.addBatch({
       var questionNumber = 0;
       var studentName = question1.NAME;
       var html = "";
-      html += "<html>\n<head>Question No." + questionNumber + " </head>\n<body>\n";
+      html += "<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n";
       html += "<p>(Question created by " + studentName + ")</p>\n";
       html += "<P>Question:\n";
       html += question.Q;
@@ -362,7 +362,7 @@ suite.addBatch({
 });
 
 suite.addBatch({
-  "A GET to /JunctionServerExecution/current/0.html should return a html with the posted question" : {
+  "A GET to /JunctionServerExecution/current/1.html should return a html with the posted question" : {
     topic : function() {
       request({
         uri : BASE_URL + '/JunctionServerExecution/current/1.html',
@@ -374,7 +374,7 @@ suite.addBatch({
       var questionNumber = 1;
       var studentName = question.NAME;
       var html = "";
-      html += "<html>\n<head>Question No." + questionNumber + " </head>\n<body>\n";
+      html += "<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n";
       html += "<p>(Question created by " + studentName + ")</p>\n";
       html += "<P>Question:\n";
       html += question.Q;
@@ -482,12 +482,14 @@ suite.addBatch({
 
 var MESSAGE_SEND_SHOW_RESULTS = JSON.stringify({
   'TYPE' : 'START_SHOW',
-  'WINSCORE' : 1,
-  'WINRATING' : 3.5,
-  'HIGHSCORE' : [ "test" ],
-  'HIGHRATING' : [ "test2" ],
+  'WINSCORE' : [ "test" ],
+  'WINRATING' : [ "test2" ],
+  'HIGHSCORE' : 1,
+  'HIGHRATING' : 3.5,
   'NUMQ' : 2,
-  'RANSWER' : [ 3, 2 ]
+  'RANSWER' : [ 3, 2 ],
+  'AVG_RATINGS' : [ 2, 3.5 ],
+  'RPERCENT' : [ 50, 0 ]
 });
 
 suite.addBatch({
@@ -530,6 +532,8 @@ expectedResult["bestScoredStudentNames"] = [ "test" ];
 expectedResult["bestRatedQuestionStudentNames"] = [ "test2" ];
 expectedResult["numberOfQuestions"] = 2;
 expectedResult["rightAnswers"] = [ 3, 2 ];
+expectedResult["averageRatings"] = [ 2, 3.5 ],
+expectedResult["questionsCorrectPercentage"] = [ 50, 0 ]
 
 suite.addBatch({
   "A GET to /smile/results" : {
@@ -545,6 +549,38 @@ suite.addBatch({
   }
 });
 
+suite.addBatch({
+  "A GET to /JunctionServerExecution/current/1_result.html should return a html with the question results" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/current/1_result.html',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should be able to show the question result to the user" : function(err, res, body) {
+      var question = question2;
+      var questionNumber = 1;
+      var studentName = question.NAME;
+      var html = "";
+      html += "<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n";
+      html += "<p>(Question created by " + studentName + ")</p>\n";
+      html += "<P>Question:\n";
+      html += question.Q;
+      html += "\n</P>\n";
+      html += "<P>\n";
+      html += "(1) " + question.O1 + (parseInt(question.A) === 1 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n";
+      html += "(2) " + question.O2 + (parseInt(question.A) === 2 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n";
+      html += "(3) " + question.O3 + (parseInt(question.A) === 3 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n";
+      html += "(4) " + question.O4 + (parseInt(question.A) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n";
+      html += "</P>\n";
+      html += "Correct Answer: " + question.A + "<br>\n";
+      html += "<P> Num correct people: " + 0 + " / " + 2 + "<br>\n";
+      html += "Average rating: " + 3.5 + "<br>\n";
+      html += "</body></html>\n";
+      assert.equal(res.body, html);
+    },
+  }
+});
 
 suite.addBatch({
   "shutdown" : function() {

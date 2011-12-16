@@ -11,7 +11,7 @@ HEADERS_ENCODED = {
   'Content-Type' : 'application/x-www-form-urlencoded'
 };
 
-var encodedStudent1 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%2210.0.2.15%22%2C%22NAME%22%3A%22test%22%7D";
+var encodedStudent1 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%2210.0.2.14%22%2C%22NAME%22%3A%22test%22%7D";
 var encodedStudent2 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%2210.0.2.16%22%2C%22NAME%22%3A%22test2%22%7D";
 
 request({
