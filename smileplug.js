@@ -26,6 +26,9 @@ js.post('/smile/startsolvequestion', routes.handleStartSolveQuestionPut);
 js.put('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 js.post('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 
+js.put('/smile/sendshowresults', routes.handleSendShowResultsPut);
+js.post('/smile/sendshowresults', routes.handleSendShowResultsPut);
+
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 js.get('/smile/question', routes.handleQuestionGetAll);
@@ -39,12 +42,15 @@ js.put('/smile/student', routes.handleStudentPut);
 js.post('/smile/student', routes.handleStudentPut);
 js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
 
+js.get('/smile/results', routes.handleResultsGet);
+
 // Backward compatibility with JunctionQuiz
 js.get('/JunctionServerExecution/current/MSG/smsg.txt',
     routes.handleCurrentMessageGet);
 js.post('/JunctionServerExecution/pushmsg.php',
     routes.handlePushMsgPost);
 js.get('/JunctionServerExecution/current/MSG/:id.txt', routes.handleStudentStatusGetByIP, true);
+js.get('/JunctionServerExecution/current/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/JunctionServerExecution/current/:id.html', routes.handleQuestionHtmlGet, true);
 js.get('/JunctionServerExecution/current/:id.jpg', routes.handleQuestionImageGet, true);
 

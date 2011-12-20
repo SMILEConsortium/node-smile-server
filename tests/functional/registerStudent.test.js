@@ -22,13 +22,17 @@ var student =  {
     "name" : "test",
     "ip" : "172.16.129.242",
     "status": {"made":false,"solved":false},
-    "answers":[]
+    "answers":[],
+    "ratings":[],
+    "score" : 0
 } 
 var student2 =  {
     "name" : "test2",
     "ip" : "172.16.129.243",
     "status": {"made":false,"solved":false},
-    "answers":[]
+    "answers":[],
+    "ratings":[],
+    "score" : 0
 } 
 
 var studentId = '172.16.129.242';

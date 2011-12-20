@@ -1,7 +1,5 @@
-var Questions = require('../lib/smile/question').Questions;
-var Students = require('../lib/smile/student').Students;
+var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
-var StudentsWrapper = require('../lib/smile/student').StudentsWrapper;
 
 OK = 'OK';
 
@@ -14,53 +12,37 @@ var MESSAGE_WAIT_CONNECT = {
   'TYPE' : 'WAIT_CONNECT'
 };
 
-var messages = {};
-messages.current = {};
-messages.past = []
-
-var questions = new Questions();
-var students = new Students();
-
-var studentsWrapper = new StudentsWrapper(students);
-
-function setCurrentMessage(message) {
-  messages.current = message;
-  messages.past.push(message);
-}
-
-function getCurrentMessage() {
-  return messages.current;
-}
+var game = new Game();
 
 exports.handleQuestionGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, questions.getQuestions(req.id));
+  res.sendJSON(HTTP_STATUS_OK, game.questions.getQuestions(req.id));
 };
 
 exports.handleQuestionGetAll = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, questions.getAll());
+  res.sendJSON(HTTP_STATUS_OK, game.questions.getAll());
 };
 
 exports.handleCurrentMessageGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, getCurrentMessage());
+  res.sendJSON(HTTP_STATUS_OK, game.getCurrentMessage());
 };
 
 exports.handleCurrentMessagePut = function(req, res) {
-  setCurrentMessage(req.body);
+  game.setCurrentMessage(req.body);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStartMakeQuestionPut = function(req, res) {
-  setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
+  game.setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleSendInitMessagePut = function(req, res) {
-  setCurrentMessage(MESSAGE_WAIT_CONNECT);
+  game.setCurrentMessage(MESSAGE_WAIT_CONNECT);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStudentGetAll = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, students.getAll());
+  res.sendJSON(HTTP_STATUS_OK, game.students.getAll());
 };
 
 exports.handleStartSolveQuestionPut = function(req, res) {
@@ -68,26 +50,46 @@ exports.handleStartSolveQuestionPut = function(req, res) {
   if (req.body.TIME_LIMIT) {
     timeLimit = req.body.TIME_LIMIT;
   }
-  var numberOfQuestions = questions.getNumberOfQuestions();
-  var rightAnswers = questions.getRightAnswers();
+  var numberOfQuestions = game.questions.getNumberOfQuestions();
+  var rightAnswers = game.questions.getRightAnswers();
   var message = {};
   message['TYPE'] = 'START_SOLVE';
   message['NUMQ'] = numberOfQuestions;
   message['RANSWER'] = rightAnswers;
   message['TIME_LIMIT'] = timeLimit;
 
-  setCurrentMessage(message);
+  game.setCurrentMessage(message);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStudentStatusGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, students.getStudentStatus(req.id));
+  res.sendJSON(HTTP_STATUS_OK, game.students.getStudentStatus(req.id));
 };
 
 exports.handleStudentPut = function(req, res) {
   var message = req.body;
   var student = new Student(message.name, message.ip);
-  students.addStudent(student);
+  game.students.addStudent(student);
+  res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleResultsGet = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
+};
+
+exports.handleSendShowResultsPut = function(req, res) {
+  var result = game.calculateResults();
+  var message = {};
+  message['TYPE'] = 'START_SHOW';
+  message['WINSCORE'] = result.bestScoredStudentNames;
+  message['WINRATING'] = result.bestRatedQuestionStudentNames;
+  message['HIGHSCORE'] = result.winnerScore;
+  message['HIGHRATING'] = result.winnerRating;
+  message['NUMQ'] = result.numberOfQuestions;
+  message['RANSWER'] = result.rightAnswers;
+  message["AVG_RATINGS"] = result.averageRatings;
+  message["RPERCENT"] = result.questionsCorrectPercentage;
+  game.setCurrentMessage(message);
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -104,28 +106,26 @@ exports.handlePushMessage = function(req, res) {
     console.warn("Unrecognized type: " + type)
     break;
   case 'QUESTION':
-    questions.addQuestion(message);
+    game.addQuestion(message);
     break;
   case 'QUESTION_PIC':
-    questions.addQuestion(message);
+    game.addQuestion(message);
     break;
   case 'HAIL':
-    studentsWrapper.addStudent(message);
+    game.studentsWrapper.addStudent(message);
     break;
   case 'ANSWER':
-    studentsWrapper.registerAnswer(message);
+    game.registerAnswerByMessage(message);
     break;
   default:
     console.warn("Unrecognized type: " + type)
-    res.sendJSON(404, { 'error' : "Unrecognized type: " + type})
+    res.sendJSON(404, {
+      'error' : "Unrecognized type: " + type
+    })
     break;
   }
   if (req.id) {
-    res
-        .sendText(
-            HTTP_STATUS_OK,
-            "This server does not support question update. The question you sent has been added to: "
-                + req.id);
+    res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
   } else {
     res.sendText(HTTP_STATUS_OK, OK);
   }
@@ -138,26 +138,24 @@ exports.handlePushMsgPost = function(req, res) {
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, studentsWrapper.getStudentStatus(req.id, questions.getNumberOfQuestions()));
+  res.sendJSON(HTTP_STATUS_OK, game.studentsWrapper.getStudentStatus(req.id, game.questions.getNumberOfQuestions()));
 };
 
 exports.handleQuestionHtmlGet = function(req, res) {
   var questionNumber = parseInt(req.id);
-  var question = questions.getList()[questionNumber];
+  var question = game.questions.getList()[questionNumber];
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
     'Content-Type' : 'text/html',
   });
-  res.write("<html>\n<head>Question No." + questionNumber
-      + " </head>\n<body>\n");
+  res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
   res.write("<p>(Question created by " + studentName + ")</p>\n");
   res.write("<P>Question:\n");
   res.write(question.Q);
   res.write("\n</P>\n");
 
   if (question.hasOwnProperty("PIC")) {
-    res.write("<img class=\"main\" src=\"" + questionNumber
-        + ".jpg\" width=\"200\" height=\"180\"/>\n");
+    res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
   }
 
   res.write("<P>\n");
@@ -171,11 +169,43 @@ exports.handleQuestionHtmlGet = function(req, res) {
 
 exports.handleQuestionImageGet = function(req, res) {
   var questionNumber = parseInt(req.id);
-  var question = questions.getList()[questionNumber];
+  var question = game.questions.getList()[questionNumber];
   var dataBuffer = new Buffer(question.PIC, 'base64');
   res.writeHead(200, {
     'Content-Type' : 'image/jpeg',
   });
   res.write(dataBuffer);
+  res.end();
+};
+
+exports.handleQuestionResultHtmlGet = function(req, res) {
+  var questionNumber = parseInt(req.id);
+  var question = game.questions.getList()[questionNumber];
+  var studentName = question.NAME; // XXX
+  res.writeHead(200, {
+    'Content-Type' : 'text/html',
+  });
+  res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
+  res.write("<p>(Question created by " + studentName + ")</p>\n");
+  res.write("<P>Question:\n");
+  res.write(question.Q);
+  res.write("\n</P>\n");
+
+  if (question.hasOwnProperty("PIC")) {
+    res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
+  }
+
+  res.write("<P>\n");
+  res.write("(1) " + question.O1 + (parseInt(question.A) === 1 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("(2) " + question.O2 + (parseInt(question.A) === 2 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("(3) " + question.O3 + (parseInt(question.A) === 3 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("(4) " + question.O4 + (parseInt(question.A) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+  res.write("</P>\n");
+  res.write("Correct Answer: " + question.A + "<br>\n");
+  res.write("<P> Num correct people: " + game.questionCorrectCountMap[questionNumber] + " / " + game.students.getNumberOfStudents() + "<br>\n");
+  res.write("Average rating: " + game.getQuestionAverageRating(questionNumber) + "<br>\n");
+
+  res.write("</body></html>\n");
+
   res.end();
 };

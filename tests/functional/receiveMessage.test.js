@@ -39,8 +39,27 @@ suite.addBatch({
   }
 });
 
+var encodedStudent1 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%2210.0.2.15%22%2C%22NAME%22%3A%22test%22%7D";
 suite.addBatch({
-  "A POST to /JunctionServerExecution/pushmsg.php with data" : {
+  "Register Student 1" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + "/JunctionServerExecution/pushmsg.php",
+        method : 'POST',
+        headers : HEADERS_ENCODED,
+        body : encodedStudent1,
+      }, this.callback);
+    },
+    "should respond with 200" : function(err, res, body) {
+      assert.equal(res.statusCode, 200);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, "OK");
+    },
+  }
+});
+suite.addBatch({
+  "A POST to /JunctionServerExecution/pushmsg.php with question" : {
     topic : function() {
       request({
         uri : url,
@@ -57,6 +76,7 @@ suite.addBatch({
     },
   }
 });
+
 suite.addBatch({
   "A GET to /smile/question/default.15 should return the posted question" : {
     topic : function() {
