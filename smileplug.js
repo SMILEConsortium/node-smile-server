@@ -43,6 +43,9 @@ js.post('/smile/student', routes.handleStudentPut);
 js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
 
 js.get('/smile/results', routes.handleResultsGet);
+js.get('/smile/all', routes.handleAllMessagesGet);
+js.get('/smile', routes.handleSmileRootGet);
+js.get('/smile/', routes.handleSmileRootGet);
 
 // Backward compatibility with JunctionQuiz
 js.get('/JunctionServerExecution/current/MSG/smsg.txt',

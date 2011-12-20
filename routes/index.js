@@ -31,6 +31,10 @@ exports.handleCurrentMessagePut = function(req, res) {
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleSmileRootGet = function(req, res) {
+  res.sendText(HTTP_STATUS_OK, OK);
+};
+
 exports.handleStartMakeQuestionPut = function(req, res) {
   game.setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
   res.sendText(HTTP_STATUS_OK, OK);
@@ -93,12 +97,17 @@ exports.handleSendShowResultsPut = function(req, res) {
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleAllMessagesGet = function(req, res) {
+  res.sendJSON(HTTP_STATUS_OK, game.messages.past);
+};
+
 //
 // Backward compatibility
 //
 
 exports.handlePushMessage = function(req, res) {
   var message = req.body;
+  game.registerMessage(message);
   var type = message.TYPE || null;
   switch (type) {
   case null:
