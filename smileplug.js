@@ -48,6 +48,7 @@ js.get('/smile', routes.handleSmileRootGet);
 js.get('/smile/', routes.handleSmileRootGet);
 
 js.get('/smile/reset', routes.handleResetGet);
+js.put('/smile/reset', routes.handleResetPut);
 
 var restart = function(req, res) {
   app.close();

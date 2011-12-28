@@ -532,8 +532,8 @@ expectedResult["bestScoredStudentNames"] = [ "test" ];
 expectedResult["bestRatedQuestionStudentNames"] = [ "test2" ];
 expectedResult["numberOfQuestions"] = 2;
 expectedResult["rightAnswers"] = [ 3, 2 ];
-expectedResult["averageRatings"] = [ 2, 3.5 ],
-expectedResult["questionsCorrectPercentage"] = [ 50, 0 ]
+expectedResult["averageRatings"] = [ 2, 3.5 ];
+expectedResult["questionsCorrectPercentage"] = [ 50, 0 ];
 
 suite.addBatch({
   "A GET to /smile/results" : {
@@ -578,6 +578,109 @@ suite.addBatch({
       html += "Average rating: " + 3.5 + "<br>\n";
       html += "</body></html>\n";
       assert.equal(res.body, html);
+    },
+  }
+});
+
+// Reset
+
+suite.addBatch({
+  "A PUT to /smile/reset without data" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/reset',
+        method : 'PUT',
+        headers : HEADERS_JSON,
+        body : JSON.stringify({}),
+      }, this.callback);
+    },
+    "should respond with 200" : function(err, res, body) {
+      assert.equal(res.statusCode, 200);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, "OK");
+    },
+  }
+});
+
+suite.addBatch({
+  "A GET to /smile/results" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/results',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should return raw results" : function(err, res, body) {
+      var expectedResults = {
+        "winnerScore" : 0,
+        "winnerRating" : 0,
+        "numberOfQuestions" : 0,
+        "rightAnswers" : [],
+        "averageRatings" : [],
+        "questionsCorrectPercentage" : []
+      };
+      assert.equal(res.body, JSON.stringify(expectedResults));
+    },
+  }
+});
+
+suite.addBatch({
+  "A GET to /smile/question" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/question',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should return empty json" : function(err, res, body) {
+      var expectedResults = {};
+      assert.equal(res.body, JSON.stringify(expectedResults));
+    },
+  }
+});
+
+suite.addBatch({
+  "A GET to /smile/student" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/student',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should return empty json" : function(err, res, body) {
+      var expectedResults = {};
+      assert.equal(res.body, JSON.stringify(expectedResults));
+    },
+  }
+});
+
+suite.addBatch({
+  "A GET to /smile/currentmessage" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/currentmessage',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should return empty json" : function(err, res, body) {
+      var expectedResults = {};
+      assert.equal(res.body, JSON.stringify(expectedResults));
+    },
+  }
+});
+
+suite.addBatch({
+  "A GET to /smile/all" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/all',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should return empty list" : function(err, res, body) {
+      var expectedResults = [];
+      assert.equal(res.body, JSON.stringify(expectedResults));
     },
   }
 });
