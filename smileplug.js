@@ -5,8 +5,8 @@ var url = require('url');
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.1.0',
-  'VERSION_DESCRIPTION' : 'Put your app description here',
+  'VERSION_TAG' : '0.1.1',
+  'VERSION_DESCRIPTION' : 'SMILE Junction Server',
   'SLIDE_DIR' : './'
 };
 
