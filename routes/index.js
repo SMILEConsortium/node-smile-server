@@ -101,13 +101,22 @@ exports.handleAllMessagesGet = function(req, res) {
   res.sendJSON(HTTP_STATUS_OK, game.messages.past);
 };
 
-exports.handleResetGet = function(req, res) {
+
+reset = function() {
   oldGame = game;
   game = new Game();
   delete oldGame;
+}
+
+exports.handleResetGet = function(req, res) {
+  reset();
   res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleResetPut = function(req, res) {
+  reset();
+  res.sendText(HTTP_STATUS_OK, OK);
+};
 
 //
 // Backward compatibility
