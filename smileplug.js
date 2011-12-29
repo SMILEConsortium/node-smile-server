@@ -5,7 +5,7 @@ var url = require('url');
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.1.1',
+  'VERSION_TAG' : '0.1.2',
   'VERSION_DESCRIPTION' : 'SMILE Junction Server',
   'SLIDE_DIR' : './'
 };
@@ -59,10 +59,8 @@ var restart = function(req, res) {
 js.get('/smile/restart', restart);
 
 // Backward compatibility with JunctionQuiz
-js.get('/JunctionServerExecution/current/MSG/smsg.txt',
-    routes.handleCurrentMessageGet);
-js.post('/JunctionServerExecution/pushmsg.php',
-    routes.handlePushMsgPost);
+js.get('/JunctionServerExecution/current/MSG/smsg.txt', routes.handleCurrentMessageGet);
+js.post('/JunctionServerExecution/pushmsg.php', routes.handlePushMsgPost);
 js.get('/JunctionServerExecution/current/MSG/:id.txt', routes.handleStudentStatusGetByIP, true);
 js.get('/JunctionServerExecution/current/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/JunctionServerExecution/current/:id.html', routes.handleQuestionHtmlGet, true);
