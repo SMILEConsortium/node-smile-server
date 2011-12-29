@@ -54,9 +54,12 @@ var msgNoName = {
 }
 
 exports.testEmptyStudents = function(test) {
-  test.expect(1);
+  test.expect(2);
   var myStudents = new Students();
-  test.ok(true, !myStudents.getStudent(""));
+  test.equals(JSON.stringify({}), JSON.stringify(myStudents.getAll()));
+  test.throws(function() {
+    myStudents.getStudent("")
+  });
   test.done();
 };
 
@@ -105,8 +108,16 @@ exports.testStatusOfStudents = function(test) {
   var obj = {};
   obj["172.16.129.242"] = msgOK;
   obj["172.16.129.243"] = msgOK2;
-  var status1 = {"NAME":"test","MADE":"N","SOLVED":"N"}
-  var status2 = {"NAME":"test2","MADE":"N","SOLVED":"N"}
+  var status1 = {
+    "NAME" : "test",
+    "MADE" : "N",
+    "SOLVED" : "N"
+  }
+  var status2 = {
+    "NAME" : "test2",
+    "MADE" : "N",
+    "SOLVED" : "N"
+  }
   test.equal(JSON.stringify(status1), JSON.stringify(myStudents.getStudentStatus("172.16.129.242")));
   test.equal(JSON.stringify(status2), JSON.stringify(myStudents.getStudentStatus("172.16.129.243")));
   test.throws(function() {
@@ -120,13 +131,23 @@ exports.testAnswerQuestions = function(test) {
   var myStudents = new StudentsWrapper(new Students());
   myStudents.addStudent(msgOK);
   myStudents.addStudent(msgOK2);
-  myStudents.students.getStudent("172.16.129.242").registerAnswers([2,4]);
-  myStudents.students.getStudent("172.16.129.242").registerRatings([4,5]);
+  myStudents.students.getStudent("172.16.129.242").registerAnswers([ 2, 4 ]);
+  myStudents.students.getStudent("172.16.129.242").registerRatings([ 4, 5 ]);
   var obj = {};
   obj["172.16.129.242"] = msgOK;
   obj["172.16.129.243"] = msgOK2;
-  var status1 = {"NAME":"test","MADE":"N","SOLVED":"Y","NUMQ":1,"YOUR_ANSWERS":[2,4]}
-  var status2 = {"NAME":"test2","MADE":"N","SOLVED":"N"}
+  var status1 = {
+    "NAME" : "test",
+    "MADE" : "N",
+    "SOLVED" : "Y",
+    "NUMQ" : 1,
+    "YOUR_ANSWERS" : [ 2, 4 ]
+  }
+  var status2 = {
+    "NAME" : "test2",
+    "MADE" : "N",
+    "SOLVED" : "N"
+  }
   test.equal(JSON.stringify(status1), JSON.stringify(myStudents.getStudentStatus("172.16.129.242", 1)));
   test.equal(JSON.stringify(status2), JSON.stringify(myStudents.getStudentStatus("172.16.129.243", 1)));
   test.throws(function() {
@@ -134,4 +155,3 @@ exports.testAnswerQuestions = function(test) {
   });
   test.done();
 };
-
