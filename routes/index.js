@@ -1,5 +1,7 @@
 var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
+var NotFoundError = require('../lib/js').NotFoundError;
+var UnexpectedError = require('../lib/js').UnexpectedError;
 
 OK = 'OK';
 
@@ -101,7 +103,6 @@ exports.handleAllMessagesGet = function(req, res) {
   res.sendJSON(HTTP_STATUS_OK, game.messages.past);
 };
 
-
 reset = function() {
   oldGame = game;
   game = new Game();
@@ -132,10 +133,16 @@ exports.handlePushMessage = function(req, res) {
     console.warn("Unrecognized type: " + type);
     break;
   case 'QUESTION':
-    game.addQuestion(message);
+    var error = game.addQuestion(message);
+    if (error) {
+      res.handleError(error);
+    }
     break;
   case 'QUESTION_PIC':
-    game.addQuestion(message);
+    var error = game.addQuestion(message);
+    if (error) {
+      res.handleError(error);
+    }
     break;
   case 'HAIL':
     game.studentsWrapper.addStudent(message);
@@ -145,9 +152,7 @@ exports.handlePushMessage = function(req, res) {
     break;
   default:
     console.warn("Unrecognized type: " + type)
-    res.sendJSON(404, {
-      'error' : "Unrecognized type: " + type
-    })
+    res.handleError(new UnexpectedError("Unrecognized type: " + type));
     break;
   }
   if (req.id) {
@@ -170,6 +175,9 @@ exports.handleStudentStatusGetByIP = function(req, res) {
 exports.handleQuestionHtmlGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
+  if (!question) {
+    return res.handleError(new NotFoundError('Question not found: ' + questionNumber));
+  }
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
     'Content-Type' : 'text/html',
@@ -196,6 +204,9 @@ exports.handleQuestionHtmlGet = function(req, res) {
 exports.handleQuestionImageGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
+  if (!question) {
+    return res.handleError(new NotFoundError('Question not found: ' + questionNumber));
+  }
   var dataBuffer = new Buffer(question.PIC, 'base64');
   res.writeHead(200, {
     'Content-Type' : 'image/jpeg',
@@ -207,6 +218,9 @@ exports.handleQuestionImageGet = function(req, res) {
 exports.handleQuestionResultHtmlGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
+  if (!question) {
+    return res.handleError(new NotFoundError('Question not found: ' + questionNumber));
+  }
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
     'Content-Type' : 'text/html',

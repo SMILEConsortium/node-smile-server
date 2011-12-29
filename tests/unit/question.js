@@ -45,7 +45,7 @@ var qNoName = {
 exports.testEmptyQuestions = function(test) {
   test.expect(1);
   var myQuestions = new Questions();
-  test.ok(true, myQuestions.getQuestions("") === []);
+  test.ok(true, myQuestions.getAll() === []);
   test.done();
 };
 
