@@ -129,7 +129,7 @@ exports.handlePushMessage = function(req, res) {
   switch (type) {
   case null:
     // Ignoring the message does not have a type
-    console.warn("Unrecognized type: " + type)
+    console.warn("Unrecognized type: " + type);
     break;
   case 'QUESTION':
     game.addQuestion(message);
