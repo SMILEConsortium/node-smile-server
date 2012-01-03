@@ -2,7 +2,7 @@
   "name": "smile-junction-server",
 	"descrption": "SMILE Junction Server",
   "author": "Juan Pinazo <juan.pinazo@actminds.com>",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "dependencies": {
     "vows": "0.6.0",
