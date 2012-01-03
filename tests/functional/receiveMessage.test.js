@@ -32,7 +32,6 @@ var encodedQuestion = 'MSG=%7B%22NAME%22%3A%22default.15%22%2C%22Q%22%3A%22qwert
 var suite = vows.describe('Tests "Receive Questions"');
 var url = BASE_URL + '/JunctionServerExecution/pushmsg.php';
 
-
 suite.addBatch({
   "startup" : function() {
     app.runServer(PORT);
@@ -91,6 +90,37 @@ suite.addBatch({
   }
 });
 
+var questionTeacher = {
+  "NAME" : "teacher",
+  "Q" : "zxcv",
+  "A" : "4",
+  "IP" : '10.0.2.20',
+  "O4" : "z",
+  "O3" : "x",
+  "O2" : "c",
+  "O1" : "v",
+  "TYPE" : 'QUESTION'
+}
+
+suite.addBatch({
+  "Insert teacher question" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + "/smile/question",
+        method : 'PUT',
+        headers : HEADERS_JSON,
+        body : JSON.stringify(questionTeacher)
+      }, this.callback);
+    },
+    "should respond with 200" : function(err, res, body) {
+      assert.equal(res.statusCode, 200);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, "OK");
+    }
+  }
+});
+
 suite.addBatch({
   "A GET to /smile/question should return a list containing the posted question" : {
     topic : function() {
@@ -102,6 +132,7 @@ suite.addBatch({
     "should have registered the question" : function(err, res, body) {
       var obj = {};
       obj[questionOwner] = [ question ];
+      obj['teacher'] = [ questionTeacher ];
       assert.equal(res.body, JSON.stringify(obj));
     },
   }

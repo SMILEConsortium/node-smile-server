@@ -61,9 +61,8 @@ exports.testOneQuestion = function(test) {
 exports.testMissingMandatoryProperties = function(test) {
   test.expect(1);
   var myQuestions = new Questions();
-  test.throws(function() {
-    myQuestions.addQuestion(qNoName);
-  });
+  var error =  myQuestions.addQuestion(qNoName);
+  test.ok(error instanceof Error);
   test.done();
 };
 
