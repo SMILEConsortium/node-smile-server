@@ -57,9 +57,8 @@ exports.testEmptyStudents = function(test) {
   test.expect(2);
   var myStudents = new Students();
   test.equals(JSON.stringify({}), JSON.stringify(myStudents.getAll()));
-  test.throws(function() {
-    myStudents.getStudent("")
-  });
+  var error = myStudents.getStudent("");
+  test.ok(error instanceof Error);
   test.done();
 };
 
@@ -91,12 +90,10 @@ exports.testTwoStudents = function(test) {
 exports.testMissingProperties = function(test) {
   test.expect(2);
   var myStudents = new StudentsWrapper(new Students());
-  test.throws(function() {
-    myStudents.addStudent(msgNoIP);
-  });
-  test.throws(function() {
-    myStudents.addStudent(msgNoName);
-  });
+  var error =  myStudents.addStudent(msgNoIP);
+  test.ok(error instanceof Error);
+  var error = myStudents.addStudent(msgNoName);
+  test.ok(error instanceof Error);
   test.done();
 };
 

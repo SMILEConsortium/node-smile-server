@@ -1,7 +1,6 @@
 var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
-var NotFoundError = require('../lib/js').NotFoundError;
-var UnexpectedError = require('../lib/js').UnexpectedError;
+var js = require('../lib/js');
 
 OK = 'OK';
 
@@ -17,38 +16,43 @@ var MESSAGE_WAIT_CONNECT = {
 var game = new Game();
 
 exports.handleQuestionGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.questions.getQuestions(req.id));
+  var questions = game.questions.getQuestions(req.id);
+  if (questions instanceof Error) {
+    res.handleError(questions);
+  } else {
+    return res.sendJSON(HTTP_STATUS_OK, questions);
+  }
 };
 
 exports.handleQuestionGetAll = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.questions.getAll());
+  return res.sendJSON(HTTP_STATUS_OK, game.questions.getAll());
 };
 
 exports.handleCurrentMessageGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.getCurrentMessage());
+  return res.sendJSON(HTTP_STATUS_OK, game.getCurrentMessage());
 };
 
 exports.handleCurrentMessagePut = function(req, res) {
   game.setCurrentMessage(req.body);
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleSmileRootGet = function(req, res) {
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStartMakeQuestionPut = function(req, res) {
   game.setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleSendInitMessagePut = function(req, res) {
   game.setCurrentMessage(MESSAGE_WAIT_CONNECT);
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStudentGetAll = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.students.getAll());
+  return res.sendJSON(HTTP_STATUS_OK, game.students.getAll());
 };
 
 exports.handleStartSolveQuestionPut = function(req, res) {
@@ -65,22 +69,27 @@ exports.handleStartSolveQuestionPut = function(req, res) {
   message['TIME_LIMIT'] = timeLimit;
 
   game.setCurrentMessage(message);
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleStudentStatusGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.students.getStudentStatus(req.id));
+  var studentStatus = game.students.getStudentStatus(req.id);
+  if (studentStatus instanceof Error) {
+    res.handleError(studentStatus);
+  } else {
+    return res.sendJSON(HTTP_STATUS_OK, studentStatus);
+  }
 };
 
 exports.handleStudentPut = function(req, res) {
   var message = req.body;
   var student = new Student(message.name, message.ip);
   game.students.addStudent(student);
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleResultsGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
+  return res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
 };
 
 exports.handleSendShowResultsPut = function(req, res) {
@@ -96,11 +105,11 @@ exports.handleSendShowResultsPut = function(req, res) {
   message["AVG_RATINGS"] = result.averageRatings;
   message["RPERCENT"] = result.questionsCorrectPercentage;
   game.setCurrentMessage(message);
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleAllMessagesGet = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.messages.past);
+  return res.sendJSON(HTTP_STATUS_OK, game.messages.past);
 };
 
 reset = function() {
@@ -111,12 +120,12 @@ reset = function() {
 
 exports.handleResetGet = function(req, res) {
   reset();
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 exports.handleResetPut = function(req, res) {
   reset();
-  res.sendText(HTTP_STATUS_OK, OK);
+  return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 //
@@ -127,38 +136,37 @@ exports.handlePushMessage = function(req, res) {
   var message = req.body;
   game.registerMessage(message);
   var type = message.TYPE || null;
+  var error;
   switch (type) {
   case null:
     // Ignoring the message does not have a type
     console.warn("Unrecognized type: " + type);
     break;
   case 'QUESTION':
-    var error = game.addQuestion(message);
-    if (error) {
-      res.handleError(error);
-    }
+    error = game.addQuestion(message);
     break;
   case 'QUESTION_PIC':
-    var error = game.addQuestion(message);
-    if (error) {
-      res.handleError(error);
-    }
+    error = game.addQuestion(message);
     break;
   case 'HAIL':
-    game.studentsWrapper.addStudent(message);
+    error = game.studentsWrapper.addStudent(message);
     break;
   case 'ANSWER':
-    game.registerAnswerByMessage(message);
+    error = game.registerAnswerByMessage(message);
     break;
   default:
-    console.warn("Unrecognized type: " + type)
-    res.handleError(new UnexpectedError("Unrecognized type: " + type));
+    error = new Error("Unrecognized type: " + type);
     break;
   }
-  if (req.id) {
-    res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
+  if (error) {
+    // Something wrong happened
+    return res.handleError(error);
   } else {
-    res.sendText(HTTP_STATUS_OK, OK);
+    if (req.id) {
+      return res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
+    } else {
+      return res.sendText(HTTP_STATUS_OK, OK);
+    }
   }
 };
 
@@ -169,14 +177,19 @@ exports.handlePushMsgPost = function(req, res) {
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
-  res.sendJSON(HTTP_STATUS_OK, game.studentsWrapper.getStudentStatus(req.id, game.questions.getNumberOfQuestions()));
+  var studentStatus = game.studentsWrapper.getStudentStatus(req.id, game.questions.getNumberOfQuestions());
+  if (studentStatus instanceof Error) {
+    res.handleError(studentStatus);
+  } else {
+    return res.sendJSON(HTTP_STATUS_OK, studentStatus);
+  }
 };
 
 exports.handleQuestionHtmlGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
   if (!question) {
-    return res.handleError(new NotFoundError('Question not found: ' + questionNumber));
+    return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
   }
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
@@ -205,7 +218,7 @@ exports.handleQuestionImageGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
   if (!question) {
-    return res.handleError(new NotFoundError('Question not found: ' + questionNumber));
+    return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
   }
   var dataBuffer = new Buffer(question.PIC, 'base64');
   res.writeHead(200, {
@@ -219,7 +232,7 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
   if (!question) {
-    return res.handleError(new NotFoundError('Question not found: ' + questionNumber));
+    return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
   }
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
