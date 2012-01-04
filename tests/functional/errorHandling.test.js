@@ -130,7 +130,7 @@ suite.addBatch({
     },
     "should return not found message in JSON format" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify({
-        "message" : "Not found: /nonexistenturl"
+        "message" : "The requested URL /nonexistenturl was not found on this server."
       }));
     },
   }
@@ -249,6 +249,28 @@ suite.addBatch({
     },
   }
 });
+
+var studentNoIP = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22NAME%22%3A%22test%22%7D"
+
+suite.addBatch({
+  "A POST to /JunctionServerExecution/pushmsg.php with no IP" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/pushmsg.php',
+        method : 'POST',
+        headers : HEADERS_ENCODED,
+        body : studentNoIP,
+      }, this.callback);
+    },
+    "should respond with 500" : function(err, res, body) {
+      assert.equal(res.statusCode, 500);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify({"message":"Student registration message must contain a valid IP property."}));
+    },
+  }
+});
+
 
 suite.addBatch({
   "shutdown" : function() {
