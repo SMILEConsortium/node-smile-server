@@ -118,10 +118,10 @@ suite.addBatch({
 });
 
 suite.addBatch({
-  "A GET to /inexistenturl should return not found" : {
+  "A GET to /nonexistenturl should return not found" : {
     topic : function() {
       request({
-        uri : BASE_URL + '/inexistenturl',
+        uri : BASE_URL + '/nonexistenturl',
         method : 'GET'
       }, this.callback);
     },
@@ -130,7 +130,7 @@ suite.addBatch({
     },
     "should return not found message in JSON format" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify({
-        "message" : "Not found: /inexistenturl"
+        "message" : "The requested URL /nonexistenturl was not found on this server."
       }));
     },
   }
@@ -230,7 +230,7 @@ var question = {
 }
 
 suite.addBatch({
-  "A PUT to /smile/question with inexistent student" : {
+  "A PUT to /smile/question with nonexistent student" : {
     topic : function() {
       request({
         uri : BASE_URL + '/smile/question',
@@ -244,11 +244,33 @@ suite.addBatch({
     },
     "should return error message in JSON format" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify({
-        "message" : "The question provided refers to inexistent student: 10.0.2.15"
+        "message" : "The question provided refers to nonexistent student: 10.0.2.15"
       }));
     },
   }
 });
+
+var studentNoIP = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22NAME%22%3A%22test%22%7D"
+
+suite.addBatch({
+  "A POST to /JunctionServerExecution/pushmsg.php with no IP" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/pushmsg.php',
+        method : 'POST',
+        headers : HEADERS_ENCODED,
+        body : studentNoIP,
+      }, this.callback);
+    },
+    "should respond with 500" : function(err, res, body) {
+      assert.equal(res.statusCode, 500);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify({"message":"Student registration message must contain a valid IP property."}));
+    },
+  }
+});
+
 
 suite.addBatch({
   "shutdown" : function() {
