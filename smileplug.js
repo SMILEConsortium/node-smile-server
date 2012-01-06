@@ -5,7 +5,7 @@ var url = require('url');
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.1.4beta2-' + Date(),
+  'VERSION_TAG' : '0.1.4beta4-' + Date(),
   'VERSION_DESCRIPTION' : 'SMILE Junction Server',
   'SLIDE_DIR' : './'
 };
