@@ -25,7 +25,8 @@ var question = {
   "O3" : "e",
   "O2" : "w",
   "O1" : "q",
-  "TYPE" : 'QUESTION_PIC'
+  "TYPE" : 'QUESTION_PIC',
+  "PICURL" : '/smile/questionview/0.jpg'
 }
 
 var question2 = {

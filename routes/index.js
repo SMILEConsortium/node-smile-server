@@ -220,6 +220,9 @@ exports.handleQuestionImageGet = function(req, res) {
   if (!question) {
     return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
   }
+  if (!question.PIC) {
+    return res.handleError(js.JumboError.notFound('Question does not have picture: ' + questionNumber));
+  }
   var dataBuffer = new Buffer(question.PIC, 'base64');
   res.writeHead(200, {
     'Content-Type' : 'image/jpeg',
