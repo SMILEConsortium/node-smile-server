@@ -271,6 +271,19 @@ suite.addBatch({
   }
 });
 
+suite.addBatch({
+  "A GET to index.html" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/index.html',
+        method : 'GET'
+      }, this.callback);
+    },
+    "should respond with 200" : function(err, res, body) {
+      assert.equal(res.statusCode, 200);
+    },
+  }
+});
 
 suite.addBatch({
   "shutdown" : function() {
