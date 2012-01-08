@@ -36,6 +36,11 @@ var msgOK2 = {
   "IP" : "172.16.129.243",
 }
 
+var msgOK3 = {
+  "NAME" : "test3",
+  "IP" : "172.16.129.244",
+}
+
 exports.testcalcScoreAndRating = function(test) {
   test.expect(8);
   var game = new Game();
@@ -71,19 +76,22 @@ exports.testResults = function(test) {
   var myStudents = game.studentsWrapper;
   myStudents.addStudent(msgOK);
   myStudents.addStudent(msgOK2);
+  myStudents.addStudent(msgOK3);
   var student1 = myStudents.students.getStudent("172.16.129.242");
   var student2 = myStudents.students.getStudent("172.16.129.243");
-  game.registerAnswer(student1, [ 2, 4 ], [ 4, 5 ]);
+  var student3 = myStudents.students.getStudent("172.16.129.244");
+  game.registerAnswer(student1, [ 2, 4 ], [ 4, 4 ]);
   game.registerAnswer(student2, [ 3, 4 ], [ 3, 1 ]);
+  game.registerAnswer(student3, [ 3, 4 ], [ 2, 1 ]);
   var expectedResult = {};
   expectedResult["winnerScore"] = 1;
-  expectedResult["winnerRating"] = 3.5;
+  expectedResult["winnerRating"] = 3;
   expectedResult["bestScoredStudentNames"] = [ "test" ];
   expectedResult["bestRatedQuestionStudentNames"] = [ "marco" ];
   expectedResult["numberOfQuestions"] = 2;
   expectedResult["rightAnswers"] = [ 2, 3 ];
-  expectedResult["averageRatings"] = [3.5, 3];
-  expectedResult["questionsCorrectPercentage"] = [50, 0];
+  expectedResult["averageRatings"] = [ 3, 2 ];
+  expectedResult["questionsCorrectPercentage"] = [ 33, 0 ];
   test.equals(JSON.stringify(expectedResult), JSON.stringify(game.calculateResults()));
   test.done();
 };

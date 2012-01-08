@@ -50,6 +50,10 @@ js.get('/smile/', routes.handleSmileRootGet);
 js.get('/smile/reset', routes.handleResetGet);
 js.put('/smile/reset', routes.handleResetPut);
 
+js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
+js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);
+js.get('/smile/questionview/:id.jpg', routes.handleQuestionImageGet, true);
+
 var restart = function(req, res) {
   app.close();
   app.runServer(js.CONFIG['PORT']);

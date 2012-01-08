@@ -201,7 +201,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
   res.write(question.Q);
   res.write("\n</P>\n");
 
-  if (question.hasOwnProperty("PIC")) {
+  if (question.TYPE == "QUESTION_PIC") {
     res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
   }
 
@@ -220,7 +220,10 @@ exports.handleQuestionImageGet = function(req, res) {
   if (!question) {
     return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
   }
-  var dataBuffer = new Buffer(question.PIC, 'base64');
+  if (question.TYPE != "QUESTION_PIC") {
+    return res.handleError(js.JumboError.notFound('Question does not have picture: ' + questionNumber));
+  }
+  var dataBuffer = new Buffer(game.questions.getQuestionPicture(questionNumber), 'base64');
   res.writeHead(200, {
     'Content-Type' : 'image/jpeg',
   });
@@ -244,7 +247,7 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
   res.write(question.Q);
   res.write("\n</P>\n");
 
-  if (question.hasOwnProperty("PIC")) {
+  if (question.TYPE == "QUESTION_PIC") {
     res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
   }
 
