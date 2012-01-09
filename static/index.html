@@ -1,39 +1,121 @@
-<!doctype html>
+<!DOCTYPE html>
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta charset="utf-8" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
 
-	<title>smileplug-server</title>
-	<meta name="description" content="smileplug-server">
-	<meta name="author" content="Juan Pinazo <juan.pinazo@actminds.com>">
+	<!-- Set the viewport width to device width for mobile -->
+	<meta name="viewport" content="width=device-width" />
 
-	<!--  Mobile viewport optimized: j.mp/bplateviewport -->
-	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Welcome to The SMILEPlug</title>
+  
+	<!-- Included CSS Files -->
+	<!-- Combine and Compress These CSS Files -->
+	<link rel="stylesheet" href="/css/globals.css">
+	<link rel="stylesheet" href="/css/typography.css">
+	<link rel="stylesheet" href="/css/grid.css">
+	<link rel="stylesheet" href="/css/ui.css">
+	<link rel="stylesheet" href="/css/forms.css">
+	<link rel="stylesheet" href="/css/orbit.css">
+	<link rel="stylesheet" href="/css/reveal.css">
+	<link rel="stylesheet" href="/css/mobile.css">
+	<!-- End Combine and Compress These CSS Files -->
+	<link rel="stylesheet" href="/css/sapp.css">
 
-	<!-- CSS : implied media="all" -->
-	<link rel="stylesheet" href="/css/style.css">
+	<!--[if lt IE 9]>
+		<link rel="css" href="css/ie.css">
+	<![endif]-->
+
+
+	<!-- IE Fix for HTML5 Tags -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
 </head>
 <body>
 
-<div id="container">
-	<header>
-		<H1>smileplug-server</H1>
-	</header>
-	<H2>Placeholder for SMILE Content</H2>
-	<P>
-	<BR/>
-	<H2>Available software:</H2>
-	<UL>
-        <LI><a href="/apps/smileplug-adm-app-0.1.5_beta2-SNAPSHOT.apk">Junction Server Admin for Android</a></LI>
-        <LI><a href="/apps/JunctionQuiz_06252011_version2.0.1.apk">Junction Quiz Client for Android</a></LI>
-        <LI><a href="/apps/MySMILE_12282011_version2.0.2.apk">MySMILE_12282011 for Android</a></LI>
-        <LI><a href="/apps/MySMILE_01032012_version2.0.2.apk">MySMILE 01032012 for Android</a></LI>
-	</UL>
-	<footer>
-	</footer>
-</div> <!--! end of #container -->
+	<!-- container -->
+	<div class="container">
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
+		<div class="row">
+			<div class="twelve columns">
+				<h2>Welcome to The SMILEPlug</h2>
+				<img src="/images/smile.jpg" /><img src="images/marvell_horiz_logo.jpg" />
+				<p>SMILE turns a traditional classroom into a highly interactive learning environment by engaging students in critical reasoning and problem solving while enabling them to generate, share, and evaluate multimedia-rich inquiries.</p>
+				<hr />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="eight columns">
+				<h3>Downloads</h3>
+
+				<div class="row">
+					<div class="six columns">
+						<div class="panel">
+							<h3>Junction Server Apps</h3>
+								<p><a class="blue button" href="/apps/smileplug-adm-app-0.1.5_beta3-SNAPSHOT.apk">Junction Server Admin for Android</a></p>
+						</div>
+					</div>
+					<div class="six columns">
+						<div class="panel">
+							<h3>Junction Client Apps</h3>
+        					<p><a class="blue button" href="/apps/JunctionQuiz_06252011_version2.0.1.apk">Junction Quiz Client for Android</a></p>
+        					<p><a class="blue button" href="/apps/MySMILE_12282011_version2.0.2.apk">MySMILE_12282011 for Android</a></p>
+        					<p><a class="blue button" href="/apps/MySMILE_01032012_version2.0.2.apk">MySMILE 01032012 for Android</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="four columns">			
+				<h4>Getting Started</h4>
+				<p>Download the SMILE Junction Server Admin apk to a teacher tablet, and then download the MySMILE apk to one ore more student tablets.  The SMILE Junction Server is already running (if you can see this page).  You can always check on <a href="/about">server status</a> to see what version is running.</p>
+
+				<h4>Other Resources</h4>
+				<p>Once you've exhausted the fun in this document, you should check out:</p>
+				<ul class="disc">
+					<li><a href="http://suseit.stanford.edu/research/project/smile">SMILE @ Stanford</a><br />Overview of the Stanford Mobile Inquiry-based Learning Environment.</li>
+					<li><a href="http://seedsofempowerment.org">Seeds of Empowerment</a><br />The Seeds of Empowerment team intends to develop and implement projects that will “plant seeds of hope and opportunity” for the underserved around the world</li>
+					<li><a href="http://github.com">SMILE on Github</a><br />Latest code, issue reports, feature requests and more. - Coming Soon!</li>
+					<li><a href="http://twitter.com">@seedsofempowerment</a><br />Ping us on Twitter if you have questions - Coming Soon!</li>
+					<li><a href="http://plugcomputer.org">PlugComputer.org</a><br />The PlugComputer.org website is a great resource for Plug-based development.</li>
+					<li><a href="http://marvell.com">Marvell, Inc.</a><br />Creator of the PlugComputer initiative and supporter of SMILE related projects.</li>
+					<li><a href="http://razortooth.biz">Razortooth Communications, LLC</a><br />Developers of the PlugComputer and Android versions of SMILE.</li>
+				</ul>
+				<h3>Development</h3>
+				<div class="row">
+						<div class="panel">
+							<h3>NIDE</h3>
+							<p>NIDE is a web-based IDE for Node.js, designed with simplicity and ease-of-use in mind.  NIDE can be used on the SMILEPlug for Tablet or Web-based develpment of services to run on the PlugComputer.</p>
+        					<p><a class="blue button" href="http://coreh.github.com/nide">More Information</a></p>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- container -->
+
+
+
+
+	<!-- Included JS Files -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/modernizr.foundation.js"></script>
+	<!-- Combine and Compress These JS Files -->
+	<script src="js/jquery.reveal.js"></script>
+	<script src="js/jquery.orbit-1.3.0.js"></script>
+	<script src="js/forms.jquery.js"></script>
+	<script src="js/jquery.customforms.js"></script>
+	<script src="js/jquery.placeholder.min.js"></script>
+	<!-- End Combine and Compress These JS Files -->
+	<script src="js/app.js"></script>
+
 </body>
 </html>
