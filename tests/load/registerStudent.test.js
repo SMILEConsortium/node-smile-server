@@ -6,7 +6,7 @@ var logger = require('nlogger').logger(module);
 var util = require('util');
 
 PORT = 80;
-LOAD_TEST_SIZE = 30;
+LOAD_TEST_SIZE = 60;
 BASE_URL = "http://localhost:" + PORT;
 
 HEADERS_JSON = {
