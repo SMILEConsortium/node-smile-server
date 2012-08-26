@@ -27,3 +27,65 @@
 #(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
+
+// Here's my data model
+var ViewModel = function(first, last) {
+    this.firstName = ko.observable(first);
+    this.lastName = ko.observable(last);
+ 
+    this.fullName = ko.computed(function() {
+        // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+        return this.firstName() + " " + this.lastName();
+    }, this);
+};
+ 
+ko.applyBindings(new ViewModel("Planet", "Earth")); // This makes Knockout get to work
+$(document).ready(function() {
+	//
+	// Init globals
+	//
+	
+	//
+	// Init Handlers
+	//
+	$('.wizard').click(function (e) {
+		
+		e.preventDefault();
+		if ($(this).hasClass('disabled')) {
+			smileAlert('#globalstatus', 'I am disabled', 'red');
+			return false; // Do something else in here if required
+		} else {
+			window.location.href = $(this).attr('href');
+		}
+	});
+});
+
+function smileAlert(targetid, text, alerttype) {
+	var defaultalert = 'secondary';
+	var redalert = 'alert';
+	var bluealert = '';
+	var greenalert = 'success';
+	var formatstr = '<div class="alert-box %s"> \
+		%s \
+	  	<a href="" class="close">&times;</a> \
+		</div>';
+	if (!alerttype) {
+		alerttype = defaultalert;
+	} else if (alerttype === 'red') {
+		alerttype = redalert;
+	} else if (alerttype === 'blue') {
+		alerttype = bluealert;
+	} else if (alerttype === 'green') {
+		alerttype = greenalert;
+	} else {
+		alerttype = defaultalert;
+	}
+	if (targetid) {
+		$(targetid).append(sprintf(formatstr, alerttype, text));
+	}
+}
+$(window).unload(function () {
+	// XXX Implement something here to tell the server we've left
+	// partSession();
+	// setTimeout(partSession(), 60000);  // XXX Give the user a minute to return
+});

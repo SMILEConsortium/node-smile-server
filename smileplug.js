@@ -31,6 +31,7 @@
 var js = require('./lib/js.js');
 var routes = require('./routes');
 var url = require('url');
+var starttime = (new Date()).getTime();
 
 js.CONFIG = {
   'PORT' : 80,

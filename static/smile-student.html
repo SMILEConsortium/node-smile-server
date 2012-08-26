@@ -41,16 +41,21 @@
 		</div>
 		<div class="row">
 			<div class="nine columns">
-                <h3>SMILE Student</h3>
+				<h3>SMILE Student</h3>
+				<div class="row">
+				<div class="eight columns centered">
+                <div id="globalstatus"></div>
+				</div>
+				</div>
                 <div class="row">
                     <div class="twelve columns">
                         <div class="panel">
 							<dl class="tabs pill">
-        						<dd class="active"><a href="#login-pane1">1. Login</a></dd>
-        						<dd><a href="#start-pane1">2. Get Ready</a></dd>
-        						<dd><a href="#makeq-pane1">3. Make Qs</a></dd>
-        						<dd><a href="#answerq-pane1">4. Answer Qs</a></dd>
-        						<dd><a href="#results-pane1">5. Results</a></dd>
+        						<dd class="active"><a class="wizard" href="#login-pane1">1. Login</a></dd>
+        						<dd><a class="wizard disabled" href="#start-pane1">2. Get Ready</a></dd>
+        						<dd><a class="wizard disabled" href="#makeq-pane1">3. Make Qs</a></dd>
+        						<dd><a class="wizard disabled" href="#answerq-pane1">4. Answer Qs</a></dd>
+        						<dd><a class="wizard disabled" href="#results-pane1">5. Results</a></dd>
       						</dl>
       						<ul class="tabs-content">
         						<li class="active" id="login-pane1Tab">
@@ -247,6 +252,8 @@
 	<!-- Switch to minified version after development -->
 	<script type='text/javascript' src='js/knockout-2.1.0.debug.js'></script>
 	<script type='text/javascript' src='js/underscore-1.3.3.js'></script>
-	<script type='text/javascript' src='async-0.1.22.js'></script>
+	<script type='text/javascript' src='js/async-0.1.22.js'></script>
+	<script type='text/javascript' src='js/sprintf-0.7-beta1.js'></script>
+	<script type='text/javascript' src='js/smilestudent.js'></script>
 </body>
 </html>
