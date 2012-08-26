@@ -180,8 +180,8 @@ function setClientIP() {
 						// duplicate IPs.  To avoid this during testing scenarios generate fake IPs.
 						CLIENTIP = randomIPGen();
 						smileAlert('#globalstatus', 'Using fake IP address ' + CLIENTIP, 'blue', 5000);
-						LoginViewModel.clientip(CLIENTIP);
 					}
+					LoginViewModel.clientip(CLIENTIP);
 				}
 	});
 }
