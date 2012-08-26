@@ -35,6 +35,9 @@ var STARTTIME;
 var ALPHASEQ = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 var DIGITSEQ = [0,1,2,3,4,5,6,7,8,9];
 var CLIENTIP = '127.0.0.1';
+var SMILEROUTES = {
+	"pushmsg" : "/JunctionServerExecution/pushmsg.php"
+}
 //
 // 1 - login screen
 // 2 - logged in, waiting
@@ -61,9 +64,10 @@ LoginViewModel.fullName = ko.computed(function() {
 
 LoginViewModel.doLogin = function() {
 	smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
-	
+	smileLogin(this.clientip(), this.username());
 }
-LoginViewModel.doReset = function() {
+
+LoginViewModel.doLoginReset = function() {
 	this.username(nameGen(8));
 	this.realname("");
 }
@@ -184,6 +188,31 @@ function setClientIP() {
 					LoginViewModel.clientip(CLIENTIP);
 				}
 	});
+}
+
+function smileLogin(clientip, username) {
+	var clientip;
+	$.ajax({ cache: false
+			   , type: "POST" // XXX should be POST
+			   , dataType: "text"
+			   , url: SMILEROUTES["pushmsg"]
+			   , data: generateEncodedHail(clientip, username)
+			   , error: function (xhr, text, err) {
+					smileAlert('#globalstatus', 'Unable to login.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red');
+				 }
+			   , success: function(data) {
+					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
+					// Move to state 2 now
+				}
+	});
+}
+
+function generateEncodedHail(clientip, username) {
+	var key = "MSG";
+	var encodedmsg;
+	var template = '{"TYPE":"HAIL","IP":"%s","NAME":"%s"}';
+	encodedmsg = key + '=' + encodeURIComponent(sprintf(template, clientip, username));
+    return encodedmsg;
 }
 
 $(window).unload(function () {

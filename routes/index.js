@@ -280,6 +280,6 @@ exports.handleEchoClientIP = function(req, res) {
 	if (!clientip) {
 		clientip = '127.0.0.1';
 	}
-	console.log('received ping from' + clientip);
+	console.log('received ping from ' + clientip);
 	return res.sendJSON(HTTP_STATUS_OK, {'ip': clientip});
 };
