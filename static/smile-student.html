@@ -65,6 +65,8 @@
   
   									<label>Real Name</label>
   									<input data-bind='value: realname, valueUpdate: "afterkeydown"' type="text" class="twelve" placeholder="Real Name(Optional)" />
+									<label>Client IPAddress</label>
+  									<input data-bind='value: clientip' type="text" class="twelve" disabled="true" placeholder="unknown (Will be provided by server)" />
 									<ul class="button-group even two-up">
   										<li><a href="#" data-bind='click: doLogin' class="button">Submit</a></li>
   										<li><a href="#" class="button">Reset</a></li>

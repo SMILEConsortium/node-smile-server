@@ -265,3 +265,18 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
 
   res.end();
 };
+
+exports.handleEchoClientIP = function(req, res) {
+	var clientip = null;
+	try {
+		clientip = req.headers['x-forwarded-for'];
+	}
+	catch (e) {
+		clientip = req.connection.remoteAddress;
+	}
+	if (!clientip) {
+		clientip = '127.0.0.1';
+	}
+	console.log(clientip);
+	return res.sendJSON(HTTP_STATUS_OK, {'ip': clientip});
+};

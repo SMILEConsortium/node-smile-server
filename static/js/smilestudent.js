@@ -34,34 +34,46 @@
 var STARTTIME;
 var ALPHASEQ = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 var DIGITSEQ = [0,1,2,3,4,5,6,7,8,9];
+var CLIENTIP = '127.0.0.1';
+//
+// 1 - login screen
+// 2 - logged in, waiting
+// 3 - making questions
+// 4 - answering questions
+// 5 - results
+//
+var STATEMACHINE = [1,2,3,4,5]; 
 
 //
 // Data Modles
 //
-var ViewModel = function(first, last) {
-    this.username = ko.observable(first);
-    this.realname = ko.observable(last);
- 
-    this.fullName = ko.computed(function() {
-        // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-        return this.username() + " " + this.realname();
-    }, this);
-	this.doLogin = function() {
-		smileAlert('#globalstatus', 'Logging in','green', 5000);
-	}
+var LoginViewModel =  {
+    username : ko.observable(nameGen(8))
+    ,realname : ko.observable("")
+ 	,clientip : ko.observable("")
 };
- 
+
+LoginViewModel.fullName = ko.computed(function() {
+    // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+    return this.username + " " + this.realname;
+}, this);
+
+LoginViewModel.doLogin = function() {
+	smileAlert('#globalstatus', 'Logging in ' + this.username,'green', 5000);
+}
+
 
 $(document).ready(function() {
 	//
 	// Init globals
 	//
 	STARTTIME = Date.now();
-
+	setClientIP();
+	
 	//
 	// Init Data Model
 	//
-	ko.applyBindings(new ViewModel(nameGen(8), "")); // This makes Knockout get to work
+	ko.applyBindings(LoginViewModel); // This makes Knockout get to work
 	//
 	// Init Handlers
 	//
@@ -132,6 +144,39 @@ function nameGen(namelen) {
 		name = name + DIGITSEQ[dice];
 	}
 	return name;
+}
+
+function randomIPGen() {
+	var baseip = '127.0.0.';
+	var MAXVAL = 255;
+	var dice = dice = Math.floor((Math.random()*MAXVAL) + 1); // A value of 1-255
+	return(baseip + dice);
+}
+
+function setClientIP() {
+	var clientip;
+	$.ajax({ cache: false
+			   , type: "GET" // XXX should be POST
+			   , dataType: "json"
+			   , url: "/smile/echoclientip"
+			   , data: {}
+			   , error: function (xhr, text, err) {
+					smileAlert('#globalstatus', 'Cannot obtain client IP address.  Please verify your connection or server status.', 'red');
+				 }
+			   , success: function(data) {
+					clientip = data.ip; // XXX We should be defensive in case garbage comes back
+					if (clientip !== '127.0.0.1') {
+						CLIENTIP = clientip;
+					} else {
+						// I've no idea why this would happen, other than on localhost without a real 
+						// ip address assigned.  But the game doesn't really function if there are multiple
+						// duplicate IPs.  To avoid this during testing scenarios generate fake IPs.
+						CLIENTIP = randomIPGen();
+						smileAlert('#globalstatus', 'Using fake IP address ' + CLIENTIP, 'blue', 5000);
+						LoginViewModel.clientip(CLIENTIP);
+					}
+				}
+	});
 }
 
 $(window).unload(function () {

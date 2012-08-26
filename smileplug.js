@@ -101,7 +101,8 @@ js.get('/JunctionServerExecution/current/:id_result.html', routes.handleQuestion
 js.get('/JunctionServerExecution/current/:id.html', routes.handleQuestionHtmlGet, true);
 js.get('/JunctionServerExecution/current/:id.jpg', routes.handleQuestionImageGet, true);
 
-
+// General utility routes
+js.get('/smile/echoclientip', routes.handleEchoClientIP);
 //console.info(js.ROUTE_MAP);
 //console.info(js.RE_MAP);
 
