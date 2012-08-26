@@ -266,12 +266,15 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
   res.end();
 };
 
+// Attribution: https://gist.github.com/1626318
 exports.handleEchoClientIP = function(req, res) {
+
 	var clientip = null;
-	try {
-		clientip = req.headers['x-forwarded-for'];
-	}
-	catch (e) {
+	clientip = req.headers['x-forwarded-for'];
+	if (clientip) {
+		clientip.split(',');
+		clientip = clientip[0];
+	} else {
 		clientip = req.connection.remoteAddress;
 	}
 	if (!clientip) {
