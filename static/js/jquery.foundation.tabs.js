@@ -23,7 +23,10 @@
     };
     
     $('dl.tabs dd a', this).on('click.fndtn', function (event){
-      activateTab($(this).parent('dd'));
+		// XXX Patch to support disabling of specific tab link
+		if (!$(this).hasClass('disabled')) {
+      		activateTab($(this).parent('dd'));
+		}
     });
     
     if (window.location.hash) {

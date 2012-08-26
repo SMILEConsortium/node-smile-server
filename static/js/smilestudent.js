@@ -28,38 +28,59 @@
 #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 
-// Here's my data model
+//
+// GLOBALS
+//
+var STARTTIME;
+var ALPHASEQ = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+var DIGITSEQ = [0,1,2,3,4,5,6,7,8,9];
+
+//
+// Data Modles
+//
 var ViewModel = function(first, last) {
-    this.firstName = ko.observable(first);
-    this.lastName = ko.observable(last);
+    this.username = ko.observable(first);
+    this.realname = ko.observable(last);
  
     this.fullName = ko.computed(function() {
         // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-        return this.firstName() + " " + this.lastName();
+        return this.username() + " " + this.realname();
     }, this);
 };
  
-ko.applyBindings(new ViewModel("Planet", "Earth")); // This makes Knockout get to work
+
 $(document).ready(function() {
 	//
 	// Init globals
 	//
-	
+	STARTTIME = Date.now();
+
+	//
+	// Init Data Model
+	//
+	ko.applyBindings(new ViewModel(nameGen(8), "")); // This makes Knockout get to work
 	//
 	// Init Handlers
 	//
-	$('.wizard').click(function (e) {
-		
-		e.preventDefault();
+	$('dl.tabs dd a.wizard').on('click.fndtn', function (e) {
+		e.stopPropagation();
+		var $activetab = $(this).parent().parent().find('dd.active a');
 		if ($(this).hasClass('disabled')) {
-			smileAlert('#globalstatus', 'I am disabled', 'red');
+			var txt =$activetab.text().split('.'); // XXX This is non-defensive
+			smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.');
 			return false; // Do something else in here if required
 		} else {
+			// smileAlert('#globalstatus', 'Bubble ' + $(this).text(), 'green');
+			$(this).removeClass('disabled');
+			$activetab.addClass('disabled');
 			window.location.href = $(this).attr('href');
 		}
 	});
 });
 
+//
+// App functions
+//
 function smileAlert(targetid, text, alerttype) {
 	var defaultalert = 'secondary';
 	var redalert = 'alert';
@@ -84,7 +105,29 @@ function smileAlert(targetid, text, alerttype) {
 		$(targetid).append(sprintf(formatstr, alerttype, text));
 	}
 }
+
+function nameGen(namelen) {
+	var dice;
+	var alphasetsize = ALPHASEQ.length;
+	var digitsetsize = DIGITSEQ.length;
+	var name = "";
+
+	// Get alpha portion
+	for (var i = 0; i < namelen; i++) {
+		dice = Math.floor((Math.random()*alphasetsize));
+		name = name + ALPHASEQ[dice];
+	}
+	
+	// Get digit portion, fixed at 4 digits
+	for (var i = 0; i < 4; i++) {
+		dice = Math.floor((Math.random()*digitsetsize));
+		name = name + DIGITSEQ[dice];
+	}
+	return name;
+}
+
 $(window).unload(function () {
+	
 	// XXX Implement something here to tell the server we've left
 	// partSession();
 	// setTimeout(partSession(), 60000);  // XXX Give the user a minute to return
