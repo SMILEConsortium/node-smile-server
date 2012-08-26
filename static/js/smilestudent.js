@@ -46,6 +46,9 @@ var ViewModel = function(first, last) {
         // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
         return this.username() + " " + this.realname();
     }, this);
+	this.doLogin = function() {
+		smileAlert('#globalstatus', 'Logging in','green', 5000);
+	}
 };
  
 
@@ -81,7 +84,7 @@ $(document).ready(function() {
 //
 // App functions
 //
-function smileAlert(targetid, text, alerttype) {
+function smileAlert(targetid, text, alerttype, lifetime) {
 	var defaultalert = 'secondary';
 	var redalert = 'alert';
 	var bluealert = '';
@@ -103,6 +106,11 @@ function smileAlert(targetid, text, alerttype) {
 	}
 	if (targetid) {
 		$(targetid).append(sprintf(formatstr, alerttype, text));
+	}
+	if (lifetime) {
+		setInterval(function() {
+			$(targetid).find('.alert-box').fadeOut();
+		}, lifetime)
 	}
 }
 

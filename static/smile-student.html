@@ -61,12 +61,12 @@
         						<li class="active" id="login-pane1Tab">
 								<form>
   									<label>Username</label>
-  									<input data-bind='value: username'type="text" placeholder="Username" />
+  									<input data-bind='value: username, valueUpdate: "afterkeydown"'type="text" placeholder="Username" />
   
   									<label>Real Name</label>
-  									<input data-bind='value: realname' type="text" class="twelve" placeholder="Real Name(Optional)" />
+  									<input data-bind='value: realname, valueUpdate: "afterkeydown"' type="text" class="twelve" placeholder="Real Name(Optional)" />
 									<ul class="button-group even two-up">
-  										<li><a href="#" class="button">Submit</a></li>
+  										<li><a href="#" data-bind='click: doLogin' class="button">Submit</a></li>
   										<li><a href="#" class="button">Reset</a></li>
 									</ul>
 								</form>
