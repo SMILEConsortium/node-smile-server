@@ -43,6 +43,7 @@ var CLIENTIP = '127.0.0.1';
 // 5 - results
 //
 var STATEMACHINE = [1,2,3,4,5]; 
+var SMILESTATE = 0;
 
 //
 // Data Modles
@@ -59,7 +60,12 @@ LoginViewModel.fullName = ko.computed(function() {
 }, this);
 
 LoginViewModel.doLogin = function() {
-	smileAlert('#globalstatus', 'Logging in ' + this.username,'green', 5000);
+	smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
+	
+}
+LoginViewModel.doReset = function() {
+	this.username(nameGen(8));
+	this.realname("");
 }
 
 
@@ -69,6 +75,7 @@ $(document).ready(function() {
 	//
 	STARTTIME = Date.now();
 	setClientIP();
+	SMILESTATE = 0;
 	
 	//
 	// Init Data Model
