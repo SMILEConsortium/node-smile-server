@@ -45,8 +45,24 @@ var SMILEROUTES = {
 // 4 - answering questions
 // 5 - results
 //
-var STATEMACHINE = [1,2,3,4,5]; 
-var SMILESTATE = 0;
+var STATEMACHINE = {
+						"1": { "label": "Login"
+							  	,"id": "#login-pane1"
+							  }
+						,"2": { "label": "Get Ready"
+								  	,"id": "#start-pane1"
+							  }
+						,"3": { "label": "Make Qs"
+								 ,"id": "#makeq-pane1"
+							   }
+						,"4":  { "label": "Answer Qs"
+								,"id": "#answerq-pane1"
+							 	}
+						,"5":  { "label": "Results"
+								 ,"id": "#results-pane1"
+								}
+					};  // We should store transitions
+var SMILESTATE = "1";
 
 //
 // Data Modles
@@ -79,7 +95,7 @@ $(document).ready(function() {
 	//
 	STARTTIME = Date.now();
 	setClientIP();
-	SMILESTATE = 0;
+	SMILESTATE = "1";
 	
 	//
 	// Init Data Model
@@ -93,12 +109,13 @@ $(document).ready(function() {
 		var $activetab = $(this).parent().parent().find('dd.active a');
 		if ($(this).hasClass('disabled')) {
 			var txt =$activetab.text().split('.'); // XXX This is non-defensive
-			smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.');
+			smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.', '', 5000);
 			return false; // Do something else in here if required
 		} else {
 			// smileAlert('#globalstatus', 'Bubble ' + $(this).text(), 'green');
 			$(this).removeClass('disabled');
 			$activetab.addClass('disabled');
+			console.log('clicked ' + $(this).attr('href'));
 			window.location.href = $(this).attr('href');
 		}
 	});
@@ -203,9 +220,40 @@ function smileLogin(clientip, username) {
 			   , success: function(data) {
 					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
 					// Move to state 2 now
+					statechange(1,2);
 				}
 	});
 }
+
+function statechange(from,to) {
+	if (from == 1) {
+		// We can only loop back to 1 or go to 2 (waiting)
+		if (to != 2) {
+			smileAlert('#globalstatus', 'Cannot move to phase ' + to +' yet.', 'red', 5000);
+		} else {
+			// Move to 2. Get Ready Phase
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["2"].id + '"]');
+			if ($next) {
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.');
+				console.log('go to href = ' + $next.attr('href'));
+				// Note, we won't disable the login screen, user can click back to it
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				a.dispatchEvent(evt);
+			}
+		}
+	} else if (from == 2) {
+		
+		if (to == 3) { // Enter Make Questions Phase
+			
+		} else if (to == 4) { // Enter Answer Questions Phase
+			
+		}
+	}
+}
+
 
 function generateEncodedHail(clientip, username) {
 	var key = "MSG";

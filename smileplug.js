@@ -36,7 +36,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.1.5-beta3-<' + Date() + '>',
+  'VERSION_TAG' : '0.2.1-<' + Date() + '>',
   'VERSION_DESCRIPTION' : 'SMILE Junction Server',
   'SLIDE_DIR' : './'
 };
