@@ -58,19 +58,20 @@ var STATEMACHINE = {
 							  }
 						,"3": { "label": "Make Qs"
 								 ,"id": "#makeq-pane1"
-							   }
-						,"4":  { "label": "Answer Qs"
+							  }
+						,"4": { "label": "Answer Qs"
 								,"id": "#answerq-pane1"
-							 	}
-						,"5":  { "label": "Results"
+							  }
+						,"5": { "label": "Results"
 								 ,"id": "#results-pane1"
-								}
+							  }
 					};  // We should store transitions
 var SMILESTATE = "1";
 
 //
 // Data Modles
 //
+
 var LoginViewModel =  {
     username : ko.observable(nameGen(8))
     ,realname : ko.observable("")
@@ -101,6 +102,25 @@ LoginViewModel.doLoginReset = function() {
 	return false;
 }
 
+// See fiddle here: http://jsfiddle.net/npJZM/10/
+/*
+QViewModel = {
+	answer : ko.observable("")
+	,q1 : ko.observable("")
+	,q2 : ko.observable("")
+	,q3 : ko.observable("")
+	,q4 : ko.observable("")
+	,q5 : ko.observable("")
+	,imageuri : ko.observable("")
+	, doSubmitQ : function() {
+		console.log("doSubmitQ");
+	}
+	, doSubmitQandDone: function() {
+		console.log("doSubmitQandDone");
+	}
+}
+*/
+
 
 $(document).ready(function() {
 	//
@@ -114,6 +134,7 @@ $(document).ready(function() {
 	// Init Data Model
 	//
 	ko.applyBindings(LoginViewModel); // This makes Knockout get to work
+	// ko.applyBindings(QViewModel);
 	
 	//
 	// Init UI
