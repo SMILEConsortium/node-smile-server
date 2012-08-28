@@ -35,8 +35,12 @@ var STARTTIME;
 var ALPHASEQ = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 var DIGITSEQ = [0,1,2,3,4,5,6,7,8,9];
 var CLIENTIP = '127.0.0.1';
+var EVENTLOOPCYCLE = 1500; // LOOP WAIT TIME in MILLISECONDS
+var EVENTLOOPINTERVAL = null;
 var SMILEROUTES = {
 	"pushmsg" : "/JunctionServerExecution/pushmsg.php"
+	,"smsg" : "/JunctionServerExecution/current/MSG/smsg.txt"
+	,"mystate" : "/JunctionServerExecution/current/MSG/%s.txt"
 }
 //
 // 1 - login screen
@@ -80,7 +84,7 @@ LoginViewModel.fullName = ko.computed(function() {
 
 LoginViewModel.doLogin = function() {
 	smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
-	smileLogin(this.clientip(), this.username());
+	doSmileLogin(this.clientip(), this.username());
 }
 
 LoginViewModel.doLoginReset = function() {
@@ -207,10 +211,10 @@ function setClientIP() {
 	});
 }
 
-function smileLogin(clientip, username) {
+function doSmileLogin(clientip, username) {
 	var clientip;
 	$.ajax({ cache: false
-			   , type: "POST" // XXX should be POST
+			   , type: "POST"
 			   , dataType: "text"
 			   , url: SMILEROUTES["pushmsg"]
 			   , data: generateEncodedHail(clientip, username)
@@ -221,17 +225,70 @@ function smileLogin(clientip, username) {
 					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
 					// Move to state 2 now
 					statechange(1,2);
+					$('#login-status').empty().append(LOGGED_IN_TPL);
+					ko.applyBindings(LoginViewModel, $("#login_status")[0]);
+					startSmileEventLoop();
 				}
 	});
 }
 
+function doSMSG() {
+	$.ajax({ cache: false
+			   , type: "GET"
+			   , dataType: "json"
+			   , url: SMILEROUTES["smsg"]
+			   , data: {}
+			   , error: function (xhr, text, err) {
+					smileAlert('#globalstatus', 'Status Msg Error.  Reason: ' + xhr.status + ':' + xhr.responseText + '.', 'red');
+				 }
+			   , success: function(data) {
+					if (data) {
+						msg = data.TYPE;
+						console.log(data); // XXX Remove debug
+						if (msg === "START_MAKE") { statechange(2,3) };
+						if (msg === "WAIT_CONNECT") {};
+						if (msg === "START_SOLVE") {};
+						if (msg === "START_SHOW") {};
+						if (msg === "WARN") {};
+						// Ignore anything else that we receive
+						// We should have a RESET_GAME
+					}
+					
+					// Move to state 2 now
+					// statechange(1,2);
+				}
+	});
+}
+
+function doMyState(clientip) {
+	var clientip;
+	$.ajax({ cache: false
+			   , type: "GET" // XXX should be POST
+			   , dataType: "text"
+			   , url: sprintf(SMILEROUTES["mystate"], clientip)
+			   , data: generateEncodedHail(clientip, username)
+			   , error: function (xhr, text, err) {
+					smileAlert('#globalstatus', 'Error getting state.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red', 5000);
+				 }
+			   , success: function(data) {
+					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
+					// Move to state 2 now
+					statechange(1,2);
+					$('#login-status').empty().append(LOGGED_IN_TPL);
+					ko.applyBindings(LoginViewModel, $("#login_status")[0]);
+					startSmileEventLoop();
+				}
+	});
+}
 function statechange(from,to) {
-	if (from == 1) {
+	
+	if (from == 1) { // FROM 1
+		if (SMILESTATE != 1) { return; }
 		// We can only loop back to 1 or go to 2 (waiting)
 		if (to != 2) {
 			smileAlert('#globalstatus', 'Cannot move to phase ' + to +' yet.', 'red', 5000);
-		} else {
-			// Move to 2. Get Ready Phase
+		} else { // Move to 2. Get Ready Phase
+			SMILESTATE = 2;
 			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["2"].id + '"]');
 			if ($next) {
 				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.');
@@ -244,16 +301,25 @@ function statechange(from,to) {
 				a.dispatchEvent(evt);
 			}
 		}
-	} else if (from == 2) {
-		
+	} else if (from == 2) { // FROM 2
+		if (SMILESTATE != 2) { return; }
 		if (to == 3) { // Enter Make Questions Phase
-			
+			SMILESTATE = 3;
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["3"].id + '"]');
+			if ($next) {
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["3"].label + ' phase.');
+				console.log('go to href = ' + $next.attr('href'));
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				a.dispatchEvent(evt);
+			}
 		} else if (to == 4) { // Enter Answer Questions Phase
 			
 		}
 	}
 }
-
 
 function generateEncodedHail(clientip, username) {
 	var key = "MSG";
@@ -263,9 +329,30 @@ function generateEncodedHail(clientip, username) {
     return encodedmsg;
 }
 
+function startSmileEventLoop() {
+	EVENTLOOPINTERVAL = setInterval(function() {
+		doSMSG();
+		console.log(Date.now() + " - tick");
+	}, EVENTLOOPCYCLE);
+}
+
+function stopSmileEventLoop() {
+	clearInterval(EVENTLOOPINTERVAL);
+}
+
 $(window).unload(function () {
-	
 	// XXX Implement something here to tell the server we've left
 	// partSession();
 	// setTimeout(partSession(), 60000);  // XXX Give the user a minute to return
 });
+
+var LOGGED_IN_TPL = ' \
+  <div id="login-panel" class="panel callout radius"> \
+  <h5>Logged In</h5> \
+  <p>@<div data-bind="text: clientip" id="student-clientip">127.0.0.1</div></p> \
+  <div id="session-state"> \
+  <p>Waiting for teacher to begin</p> \
+  </div> \
+  </div> \
+  <p><a class="tiny secondary button" href="#logout-action">Logout</a></p> \
+  ';
