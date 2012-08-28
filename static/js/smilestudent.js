@@ -75,6 +75,7 @@ var LoginViewModel =  {
     username : ko.observable(nameGen(8))
     ,realname : ko.observable("")
  	,clientip : ko.observable("")
+	,hasSubmitted : ko.observable(false)
 };
 
 LoginViewModel.fullName = ko.computed(function() {
@@ -83,13 +84,21 @@ LoginViewModel.fullName = ko.computed(function() {
 }, this);
 
 LoginViewModel.doLogin = function() {
-	smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
-	doSmileLogin(this.clientip(), this.username());
+	if (!this.hasSubmitted()) {
+		console.log('doLogin');
+		smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
+		doSmileLogin(this.clientip(), this.username());
+	}
+	this.hasSubmitted(true);
+
+	return false;
 }
 
 LoginViewModel.doLoginReset = function() {
 	this.username(nameGen(8));
 	this.realname("");
+	this.hasSubmitted(false);
+	return false;
 }
 
 
@@ -105,6 +114,12 @@ $(document).ready(function() {
 	// Init Data Model
 	//
 	ko.applyBindings(LoginViewModel); // This makes Knockout get to work
+	
+	//
+	// Init UI
+	//
+	restoreLoginState();
+	
 	//
 	// Init Handlers
 	//
@@ -153,7 +168,7 @@ function smileAlert(targetid, text, alerttype, lifetime) {
 	}
 	if (lifetime) {
 		setInterval(function() {
-			$(targetid).find('.alert-box').fadeOut();
+			$(targetid).find('.alert-box').fadeOut().remove();
 		}, lifetime)
 	}
 }
@@ -220,7 +235,8 @@ function doSmileLogin(clientip, username) {
 			   , data: generateEncodedHail(clientip, username)
 			   , error: function (xhr, text, err) {
 					smileAlert('#globalstatus', 'Unable to login.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red');
-				 }
+				 	LoginViewModel.hasSubmitted(false); // Reset this so clicks will work
+				}
 			   , success: function(data) {
 					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
 					// Move to state 2 now
@@ -243,15 +259,18 @@ function doSMSG() {
 				 }
 			   , success: function(data) {
 					if (data) {
-						msg = data.TYPE;
+						msg = data["TYPE"];
 						console.log(data); // XXX Remove debug
 						if (msg === "START_MAKE") { statechange(2,3) };
 						if (msg === "WAIT_CONNECT") {};
 						if (msg === "START_SOLVE") {};
 						if (msg === "START_SHOW") {};
 						if (msg === "WARN") {};
+						if ((msg === "") || (msg === null) || (msg === undefined)) { statechange(SMILESTATE, 1); }
 						// Ignore anything else that we receive
 						// We should have a RESET_GAME
+					} else {
+						console.log('no data');
 					}
 					
 					// Move to state 2 now
@@ -281,17 +300,17 @@ function doMyState(clientip) {
 	});
 }
 function statechange(from,to) {
-	
 	if (from == 1) { // FROM 1
 		if (SMILESTATE != 1) { return; }
 		// We can only loop back to 1 or go to 2 (waiting)
+		if (to == 1) { return;} // This is effectively a reset ... should we logout the user?
 		if (to != 2) {
 			smileAlert('#globalstatus', 'Cannot move to phase ' + to +' yet.', 'red', 5000);
 		} else { // Move to 2. Get Ready Phase
 			SMILESTATE = 2;
 			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["2"].id + '"]');
 			if ($next) {
-				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.');
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.', 2500);
 				console.log('go to href = ' + $next.attr('href'));
 				// Note, we won't disable the login screen, user can click back to it
 				$next.removeClass('disabled');
@@ -303,11 +322,12 @@ function statechange(from,to) {
 		}
 	} else if (from == 2) { // FROM 2
 		if (SMILESTATE != 2) { return; }
+		if (to == 1) {} // Teacher reset game ... hang in phase 2
 		if (to == 3) { // Enter Make Questions Phase
 			SMILESTATE = 3;
 			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["3"].id + '"]');
 			if ($next) {
-				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["3"].label + ' phase.');
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["3"].label + ' phase.', 2500);
 				console.log('go to href = ' + $next.attr('href'));
 				$next.removeClass('disabled');
 				var a = $next[0]; // get the dom obj
@@ -321,6 +341,23 @@ function statechange(from,to) {
 	}
 }
 
+function restoreLoginState() {
+	var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["1"].id + '"]');
+	if ($next) {
+		stopSmileEventLoop();
+		smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["1"].label + ' phase.', 2500);
+		console.log('go to href = ' + $next.attr('href'));
+		$next.removeClass('disabled');
+		var a = $next[0]; // get the dom obj
+		var evt = document.createEvent('MouseEvents');
+		evt.initEvent( 'click', true, true );
+		$('#login-info').empty().append(LOGGED_OUT_TPL);
+		a.dispatchEvent(evt);
+		ko.applyBindings(LoginViewModel, $("#login_status")[0]);
+		LoginViewModel.hasSubmitted(false);
+		
+	}
+}
 function generateEncodedHail(clientip, username) {
 	var key = "MSG";
 	var encodedmsg;
@@ -337,7 +374,10 @@ function startSmileEventLoop() {
 }
 
 function stopSmileEventLoop() {
-	clearInterval(EVENTLOOPINTERVAL);
+	if (EVENTLOOPINTERVAL) {
+		clearInterval(EVENTLOOPINTERVAL);
+		EVENTLOOPINTERVAL = null;
+	}
 }
 
 $(window).unload(function () {
@@ -345,6 +385,12 @@ $(window).unload(function () {
 	// partSession();
 	// setTimeout(partSession(), 60000);  // XXX Give the user a minute to return
 });
+
+var LOGGED_OUT_TPL = ' \
+<h4>Instructions for <div data-bind="text: username" id="student-username">Student</div> <div data-bind="text: realname" id="student-realname"></div></h4> \
+<div id="login-status"> \
+<p>Please Login.  Then the teacher will tell you instructions.</p> \
+</div>';
 
 var LOGGED_IN_TPL = ' \
   <div id="login-panel" class="panel callout radius"> \
