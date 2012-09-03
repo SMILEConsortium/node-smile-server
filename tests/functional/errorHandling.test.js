@@ -10,8 +10,16 @@ HEADERS_JSON = {
   'Content-Type' : 'application/json'
 };
 
-HEADERS_ENCODED = {
+HEADERS_FUBAR = {
+  'Content-Type' : 'application/fubar'
+};
+
+HEADERS_URLENCODED = {
   'Content-Type' : 'application/x-www-form-urlencoded'
+};
+
+HEADERS_URLENCODED2 = {
+  'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
 };
 
 var suite = vows.describe('Tests "Error Handling"');
@@ -171,7 +179,28 @@ suite.addBatch({
     },
     "should return error message in JSON format" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify({
-        "message" : "Invalid content-type: undefined"
+        "message" : "Missing content-type header"
+      }));
+    },
+  }
+});
+
+suite.addBatch({
+  "A PUT to /smile/currentmessage with invalid content-type header" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/smile/currentmessage',
+        method : 'PUT',
+		headers: HEADERS_FUBAR,
+        body : null
+      }, this.callback);
+    },
+    "should respond with 500" : function(err, res, body) {
+      assert.equal(res.statusCode, 500);
+    },
+    "should return error message in JSON format" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify({
+        "message" : "Invalid content-type: application/fubar"
       }));
     },
   }
@@ -258,7 +287,7 @@ suite.addBatch({
       request({
         uri : BASE_URL + '/JunctionServerExecution/pushmsg.php',
         method : 'POST',
-        headers : HEADERS_ENCODED,
+        headers : HEADERS_URLENCODED,
         body : studentNoIP,
       }, this.callback);
     },
@@ -270,6 +299,26 @@ suite.addBatch({
     },
   }
 });
+
+suite.addBatch({
+  "A POST to /JunctionServerExecution/pushmsg.php with no IP using proper URLENCODED headers" : {
+    topic : function() {
+      request({
+        uri : BASE_URL + '/JunctionServerExecution/pushmsg.php',
+        method : 'POST',
+        headers : HEADERS_URLENCODED2,
+        body : studentNoIP,
+      }, this.callback);
+    },
+    "should respond with 500" : function(err, res, body) {
+      assert.equal(res.statusCode, 500);
+    },
+    "should answer with ok" : function(err, res, body) {
+      assert.equal(res.body, JSON.stringify({"message":"Student registration message must contain a valid IP property."}));
+    },
+  }
+});
+
 
 suite.addBatch({
   "A GET to index.html" : {
