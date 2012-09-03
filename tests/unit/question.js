@@ -83,6 +83,12 @@ exports.testNumberOfQuestions = function(test) {
   myQuestions.addQuestion(q1);
   myQuestions.addQuestion(q2);
   myQuestions.addQuestion(q3);
+  console.log("getAll()");
+  console.log(myQuestions.getAll());
+  console.log("getList()");
+  console.log(myQuestions.getList());
+  console.log("getQuestions('marco')");
+  console.log(myQuestions.getQuestions("marco"));
   test.equal(3, myQuestions.getNumberOfQuestions());
   test.done();
 };

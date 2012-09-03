@@ -13,7 +13,8 @@ var q1 = {
   "O2" : "O Rato",
   "O3" : "O Pato",
   "O4" : "O Tigre",
-  "A" : 2
+  "A" : 2,
+  "IP" : "172.16.129.241"
 }
 
 var q2 = {
@@ -23,7 +24,30 @@ var q2 = {
   "O2" : "W",
   "O3" : "E",
   "O4" : "R",
-  "A" : 3
+  "A" : 3,
+  "IP" : "172.16.129.242"
+}
+
+var q3 = {
+  "NAME" : "test",
+  "Q" : "simpactico foo",
+  "O1" : "Q",
+  "O2" : "W",
+  "O3" : "E",
+  "O4" : "R",
+  "A" : 3,
+  "IP" : "172.16.129.242"
+}
+
+var q4 = {
+  "NAME" : "test2",
+  "Q" : "simpactico foo",
+  "O1" : "Q",
+  "O2" : "W",
+  "O3" : "E",
+  "O4" : "R",
+  "A" : 3,
+  "IP" : "172.16.129.243"
 }
 
 var msgOK = {
@@ -39,6 +63,24 @@ var msgOK2 = {
 var msgOK3 = {
   "NAME" : "test3",
   "IP" : "172.16.129.244",
+}
+
+exports.testIsDupQuestion = function(test) {
+	var game = new Game();
+	var myStudents = game.studentsWrapper;
+	myStudents.addStudent(msgOK);
+	myStudents.addStudent(msgOK2);
+	console.log(game.students);
+	game.addQuestion(q2);
+	game.addQuestion(q3);
+	console.log(game.questions);
+	test.equals(2, game.questions.getNumberOfQuestions());
+	test.equals(true, game.isDupQuestion(q2));
+	test.equals(false, game.isDupQuestion(q1));
+	test.equals(true, game.isDupQuestion(q3));
+	game.addQuestion(q2); // XXX this should fail
+	test.equals(2, game.questions.getNumberOfQuestions());
+	test.done();
 }
 
 exports.testcalcScoreAndRating = function(test) {
