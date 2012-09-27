@@ -193,7 +193,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
   }
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
-    'Content-Type' : 'text/html',
+    'Content-Type' : 'text/html; charset=utf-8',
   });
   res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
   res.write("<p>(Question created by " + studentName + ")</p>\n");
@@ -239,7 +239,7 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
   }
   var studentName = question.NAME; // XXX
   res.writeHead(200, {
-    'Content-Type' : 'text/html',
+    'Content-Type' : 'text/html; charset=utf-8',
   });
   res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
   res.write("<p>(Question created by " + studentName + ")</p>\n");
