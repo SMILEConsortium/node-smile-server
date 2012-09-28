@@ -69,9 +69,11 @@ var STATEMACHINE = {
 var SMILESTATE = "1";
 
 //
-// Data Modles
+// Data Models
 //
-
+// Multimodel approach: See fiddle here: http://jsfiddle.net/npJZM/10/
+// Another good approach:  http://bit.ly/QzIgHP 
+//
 var LoginViewModel =  {
     username : ko.observable(nameGen(8))
     ,realname : ko.observable("")
@@ -102,9 +104,7 @@ LoginViewModel.doLoginReset = function() {
 	return false;
 }
 
-// See fiddle here: http://jsfiddle.net/npJZM/10/
-/*
-QViewModel = {
+var QViewModel = {
 	answer : ko.observable("")
 	,q1 : ko.observable("")
 	,q2 : ko.observable("")
@@ -112,14 +112,20 @@ QViewModel = {
 	,q4 : ko.observable("")
 	,q5 : ko.observable("")
 	,imageuri : ko.observable("")
-	, doSubmitQ : function() {
-		console.log("doSubmitQ");
-	}
-	, doSubmitQandDone: function() {
-		console.log("doSubmitQandDone");
-	}
+};
+
+QViewModel.doSubmitQ = function() {
+	console.log("doSubmitQ");
 }
-*/
+
+QViewModel.doSubmitQandDone = function() {
+	console.log("doSubmitQandDone");
+}
+
+var GlobalViewModel = {
+  LoginViewModel: {},
+  QViewModel : {}
+};
 
 
 $(document).ready(function() {
@@ -134,8 +140,8 @@ $(document).ready(function() {
 	// Init Data Model
 	//
 	ko.applyBindings(LoginViewModel); // This makes Knockout get to work
+	// ko.applyBindings(new QViewModel(), $('#makeq-pane1Tab')[0]);
 	// ko.applyBindings(QViewModel);
-	
 	//
 	// Init UI
 	//
@@ -281,7 +287,7 @@ function doSMSG() {
 			   , success: function(data) {
 					if (data) {
 						msg = data["TYPE"];
-						console.log(data); // XXX Remove debug
+						// console.log(data); // XXX Remove debug
 						if (msg === "START_MAKE") { statechange(2,3) };
 						if (msg === "WAIT_CONNECT") {};
 						if (msg === "START_SOLVE") {};
@@ -354,6 +360,7 @@ function statechange(from,to) {
 				var a = $next[0]; // get the dom obj
 				var evt = document.createEvent('MouseEvents');
 				evt.initEvent( 'click', true, true );
+				$('#session-state').empty().append(SESSION_STATE_START_MAKE_TPL);
 				a.dispatchEvent(evt);
 			}
 		} else if (to == 4) { // Enter Answer Questions Phase
@@ -423,3 +430,7 @@ var LOGGED_IN_TPL = ' \
   </div> \
   <p><a class="tiny secondary button" href="#logout-action">Logout</a></p> \
   ';
+
+var SESSION_STATE_START_MAKE_TPL = ' \
+	<p>Start Making Questions until the teacher is ready to start Answering Questions</p> \
+';
