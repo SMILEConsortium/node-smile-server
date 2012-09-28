@@ -69,24 +69,56 @@ var STATEMACHINE = {
 var SMILESTATE = "1";
 
 //
+// KO Extenders
+//
+ko.extenders.required = function(target, overrideMessage) {
+    //add some sub-observables to our observable
+    target.hasError = ko.observable();
+    target.validationMessage = ko.observable();
+ 
+    //define a function to do validation
+    function validate(newValue) {
+       target.hasError(newValue ? false : true);
+       target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
+    }
+ 
+    //initial validation
+    validate(target());
+ 
+    //validate whenever the value changes
+    target.subscribe(validate);
+ 
+    //return the original observable
+    return target;
+};
+
+
+//
 // Data Models
 //
 // Multimodel approach: See fiddle here: http://jsfiddle.net/npJZM/10/
 // Another good approach:  http://bit.ly/QzIgHP 
 //
-var LoginViewModel =  {
-    username : ko.observable(nameGen(8))
+var GlobalViewModel =  {
+    username : ko.observable(nameGen(8)).extend({ required: "Please enter a username" })
     ,realname : ko.observable("")
  	,clientip : ko.observable("")
 	,hasSubmitted : ko.observable(false)
+	,answer : ko.observable("")
+	,q1 : ko.observable("")
+	,q2 : ko.observable("")
+	,q3 : ko.observable("")
+	,q4 : ko.observable("")
+	,sol: ko.observable("")
+	,imageuri : ko.observable("")
 };
 
-LoginViewModel.fullName = ko.computed(function() {
+GlobalViewModel.fullName = ko.computed(function() {
     // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
     return this.username + " " + this.realname;
 }, this);
 
-LoginViewModel.doLogin = function() {
+GlobalViewModel.doLogin = function() {
 	if (!this.hasSubmitted()) {
 		console.log('doLogin');
 		smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
@@ -97,37 +129,29 @@ LoginViewModel.doLogin = function() {
 	return false;
 }
 
-LoginViewModel.doLoginReset = function() {
+GlobalViewModel.doLoginReset = function() {
 	this.username(nameGen(8));
 	this.realname("");
 	this.hasSubmitted(false);
 	return false;
 }
 
-var QViewModel = {
-	answer : ko.observable("")
-	,q1 : ko.observable("")
-	,q2 : ko.observable("")
-	,q3 : ko.observable("")
-	,q4 : ko.observable("")
-	,q5 : ko.observable("")
-	,imageuri : ko.observable("")
-};
+GlobalViewModel.doQReset = function() {
+	this.q1("");
+	this.q2("");
+	this.q3("");
+	this.q4("");
+	this.answer("");
+	this.imageuri("");
+}
 
-QViewModel.doSubmitQ = function() {
+GlobalViewModel.doSubmitQ = function() {
 	console.log("doSubmitQ");
 }
 
-QViewModel.doSubmitQandDone = function() {
+GlobalViewModel.doSubmitQandDone = function() {
 	console.log("doSubmitQandDone");
 }
-
-// TBD if we keep this
-var GlobalViewModel = {
-  LoginViewModel: {},
-  QViewModel : {}
-};
-
 
 $(document).ready(function() {
 	//
@@ -140,13 +164,13 @@ $(document).ready(function() {
 	//
 	// Init Data Model
 	//
-	ko.applyBindings(LoginViewModel, $('#login-pane1Tab')[0]); // This makes Knockout get to work
-	// ko.applyBindings(new QViewModel(), $('#makeq-pane1Tab')[0]);
-	// ko.applyBindings(QViewModel);
+	ko.applyBindings(GlobalViewModel, $('#login-pane1Tab')[0]);
+	// ko.applyBindings(GlobalViewModel, document.getElementById('login-pane1Tab'));
+	console.log('applied LoginView');
+	// ko.applyBindings(GlobalViewModel, $('#makeq-pane1Tab')[0]);
 	//
 	// Init UI
 	//
-	// ko.applyBindings(GlobalViewModel);
 	
 	restoreLoginState();
 	
@@ -251,7 +275,7 @@ function setClientIP() {
 						CLIENTIP = randomIPGen();
 						smileAlert('#globalstatus', 'Using fake IP address ' + CLIENTIP, 'blue', 5000);
 					}
-					LoginViewModel.clientip(CLIENTIP);
+					GlobalViewModel.clientip(CLIENTIP);
 				}
 	});
 }
@@ -265,14 +289,15 @@ function doSmileLogin(clientip, username) {
 			   , data: generateEncodedHail(clientip, username)
 			   , error: function (xhr, text, err) {
 					smileAlert('#globalstatus', 'Unable to login.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red');
-				 	LoginViewModel.hasSubmitted(false); // Reset this so clicks will work
+				 	GlobalViewModel.hasSubmitted(false); // Reset this so clicks will work
 				}
 			   , success: function(data) {
 					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
 					// Move to state 2 now
 					statechange(1,2);
 					$('#login-status').empty().append(LOGGED_IN_TPL);
-					ko.applyBindings(LoginViewModel, $("#login_status")[0]);
+					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+					console.log('applied login_status');
 					startSmileEventLoop();
 				}
 	});
@@ -309,6 +334,7 @@ function doSMSG() {
 	});
 }
 
+// XXX Get rid of this?
 function doMyState(clientip) {
 	var clientip;
 	$.ajax({ cache: false
@@ -324,7 +350,8 @@ function doMyState(clientip) {
 					// Move to state 2 now
 					statechange(1,2);
 					$('#login-status').empty().append(LOGGED_IN_TPL);
-					ko.applyBindings(LoginViewModel, $("#login_status")[0]);
+					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+					console.log('applied login_status');
 					startSmileEventLoop();
 				}
 	});
@@ -384,8 +411,8 @@ function restoreLoginState() {
 		evt.initEvent( 'click', true, true );
 		$('#login-info').empty().append(LOGGED_OUT_TPL);
 		a.dispatchEvent(evt);
-		ko.applyBindings(LoginViewModel, $("#login_status")[0]);
-		LoginViewModel.hasSubmitted(false);
+		ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+		GlobalViewModel.hasSubmitted(false);
 		
 	}
 }

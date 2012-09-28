@@ -59,8 +59,9 @@
       						</dl>
       						<ul class="tabs-content">
         						<li class="active" id="login-pane1Tab">
+								<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span>
 								<form action="return false;">
-  									<label>Username</label>
+  									<label data-bind="css: { error: username.hasError }">Username</label><span data-bind='visible: username.hasError, text: username.validationMessage'> </span>
   									<input data-bind='value: username, valueUpdate: "afterkeydown"'type="text" placeholder="Username" />
   
   									<label>Real Name</label>
@@ -76,16 +77,18 @@
 
 								</li>
         						<li id="start-pane1Tab">
-									<p>Please wait for the class to begin.  Your teacher will give you instructions on whether to prepare questions or start answering questions.</p>
+									<p>Please wait for the class to begin.  Your teacher will give you instructions on whether to prepare questions or start answering questions.<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span></p>
 								</li>
         						<li id="makeq-pane1Tab">
+									<div id="foobar">
+									<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span>
 									<form action="return false;">
 	  									<label>Question</label>
 										<textarea rows="5" cols="20"></textarea>
 	 									<div class="row"> 
 											<div class="eight columns">
 												<label>Answer 1</label>
-												<input type="text" />
+												<input data-bind="value: q1" type="text" />
 											</div>
 											<div class="four mobile-one columns">
 												<label for="radio1">
@@ -93,7 +96,7 @@
 												</label>
 											</div>
 										</div>
-	 									<div class="row"> 
+	 									<div class="row">
 											<div class="eight columns">
 												<label>Answer 2</label>
 												<input type="text" />
@@ -126,17 +129,6 @@
 	  											</label>
 											</div>
 										</div>
-	 									<div class="row"> 
-											<div class="eight columns">
-												<label>Answer 5</label>
-												<input type="text" />
-											</div>
-											<div class="four mobile-one columns">
-												<label for="radio1">
-	    											<input name="answer-options" type="radio" id="qradio1"> Correct?
-	  											</label>
-											</div>
-										</div>
 										<ul class="button-group even two-up">
 	  										<li><a href="javascript:void(0)" class="button">Submit</a></li>
 	  										<li><a href="javascript:void(0)" class="button">Submit &amp; Done</a></li>
@@ -145,7 +137,7 @@
 										</ul>
 									</form>
 
-
+									</div>
 								</li>
 	        					<li id="answerq-pane1Tab">
 									<form>
@@ -184,16 +176,6 @@
 	 									<div class="row"> 
 											<div class="eight columns">
 												<label>Answer 4: 1901</label>
-											</div>
-											<div class="four mobile-one columns">
-												<label for="radio1">
-	    											<input name="answer-options" type="radio" id="aradio1"> Correct?
-	  											</label>
-											</div>
-										</div>
-	 									<div class="row"> 
-											<div class="eight columns">
-												<label>Answer 5: 1772</label>
 											</div>
 											<div class="four mobile-one columns">
 												<label for="radio1">
