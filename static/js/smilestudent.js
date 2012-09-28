@@ -164,7 +164,8 @@ $(document).ready(function() {
 	//
 	// Init Data Model
 	//
-	ko.applyBindings(GlobalViewModel, $('#login-pane1Tab')[0]);
+	ko.applyBindings(GlobalViewModel);
+	// ko.applyBindings(GlobalViewModel, $('#login-pane1Tab')[0]);
 	// ko.applyBindings(GlobalViewModel, document.getElementById('login-pane1Tab'));
 	console.log('applied LoginView');
 	// ko.applyBindings(GlobalViewModel, $('#makeq-pane1Tab')[0]);
@@ -296,7 +297,7 @@ function doSmileLogin(clientip, username) {
 					// Move to state 2 now
 					statechange(1,2);
 					$('#login-status').empty().append(LOGGED_IN_TPL);
-					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+					// ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
 					console.log('applied login_status');
 					startSmileEventLoop();
 				}
@@ -350,7 +351,7 @@ function doMyState(clientip) {
 					// Move to state 2 now
 					statechange(1,2);
 					$('#login-status').empty().append(LOGGED_IN_TPL);
-					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+					// ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
 					console.log('applied login_status');
 					startSmileEventLoop();
 				}
@@ -411,7 +412,7 @@ function restoreLoginState() {
 		evt.initEvent( 'click', true, true );
 		$('#login-info').empty().append(LOGGED_OUT_TPL);
 		a.dispatchEvent(evt);
-		ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+		// ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
 		GlobalViewModel.hasSubmitted(false);
 		
 	}
