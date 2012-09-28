@@ -122,6 +122,7 @@ QViewModel.doSubmitQandDone = function() {
 	console.log("doSubmitQandDone");
 }
 
+// TBD if we keep this
 var GlobalViewModel = {
   LoginViewModel: {},
   QViewModel : {}
@@ -139,12 +140,14 @@ $(document).ready(function() {
 	//
 	// Init Data Model
 	//
-	ko.applyBindings(LoginViewModel); // This makes Knockout get to work
+	ko.applyBindings(LoginViewModel, $('#login-pane1Tab')[0]); // This makes Knockout get to work
 	// ko.applyBindings(new QViewModel(), $('#makeq-pane1Tab')[0]);
 	// ko.applyBindings(QViewModel);
 	//
 	// Init UI
 	//
+	// ko.applyBindings(GlobalViewModel);
+	
 	restoreLoginState();
 	
 	//
