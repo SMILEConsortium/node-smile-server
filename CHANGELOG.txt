@@ -1,0 +1,8 @@
+October 2012
+============
+* Update to work with SMILE Student Multilang.
+
+August 2012
+===========
+* add load test dir
+* fix 0.6.x compatibility issues
