@@ -103,6 +103,7 @@ var GlobalViewModel =  {
     username : ko.observable(nameGen(8)).extend({ required: "Please enter a username" })
     ,realname : ko.observable("")
  	,clientip : ko.observable("")
+	,logindata : ko.observable()
 	,hasSubmitted : ko.observable(false)
 	,answer : ko.observable("")
 	,q1 : ko.observable("")
@@ -122,7 +123,7 @@ GlobalViewModel.doLogin = function() {
 	if (!this.hasSubmitted()) {
 		console.log('doLogin');
 		smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
-		doSmileLogin(this.clientip(), this.username());
+		doSmileLogin(this.clientip(), this.username(), this.realname());
 	}
 	this.hasSubmitted(true);
 
@@ -281,7 +282,7 @@ function setClientIP() {
 	});
 }
 
-function doSmileLogin(clientip, username) {
+function doSmileLogin(clientip, username, realname) {
 	var clientip;
 	$.ajax({ cache: false
 			   , type: "POST"
@@ -297,7 +298,13 @@ function doSmileLogin(clientip, username) {
 					// Move to state 2 now
 					statechange(1,2);
 					$('#login-status').empty().append(LOGGED_IN_TPL);
-					// ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+					// ko.applyBindings(GlobalViewModel.username, $("#login_status")[0]);
+					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+					GlobalViewModel.logindata({
+		                username: username,
+						realname: realname,
+						clientip: clientip
+					});
 					console.log('applied login_status');
 					startSmileEventLoop();
 				}
@@ -412,7 +419,7 @@ function restoreLoginState() {
 		evt.initEvent( 'click', true, true );
 		$('#login-info').empty().append(LOGGED_OUT_TPL);
 		a.dispatchEvent(evt);
-		// ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
+		ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
 		GlobalViewModel.hasSubmitted(false);
 		
 	}
