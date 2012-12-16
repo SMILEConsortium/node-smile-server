@@ -41,7 +41,7 @@
 		</div>
 		<div class="row">
 			<div class="nine columns">
-				<h3>SMILE Student 0.9.8</h3>
+				<h3>SMILE Student <span data-bind="text: version"></span></h3>
 				<div class="row">
 				<div class="eight columns">
                 <div id="globalstatus"></div>
@@ -59,8 +59,8 @@
       						</dl>
       						<ul class="tabs-content">
         						<li class="active" id="login-pane1Tab">
-								<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span>
-								<form action="return false;">
+								<!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span>
+								<form action="return false;"> -->
   									<label data-bind="css: { error: username.hasError }">Username</label><span data-bind='visible: username.hasError, text: username.validationMessage'> </span>
   									<input data-bind='value: username, valueUpdate: "afterkeydown"'type="text" placeholder="Username" />
   
@@ -69,8 +69,8 @@
 									<label>Client IPAddress</label>
   									<input data-bind='value: clientip' type="text" class="twelve" disabled="true" placeholder="unknown (Will be provided by server)" />
 									<ul class="button-group even two-up">
-  										<li><a href="#" data-bind='click: doLogin, disable: hasSubmitted' class="button">Submit</a></li>
-  										<li><a href="#" data-bind='click: doLoginReset'class="button">Reset</a></li>
+  										<li><a href="#" data-bind='click: doLogin, disable: hasSubmitted'  class="button">Submit</a></li>
+  										<li><a href="#" data-bind='click: doLoginReset' class="button">Reset</a></li>
 									</ul>
 								</form>
 
@@ -246,5 +246,6 @@
 	<!-- Got this from: http://www.diveintojavascript.com/projects/javascript-sprintf -->
 	<script type='text/javascript' src='js/sprintf-0.7-beta1.js'></script>
 	<script type='text/javascript' src='js/smilestudent.js'></script>
+	<script type='text/javascript' src='js/stacktrace-min-0.4.js'></script>
 </body>
 </html>

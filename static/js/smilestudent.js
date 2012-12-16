@@ -42,6 +42,8 @@ var SMILEROUTES = {
 	,"smsg" : "/JunctionServerExecution/current/MSG/smsg.txt"
 	,"mystate" : "/JunctionServerExecution/current/MSG/%s.txt"
 }
+var VERSION = '0.9.9';
+
 //
 // 1 - login screen
 // 2 - logged in, waiting
@@ -70,7 +72,8 @@ var SMILESTATE = "1";
 
 //
 // KO Extenders
-//
+// 
+// This adds the required extender for validation
 ko.extenders.required = function(target, overrideMessage) {
     //add some sub-observables to our observable
     target.hasError = ko.observable();
@@ -99,6 +102,7 @@ ko.extenders.required = function(target, overrideMessage) {
 // Multimodel approach: See fiddle here: http://jsfiddle.net/npJZM/10/
 // Another good approach:  http://bit.ly/QzIgHP 
 //
+
 var GlobalViewModel =  {
     username : ko.observable(nameGen(8)).extend({ required: "Please enter a username" })
     ,realname : ko.observable("")
@@ -112,20 +116,23 @@ var GlobalViewModel =  {
 	,q4 : ko.observable("")
 	,sol: ko.observable("")
 	,imageuri : ko.observable("")
+	,version : VERSION
 };
 
 GlobalViewModel.fullName = ko.computed(function() {
+	var self = this;
     // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-    return this.username + " " + this.realname;
-}, this);
+    return self.username + " " + self.realname;
+}, self);
 
 GlobalViewModel.doLogin = function() {
-	if (!this.hasSubmitted()) {
+	var self = this;
+	if (!self.hasSubmitted()) {
 		console.log('doLogin');
-		smileAlert('#globalstatus', 'Logging in ' + this.username(), 'green', 5000);
-		doSmileLogin(this.clientip(), this.username(), this.realname());
+		smileAlert('#globalstatus', 'Logging in ' + self.username(), 'green', 5000);
+		doSmileLogin(self.clientip(), self.username(), self.realname());
 	}
-	this.hasSubmitted(true);
+	self.hasSubmitted(true);
 
 	return false;
 }
@@ -212,6 +219,8 @@ function smileAlert(targetid, text, alerttype, lifetime) {
 		alerttype = defaultalert;
 	} else if (alerttype === 'red') {
 		alerttype = redalert;
+		var trace = printStackTrace();
+		text = text + ' : ' + trace;
 	} else if (alerttype === 'blue') {
 		alerttype = bluealert;
 	} else if (alerttype === 'green') {
@@ -342,33 +351,14 @@ function doSMSG() {
 	});
 }
 
-// XXX Get rid of this?
-function doMyState(clientip) {
-	var clientip;
-	$.ajax({ cache: false
-			   , type: "GET" // XXX should be POST
-			   , dataType: "text"
-			   , url: sprintf(SMILEROUTES["mystate"], clientip)
-			   , data: generateEncodedHail(clientip, username)
-			   , error: function (xhr, text, err) {
-					smileAlert('#globalstatus', 'Error getting state.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red', 5000);
-				 }
-			   , success: function(data) {
-					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
-					// Move to state 2 now
-					statechange(1,2);
-					$('#login-status').empty().append(LOGGED_IN_TPL);
-					// ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
-					console.log('applied login_status');
-					startSmileEventLoop();
-				}
-	});
-}
 function statechange(from,to) {
 	if (from == 1) { // FROM 1
 		if (SMILESTATE != 1) { return; }
 		// We can only loop back to 1 or go to 2 (waiting)
-		if (to == 1) { return;} // This is effectively a reset ... should we logout the user?
+		if (to == 1) {
+			restoreLoginState();
+			return;
+		} // This is effectively a reset, logout the user
 		if (to != 2) {
 			smileAlert('#globalstatus', 'Cannot move to phase ' + to +' yet.', 'red', 5000);
 		} else { // Move to 2. Get Ready Phase
@@ -408,6 +398,9 @@ function statechange(from,to) {
 }
 
 function restoreLoginState() {
+	// 
+	// XXX This needs to clean up the sidebar area too
+	//
 	var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["1"].id + '"]');
 	if ($next) {
 		stopSmileEventLoop();
@@ -466,7 +459,7 @@ var LOGGED_IN_TPL = ' \
   <p>Waiting for teacher to begin</p> \
   </div> \
   </div> \
-  <p><a class="tiny secondary button" href="#logout-action">Logout</a></p> \
+  <p><a class="secondary button" href="#logout-action">Logout</a></p> \
   ';
 
 var SESSION_STATE_START_MAKE_TPL = ' \
