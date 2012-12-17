@@ -77,7 +77,7 @@
 
 								</li>
         						<li id="start-pane1Tab">
-									<p>Please wait for the class to begin.  Your teacher will give you instructions on whether to prepare questions or start answering questions.<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span></p>
+									<p>Please wait for the class to begin.  Your teacher will give you instructions on whether to prepare questions or start answering questions.<!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span>--></p>
 								</li>
         						<li id="makeq-pane1Tab">
 									<div id="foobar">
@@ -129,7 +129,6 @@
 											</div>
 										</div>
 										<ul class="button-group even two-up">
-											<button data-bind='click: doSubmitQ'>Submit</button>
 	  										<li><a href="#" data-bind='click: doSubmitQ' class="button">Submit</a></li>
 	  										<li><a href="#" data-bind='click: doSubmitQandDone' class="button">Submit &amp; Done</a></li>
 										</ul>
@@ -212,7 +211,12 @@
 				<div id="login-info">	
 					<h4>Instructions for <div data-bind="text: username" id="student-username">Student</div> <div data-bind="text: realname" id="student-realname"></div></h4>
 					<div id="login-status">
-					<p>Please Login.  Then the teacher will tell you instructions.</p>
+						<div id="login-panel" class="panel callout radius">
+					  	  <h5><div data-bind="text: loginstatusmsg"></div></h5>&nbsp;
+						  <p>@<div data-bind="text: clientip" id="student-clientip">127.0.0.1</div></p>
+						  <p><div data-bind="text: sessionstatemsg"></div></p>
+						</div>
+						<p><div id="logoutarea"><a data-bind="click: doLoginReset" class="secondary button" href="#logout-action">Logout</a></div></p>
 					</div>
 				</div>
 				<!-- </div> -->

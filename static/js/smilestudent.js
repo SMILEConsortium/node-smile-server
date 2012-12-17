@@ -142,13 +142,18 @@ var SMILEInquiry2 = function(question, answer1, answer2, answer3, answer4, right
 
 /**
  * We should refactor out any items that belong in specialized child ViewModels
+ * Candidates: 
+ * - LoginModel
+ * - MsgModel
+ * - StateModel
  * 
  */
 var GlobalViewModel =  {
     username : ko.observable(nameGen(8)).extend({ required: "Please enter a username" })
     ,realname : ko.observable("")
  	,clientip : ko.observable("")
-	,logindata : ko.observable()
+	,loginstatusmsg : ko.observable("")
+	,sessionstatemsg : ko.observable("")
 	,hasSubmitted : ko.observable(false)
 	,iqx : ko.observableArray([new SMILEInquiry2()])
 	,answer : ko.observable("")
@@ -200,7 +205,7 @@ GlobalViewModel.doSubmitQ = function() {
 	var self = this;
 	console.log(">>>>>>>>>>doSubmitQ");
 	var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
-	// doPostInquiry(jsondata); 
+	doPostInquiry(jsondata); 
 }
 
 GlobalViewModel.doSubmitQandDone = function() {
@@ -352,15 +357,9 @@ function doSmileLogin(clientip, username, realname) {
 					smileAlert('#globalstatus', 'Successfully logged in', 'green', 10000);
 					// Move to state 2 now
 					statechange(1,2);
-					$('#login-status').empty().append(LOGGED_IN_TPL);
-					// ko.applyBindings(GlobalViewModel.username, $("#login_status")[0]);
-					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
-					/* GlobalViewModel.logindata({
-		                username: username,
-						realname: realname,
-						clientip: clientip
-					}); */
-					console.log('applied login_status');
+					GlobalViewModel.loginstatusmsg("Logged In");
+					// GlobalViewModel.sessionstatus();
+					// $('#login-status').empty().append(LOGGED_IN_TPL);
 					startSmileEventLoop();
 				}
 	});
@@ -369,7 +368,7 @@ function doSmileLogin(clientip, username, realname) {
 function doPostInquiry(inquirydata, cb) {
 	$.ajax({ cache: false
 			   , type: "POST"
-			   , dataType: "json"
+			   , dataType: "text"
 			   , url: SMILEROUTES["postinquiry"]
 			   , data: inquirydata
 			   , error: function (xhr, text, err) {
@@ -440,6 +439,7 @@ function statechange(from,to) {
 			if ($next) {
 				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.', 2500);
 				console.log('go to href = ' + $next.attr('href'));
+				$('#logoutarea').show();
 				// Note, we won't disable the login screen, user can click back to it
 				$next.removeClass('disabled');
 				var a = $next[0]; // get the dom obj
@@ -461,7 +461,7 @@ function statechange(from,to) {
 				var a = $next[0]; // get the dom obj
 				var evt = document.createEvent('MouseEvents');
 				evt.initEvent( 'click', true, true );
-				$('#session-state').empty().append(SESSION_STATE_START_MAKE_TPL);
+				GlobalViewModel.sessionstatemsg("Start Making Questions until the teacher is ready to start Answering Questions")
 				a.dispatchEvent(evt);
 			}
 		} else if (to == 4) { // Enter Answer Questions Phase
@@ -475,6 +475,7 @@ function restoreLoginState() {
 	// XXX This needs to clean up the sidebar area too
 	//
 	var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["1"].id + '"]');
+	$('#logoutarea').hide();
 	if ($next) {
 		stopSmileEventLoop();
 		smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["1"].label + ' phase.', 2500);
@@ -483,11 +484,10 @@ function restoreLoginState() {
 		var a = $next[0]; // get the dom obj
 		var evt = document.createEvent('MouseEvents');
 		evt.initEvent( 'click', true, true );
-		$('#login-info').empty().append(LOGGED_OUT_TPL);
 		a.dispatchEvent(evt);
-		ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
 		GlobalViewModel.hasSubmitted(false);
-		
+		GlobalViewModel.sessionstatemsg("Waiting for teacher to begin"); // XXX Need to pull out localization msgs
+		GlobalViewModel.loginstatusmsg("Please Login.  Then the teacher will tell you instructions."); // XXX Need to pull out localization msgs  
 	}
 }
 
