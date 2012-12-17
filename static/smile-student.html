@@ -84,60 +84,61 @@
 									<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span>
 									<form action="return false;">
 	  									<label>Question</label>
-										<textarea rows="5" cols="20"></textarea>
+										<textarea data-bind="value: question" rows="5" cols="20"></textarea>
 	 									<div class="row"> 
 											<div class="eight columns">
 												<label>Answer 1</label>
-												<input data-bind="value: q1" type="text" />
+												<input data-bind="value: a1" type="text" />
 											</div>
 											<div class="four mobile-one columns">
-												<label for="radio1">
-													<input name="answer-options" type="radio" id="qradio1"> Correct?
+												<label for="a1"><input value="a1" data-bind="checked: rightanswer" name="answer-options" type="radio" id="a1"> Correct?
 												</label>
 											</div>
 										</div>
 	 									<div class="row">
 											<div class="eight columns">
 												<label>Answer 2</label>
-												<input type="text" />
+												<input data-bind="value: a2" type="text" />
 											</div>
 											<div class="four mobile-one columns">
-												<label for="radio1">
-	    											<input name="answer-options" type="radio" id="qradio1"> Correct?
+												<label for="a2">
+	    											<input value="a2" data-bind="checked: rightanswer" name="answer-options" type="radio" id="a2"> Correct?
 	  											</label>
 											</div>
 										</div>
 	 									<div class="row"> 
 											<div class="eight columns">
 												<label>Answer 3</label>
-												<input type="text" />
+												<input data-bind="value: a3" type="text" />
 											</div>
 											<div class="four mobile-one columns">
-												<label for="radio1">
-	    											<input name="answer-options" type="radio" id="qradio1"> Correct?
+												<label for="a3">
+	    											<input value="a3" data-bind="checked: rightanswer" name="answer-options" type="radio" id="a3"> Correct?
 	  											</label>
 											</div>
 										</div>
 	 									<div class="row"> 
 											<div class="eight columns">
 												<label>Answer 4</label>
-												<input type="text" />
+												<input data-bind="value: a4" type="text" />
 											</div>
 											<div class="four mobile-one columns">
-												<label for="radio1">
-	    											<input name="answer-options" type="radio" id="qradio1"> Correct?
+												<label for="a4">
+	    											<input value="a4" data-bind="checked: rightanswer" name="answer-options" type="radio" id="a4"> Correct?
 	  											</label>
 											</div>
 										</div>
 										<ul class="button-group even two-up">
-	  										<li><a href="javascript:void(0)" data-bind='click: doSubmitQ' class="button">Submit</a></li>
-	  										<li><a href="javascript:void(0)" data-bind='click: doSubmitQandDone' class="button">Submit &amp; Done</a></li>
+											<button data-bind='click: doSubmitQ'>Submit</button>
+	  										<li><a href="#" data-bind='click: doSubmitQ' class="button">Submit</a></li>
+	  										<li><a href="#" data-bind='click: doSubmitQandDone' class="button">Submit &amp; Done</a></li>
 										</ul>
 									</form>
 
 									</div>
 								</li>
 	        					<li id="answerq-pane1Tab">
+									<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span>
 									<form>
 	  									<label>Question 1</label>
 										<textarea rows="5" cols="20">In what year was the battle of the Alamo Fought?</textarea>
