@@ -309,45 +309,49 @@ function doSmileLogin(clientip, username, realname) {
 					$('#login-status').empty().append(LOGGED_IN_TPL);
 					// ko.applyBindings(GlobalViewModel.username, $("#login_status")[0]);
 					ko.applyBindings(GlobalViewModel, $("#login_status")[0]);
-					GlobalViewModel.logindata({
+					/* GlobalViewModel.logindata({
 		                username: username,
 						realname: realname,
 						clientip: clientip
-					});
+					}); */
 					console.log('applied login_status');
 					startSmileEventLoop();
 				}
 	});
 }
 
+/**
+ *
+ * doSMSG - This handles server side polling.  TODO - get rid of server side polling and use socket.io
+ * 
+ * On success : review incoming messages to see what state we are in
+ * On error : smileAlert
+ */
 function doSMSG() {
 	$.ajax({ cache: false
-			   , type: "GET"
-			   , dataType: "json"
-			   , url: SMILEROUTES["smsg"]
-			   , data: {}
-			   , error: function (xhr, text, err) {
-					smileAlert('#globalstatus', 'Status Msg Error.  Reason: ' + xhr.status + ':' + xhr.responseText + '.', 'red');
-				 }
-			   , success: function(data) {
-					if (data) {
-						msg = data["TYPE"];
-						// console.log(data); // XXX Remove debug
-						if (msg === "START_MAKE") { statechange(2,3) };
-						if (msg === "WAIT_CONNECT") {};
-						if (msg === "START_SOLVE") {};
-						if (msg === "START_SHOW") {};
-						if (msg === "WARN") {};
-						if ((msg === "") || (msg === null) || (msg === undefined)) { statechange(SMILESTATE, 1); }
-						// Ignore anything else that we receive
-						// We should have a RESET_GAME
-					} else {
-						console.log('no data');
-					}
-					
-					// Move to state 2 now
-					// statechange(1,2);
+		   , type: "GET"
+		   , dataType: "json"
+		   , url: SMILEROUTES["smsg"]
+		   , data: {}
+		   , error: function (xhr, text, err) {
+				smileAlert('#globalstatus', 'Status Msg Error.  Reason: ' + xhr.status + ':' + xhr.responseText + '.', 'red');
+			 }
+		   , success: function(data) {
+				if (data) {
+					msg = data["TYPE"];
+					// console.log(data); // XXX Remove debug
+					if (msg === "START_MAKE") { statechange(2,3) };
+					if (msg === "WAIT_CONNECT") {};
+					if (msg === "START_SOLVE") {};
+					if (msg === "START_SHOW") {};
+					if (msg === "WARN") {};
+					if ((msg === "") || (msg === null) || (msg === undefined)) { statechange(SMILESTATE, 1); }
+					// Ignore anything else that we receive
+					// We should have a RESET_GAME
+				} else {
+					console.log('no data');
 				}
+			}
 	});
 }
 
@@ -459,7 +463,7 @@ var LOGGED_IN_TPL = ' \
   <p>Waiting for teacher to begin</p> \
   </div> \
   </div> \
-  <p><a class="secondary button" href="#logout-action">Logout</a></p> \
+  <p><a data-bind="click: doLoginReset" class="secondary button" href="#logout-action">Logout</a></p> \
   ';
 
 var SESSION_STATE_START_MAKE_TPL = ' \
