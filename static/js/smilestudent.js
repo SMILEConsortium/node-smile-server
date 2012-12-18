@@ -42,8 +42,12 @@ var SMILEROUTES = {
 	,"smsg" : "/JunctionServerExecution/current/MSG/smsg.txt"
 	,"mystate" : "/JunctionServerExecution/current/MSG/%s.txt"
 	,"postinquiry" : "/smile/question"
+	,"getinquiry" : "/smile/questionview/%s.json"
+	,"submitanswers" : "/smile/pushmsg.php"
+	,"echoclientip" : "/smile/echoclientip"
+	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.11';
+var VERSION = '0.9.12';
 
 //
 // 1 - login screen
@@ -154,6 +158,7 @@ var GlobalViewModel =  {
  	,clientip : ko.observable("")
 	,loginstatusmsg : ko.observable("")
 	,sessionstatemsg : ko.observable("")
+	,othermsg : ko.observable("")
 	,hasSubmitted : ko.observable(false)
 	,iqx : ko.observableArray([new SMILEInquiry2()])
 	,answer : ko.observable("")
@@ -163,7 +168,11 @@ var GlobalViewModel =  {
 	,a3 : ko.observable("")
 	,a4 : ko.observable("")
 	,rightanswer: ko.observable("a1")
+	,numq: ko.observable("")
+	,curq: ko.observable(0)
+	,qidx: ko.observable(0)
 	,picurl : ko.observable("")
+	,rating : ko.observable("")
 	,isInquiryQAValid: ko.observable(false)
 	,version : VERSION
 };
@@ -172,6 +181,12 @@ GlobalViewModel.fullName = ko.computed(function() {
 	var self = this;
     // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
     return self.username + " " + self.realname;
+}, self);
+
+GlobalViewModel.curq = ko.computed(function() {
+	var self = this;
+    // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+    return self.qidx + 1;
 }, self);
 
 //
@@ -249,7 +264,7 @@ GlobalViewModel.doSubmitQandDone = function() {
 			self.doInquiryReset();
 			// XXX Localize this
 			$('div#inquiry-form-area').block({ 
-				message: '<h1>Done.  Please wait for the rest of the students to Creating Questions</h1>', 
+				message: '<h1>Done.  Please wait for the rest of the students to finish Creating Questions</h1>', 
 				css: { border: '3px solid #a00'
 				 	   ,width: '80%'
 				} 
@@ -265,6 +280,60 @@ GlobalViewModel.doSubmitQandDone = function() {
 			timeout: 7000
 		});
 	}
+}
+
+GlobalViewModel.doAnswerPrevQ = function() {
+	var self = this;
+	console.log(">>>>>>>>>>doAnswerPrevQ");
+	// doSaveAnswerState
+	
+	// Check if there are more questions
+	
+	if ((GlobalViewModel.qidx()) > 0) {
+		GlobalViewModel.qidx(GlobalViewModel.qidx() - 1);
+		doGetInquiry(GlobalViewModel.qidx());
+	} else {
+		//
+		// Can't go past the 1st question
+		//
+		/* $('div#answer-form-area').block({ 
+			message: '<h1>Done.  Please wait for the rest of the students to finish Answering Questions</h1>', 
+			css: { border: '3px solid #a00'
+			 	   ,width: '80%'
+			} 
+		}); */
+	}
+}
+
+GlobalViewModel.doAnswerNextQ = function() {
+	var self = this;
+	console.log(">>>>>>>>>>doAnswerNextQ");
+	
+	// doSaveAnswerState
+	
+	// Check if there are more questions
+	
+	if ((GlobalViewModel.qidx()+1) < GlobalViewModel.numq()) {
+		GlobalViewModel.qidx(GlobalViewModel.qidx() + 1);
+		doGetInquiry(GlobalViewModel.qidx());
+	} else {
+		//
+		// Submit All Questions
+		//
+		$('div#answer-form-area').block({ 
+			message: '<h1>Done.  Please wait for the rest of the students to finish Answering Questions</h1>', 
+			css: { border: '3px solid #a00'
+			 	   ,width: '80%'
+			} 
+		});
+	}
+	/* if (self.validateInquiry()) {
+		var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
+		doPostInquiry(jsondata, function() {
+			self.doInquiryReset();
+		});
+	} */
+	
 }
 
 $(document).ready(function() {
@@ -342,7 +411,6 @@ function smileAlert(targetid, text, alerttype, lifetime) {
 	if (targetid) {
 		$(targetid).append(sprintf(formatstr, alerttype, text));
 	}
-	console.log(lifetime);
 	if (lifetime) {
 		setInterval(function() {
 			$(targetid).find('.alert-box').fadeOut().remove();
@@ -382,7 +450,7 @@ function setClientIP() {
 	$.ajax({ cache: false
 			   , type: "GET" // XXX should be POST
 			   , dataType: "json"
-			   , url: "/smile/echoclientip"
+			   , url: SMILEROUTES["echoclientip"]
 			   , data: {}
 			   , error: function (xhr, text, err) {
 					smileAlert('#globalstatus', 'Cannot obtain client IP address.  Please verify your connection or server status.', 'trace');
@@ -420,7 +488,6 @@ function doSmileLogin(clientip, username, realname) {
 					statechange(1,2);
 					GlobalViewModel.loginstatusmsg("Logged In");
 					// GlobalViewModel.sessionstatus();
-					// $('#login-status').empty().append(LOGGED_IN_TPL);
 					startSmileEventLoop();
 				}
 	});
@@ -448,6 +515,34 @@ function doPostInquiry(inquirydata, cb) {
 	});
 }
 
+function doGetInquiry(qnum) {
+	$.ajax({ cache: false
+			   , type: "GET"
+			   , dataType: "json"
+			   , url: sprintf(SMILEROUTES["getinquiry"], qnum)
+			   , data:{}
+			   , error: function (xhr, text, err) {
+					// TODO: XXX Decide what to do if this post fails
+					smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
+				}
+			   , success: function(data) {
+					if (data) {
+						GlobalViewModel.question(data.Q);
+						GlobalViewModel.rightanswer(data.A);
+						GlobalViewModel.a1(data.O1);
+						GlobalViewModel.a2(data.O2);
+						GlobalViewModel.a3(data.O3);
+						GlobalViewModel.a4(data.O4);
+						GlobalViewModel.othermsg((GlobalViewModel.qidx() + 1) + "/" + GlobalViewModel.numq());
+						if (data.TYPE === "QUESTION_PIC") {
+							GlobalViewModel.picurl(data.PICURL);
+						} else {
+							GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
+						}
+					}
+				}
+	});
+}
 /**
  *
  * doSMSG - This handles server side polling.  TODO - get rid of server side polling and use socket.io
@@ -468,9 +563,16 @@ function doSMSG() {
 				if (data) {
 					msg = data["TYPE"];
 					// console.log(data); // XXX Remove debug
-					if (msg === "START_MAKE") { statechange(2,3) };
+					if (msg === "START_MAKE") {
+						statechange(2,3);
+					}
 					if (msg === "WAIT_CONNECT") {};
-					if (msg === "START_SOLVE") {};
+					if (msg === "START_SOLVE") {
+						statechange(SMILESTATE,4, data, function() {
+							clearAnswerState();
+							doGetInquiry(0);
+						});
+					}
 					if (msg === "START_SHOW") {};
 					if (msg === "WARN") {};
 					if ((msg === "") || (msg === null) || (msg === undefined)) { statechange(SMILESTATE, 1); }
@@ -483,7 +585,7 @@ function doSMSG() {
 	});
 }
 
-function statechange(from,to) {
+function statechange(from,to, data, cb) {
 	if (from == 1) { // FROM 1
 		if (SMILESTATE != 1) { return; }
 		// We can only loop back to 1 or go to 2 (waiting)
@@ -510,7 +612,10 @@ function statechange(from,to) {
 		}
 	} else if (from == 2) { // FROM 2
 		if (SMILESTATE != 2) { return; }
-		if (to == 1) {} // Teacher reset game ... hang in phase 2
+		if (to == 1) {
+			restoreLoginState();
+			return;
+		} // Teacher reset game, we should logout
 		if (to == 3) { // Enter Make Questions Phase
 			SMILESTATE = 3;
 			$('div#inquiry-form-area').unblock();
@@ -525,10 +630,70 @@ function statechange(from,to) {
 				GlobalViewModel.sessionstatemsg("Start Making Questions until the teacher is ready to start Answering Questions")
 				a.dispatchEvent(evt);
 			}
-		} else if (to == 4) { // Enter Answer Questions Phase
-			
+		}
+		if (to == 4) { // Enter Answer Questions Phase
+			SMILESTATE = 4;
+			$('div#answer-form-area').unblock();
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
+			if ($next) {
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
+				console.log('go to href = ' + $next.attr('href'));
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				GlobalViewModel.sessionstatemsg("Start Answering Questions until the teacher calls time");
+				GlobalViewModel.numq(data.NUMQ);
+				GlobalViewModel.qidx(0);
+				a.dispatchEvent(evt);
+				if (cb) {
+					cb();
+				}
+			}
+		}
+	} else if (from == 3) { // FROM 3
+		if (SMILESTATE != 3) { return; }
+		if (to == 1) {
+			restoreLoginState();
+			return;
+		} // Teacher reset game, we should logout
+		if (to == 2) { return; } // Not sure why this would happen
+		if (to == 4) { // Enter Answer Questions Phase
+			SMILESTATE = 4;
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
+			if ($next) {
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
+				console.log('go to href = ' + $next.attr('href'));
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				GlobalViewModel.sessionstatemsg("Start Answering Questions until the teacher calls time");
+				GlobalViewModel.numq(data.NUMQ);
+				GlobalViewModel.qidx(0);
+				a.dispatchEvent(evt);
+				if (cb) {
+					cb();
+				}
+			}
+		}
+		if (to == 5) { // Enter Show Results Phase
+			console.log("TODO: Implement ");
+			return;
 		}
 	}
+}
+
+function clearAnswerState() {
+	GlobalViewModel.question("");
+	GlobalViewModel.answer("a1");
+	GlobalViewModel.a1("");
+	GlobalViewModel.a2("");
+	GlobalViewModel.a3("");
+	GlobalViewModel.a4("");
+	GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
+	GlobalViewModel.rating("");
+	$('#star-rating').rating();
 }
 
 function restoreLoginState() {
@@ -549,6 +714,7 @@ function restoreLoginState() {
 		GlobalViewModel.hasSubmitted(false);
 		GlobalViewModel.sessionstatemsg("Waiting for teacher to begin"); // XXX Need to pull out localization msgs
 		GlobalViewModel.loginstatusmsg("Please Login.  Then the teacher will tell you instructions."); // XXX Need to pull out localization msgs  
+		GlobalViewModel.othermsg("");
 	}
 }
 
@@ -605,23 +771,6 @@ $(window).unload(function () {
 	// partSession();
 	// setTimeout(partSession(), 60000);  // XXX Give the user a minute to return
 });
-
-var LOGGED_OUT_TPL = ' \
-<h4>Instructions for <div data-bind="text: username" id="student-username">Student</div> <div data-bind="text: realname" id="student-realname"></div></h4> \
-<div id="login-status"> \
-<p>Please Login.  Then the teacher will tell you instructions.</p> \
-</div>';
-
-var LOGGED_IN_TPL = ' \
-  <div id="login-panel" class="panel callout radius"> \
-  <h5>Logged In</h5> \
-  <p>@<div data-bind="text: clientip" id="student-clientip">127.0.0.1</div></p> \
-  <div id="session-state"> \
-  <p>Waiting for teacher to begin</p> \
-  </div> \
-  </div> \
-  <p><a data-bind="click: doLoginReset" class="secondary button" href="#logout-action">Logout</a></p> \
-  ';
 
 var SESSION_STATE_START_MAKE_TPL = ' \
 	<p>Start Making Questions until the teacher is ready to start Answering Questions</p> \

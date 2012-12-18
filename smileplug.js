@@ -36,9 +36,8 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.2.4',
+  'VERSION_TAG' : '0.2.8',
   'VERSION_DESCRIPTION' : 'SMILE Server',
-  'SLIDE_DIR' : './'
 };
 
 //
@@ -83,6 +82,7 @@ js.put('/smile/reset', routes.handleResetPut);
 
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);
+js.get('/smile/questionview/:id.json', routes.handleQuestionJSONGet, true);
 js.get('/smile/questionview/:id.jpg', routes.handleQuestionImageGet, true);
 
 // Compatibility with newer SMILE Student MULTILANG

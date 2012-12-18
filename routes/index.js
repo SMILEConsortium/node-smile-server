@@ -214,6 +214,16 @@ exports.handleQuestionHtmlGet = function(req, res) {
   res.end();
 };
 
+exports.handleQuestionJSONGet = function(req, res) {
+  var questionNumber = parseInt(req.id);
+  var question = game.questions.getList()[questionNumber];
+  if (!question) {
+    return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
+  }
+
+  res.sendJSON(HTTP_STATUS_OK, question);
+};
+
 exports.handleQuestionImageGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];
