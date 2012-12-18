@@ -43,7 +43,7 @@ var SMILEROUTES = {
 	,"mystate" : "/JunctionServerExecution/current/MSG/%s.txt"
 	,"postinquiry" : "/smile/question"
 }
-var VERSION = '0.9.10';
+var VERSION = '0.9.11';
 
 //
 // 1 - login screen
@@ -164,6 +164,7 @@ var GlobalViewModel =  {
 	,a4 : ko.observable("")
 	,rightanswer: ko.observable("a1")
 	,picurl : ko.observable("")
+	,isInquiryQAValid: ko.observable(false)
 	,version : VERSION
 };
 
@@ -171,6 +172,15 @@ GlobalViewModel.fullName = ko.computed(function() {
 	var self = this;
     // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
     return self.username + " " + self.realname;
+}, self);
+
+//
+// XXX This doesn't work, don't know why
+// probably delete this.
+//
+GlobalViewModel.isInquiryQAValid = ko.computed(function() {
+	var self = this;
+	return (self.a1 != "" && self.a2 != "" && self.a3 != "" && self.a4 != "" && self.answer != "" && self.question != "");
 }, self);
 
 GlobalViewModel.doLogin = function() {
@@ -183,6 +193,11 @@ GlobalViewModel.doLogin = function() {
 	self.hasSubmitted(true);
 
 	return false;
+}
+
+GlobalViewModel.validateInquiry = function() {
+	var self = this;
+	return (self.a1() != "" && self.a2() != "" && self.a3() != "" && self.a4() != "" && self.answer() != "" && self.question() != "");
 }
 
 GlobalViewModel.doLoginReset = function() {
@@ -202,31 +217,54 @@ GlobalViewModel.doInquiryReset = function() {
 	self.rightanswer("a1");
 	self.question("");
 	self.picurl("");
+	self.isInquiryQAValid("false");
 }
 
 GlobalViewModel.doSubmitQ = function() {
 	var self = this;
 	console.log(">>>>>>>>>>doSubmitQ");
-	var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
-	doPostInquiry(jsondata, function() {
-		self.doInquiryReset();
-	});
+	if (self.validateInquiry()) {
+		var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
+		doPostInquiry(jsondata, function() {
+			self.doInquiryReset();
+		});
+	} else {
+		console.log("Cannot validateInquiry");
+		$('div#inquiry-form-area').block({ 
+			message: '<h3>Please fill in all fields</h3>', 
+			css: { border: '3px solid #a00'
+			 	   ,width: '30%'
+			},
+			timeout: 7000
+		});
+	}
 }
 
 GlobalViewModel.doSubmitQandDone = function() {
 	var self = this;
 	console.log("doSubmitQandDone");
-	var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
-	doPostInquiry(jsondata, function() {
-		self.doInquiryReset();
-		// XXX Localize this
-		$('div#inquiry-form-area').block({ 
-			message: '<h1>Done.  Please wait for the rest of the students to Creating Questions</h1>', 
-			css: { border: '3px solid #a00'
-			 	   ,width: '80%'
-			} 
+	if (self.validateInquiry()) {
+		var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
+		doPostInquiry(jsondata, function() {
+			self.doInquiryReset();
+			// XXX Localize this
+			$('div#inquiry-form-area').block({ 
+				message: '<h1>Done.  Please wait for the rest of the students to Creating Questions</h1>', 
+				css: { border: '3px solid #a00'
+				 	   ,width: '80%'
+				} 
+			});
 		});
-	});
+	} else {
+		console.log("Cannot validateInquiry");
+		$('div#inquiry-form-area').block({ 
+			message: '<h3>Please fill in all fields</h3>', 
+			css: { border: '3px solid #a00'
+			 	   ,width: '30%'
+			},
+			timeout: 7000
+		});
+	}
 }
 
 $(document).ready(function() {
@@ -270,6 +308,13 @@ $(document).ready(function() {
 //
 // App functions
 //
+// alerttype 
+//	- by default, none is required if you don't intend to use lifetime
+//	- trace : use the stacktrace in the error message
+//  - red : display a red color alert
+//	- blue : display a blue color alert
+//	- green : display a green color alert
+//
 function smileAlert(targetid, text, alerttype, lifetime) {
 	var defaultalert = 'secondary';
 	var redalert = 'alert';
@@ -281,10 +326,12 @@ function smileAlert(targetid, text, alerttype, lifetime) {
 		</div>';
 	if (!alerttype) {
 		alerttype = defaultalert;
-	} else if (alerttype === 'red') {
+	} else if (alerttype === 'trace') {
 		alerttype = redalert;
 		var trace = printStackTrace();
 		text = text + ' : ' + trace;
+	} else if (alerttype === 'red') {
+		alerttype = redalert;
 	} else if (alerttype === 'blue') {
 		alerttype = bluealert;
 	} else if (alerttype === 'green') {
@@ -295,6 +342,7 @@ function smileAlert(targetid, text, alerttype, lifetime) {
 	if (targetid) {
 		$(targetid).append(sprintf(formatstr, alerttype, text));
 	}
+	console.log(lifetime);
 	if (lifetime) {
 		setInterval(function() {
 			$(targetid).find('.alert-box').fadeOut().remove();
@@ -337,7 +385,7 @@ function setClientIP() {
 			   , url: "/smile/echoclientip"
 			   , data: {}
 			   , error: function (xhr, text, err) {
-					smileAlert('#globalstatus', 'Cannot obtain client IP address.  Please verify your connection or server status.', 'red');
+					smileAlert('#globalstatus', 'Cannot obtain client IP address.  Please verify your connection or server status.', 'trace');
 				 }
 			   , success: function(data) {
 					clientip = data.ip; // XXX We should be defensive in case garbage comes back
@@ -363,7 +411,7 @@ function doSmileLogin(clientip, username, realname) {
 			   , url: SMILEROUTES["pushmsg"]
 			   , data: generateEncodedHail(clientip, username)
 			   , error: function (xhr, text, err) {
-					smileAlert('#globalstatus', 'Unable to login.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red');
+					smileAlert('#globalstatus', 'Unable to login.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
 				 	GlobalViewModel.hasSubmitted(false); // Reset this so clicks will work
 				}
 			   , success: function(data) {
@@ -386,7 +434,7 @@ function doPostInquiry(inquirydata, cb) {
 			   , data: inquirydata
 			   , error: function (xhr, text, err) {
 					// TODO: XXX Decide what to do if this post fails
-					smileAlert('#globalstatus', 'Unable to post inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'red');
+					smileAlert('#globalstatus', 'Unable to post inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
 				}
 			   , success: function(data) {
 					smileAlert('#globalstatus', 'Sent Inquiry Question', 'green', 5000);
@@ -395,10 +443,6 @@ function doPostInquiry(inquirydata, cb) {
 					}
 					//
 					// We should track a count of successful submits
-					//
-					
-					//
-					// We should call our CB 
 					//
 				}
 	});
@@ -418,7 +462,7 @@ function doSMSG() {
 		   , url: SMILEROUTES["smsg"]
 		   , data: {}
 		   , error: function (xhr, text, err) {
-				smileAlert('#globalstatus', 'Status Msg Error.  Reason: ' + xhr.status + ':' + xhr.responseText + '.', 'red');
+				smileAlert('#globalstatus', 'Status Msg Error.  Reason: ' + xhr.status + ':' + xhr.responseText + '.', 'trace');
 			 }
 		   , success: function(data) {
 				if (data) {
