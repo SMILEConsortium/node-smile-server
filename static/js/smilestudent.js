@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.13';
+var VERSION = '0.9.14';
 
 //
 // 1 - login screen
@@ -221,6 +221,12 @@ GlobalViewModel.doLoginReset = function() {
 	this.username(nameGen(8));
 	this.realname("");
 	this.hasSubmitted(false);
+	//
+	// XXX This is silly, fix this, cleanup the object model and reset the state
+	// For now just reload the page
+	//
+	window.location.href = window.location.pathname;
+	window.location.reload(true); 
 	return false;
 }
 
@@ -624,7 +630,12 @@ function doSMSG() {
 							doGetInquiry(0);
 						});
 					}
-					if (msg === "START_SHOW") {};
+					if (msg === "START_SHOW") {
+						statechange(SMILESTATE,5, data, function() {
+							GlobalViewModel.sessionstatemsg("Done! Please review your Score.");
+							doGetResults();
+						});
+					};
 					if (msg === "WARN") {};
 					if ((msg === "") || (msg === null) || (msg === undefined)) { statechange(SMILESTATE, 1); }
 					// Ignore anything else that we receive
@@ -704,6 +715,23 @@ function statechange(from,to, data, cb) {
 				}
 			}
 		}
+		if (to == 5) {
+			SMILESTATE = 5;
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+			if ($next) {
+				// XXX This is a copy paste of the same block of code 'from state == 2', refactor
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
+				console.log('go to href = ' + $next.attr('href'));
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				a.dispatchEvent(evt);
+				if (cb) {
+					cb();
+				}
+			}
+		}
 	} else if (from == 3) { // FROM 3
 		if (SMILESTATE != 3) { return; }
 		if (to == 1) {
@@ -734,10 +762,48 @@ function statechange(from,to, data, cb) {
 			}
 		}
 		if (to == 5) { // Enter Show Results Phase
-			console.log("TODO: Implement ");
+			SMILESTATE = 5;
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+			if ($next) {
+				// XXX This is a copy paste of the same block of code 'from state == 2', refactor
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
+				console.log('go to href = ' + $next.attr('href'));
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				a.dispatchEvent(evt);
+				if (cb) {
+					cb();
+				}
+			}
+		}
+	} else if (from == 4) { // FROM 4
+		if (SMILESTATE != 4) { return; }
+		if (to == 1) {
+			restoreLoginState();
 			return;
+		} // Teacher reset game, we should logout
+		if (to == 2) { return; } // Not sure why this would happen
+		if (to == 5) { // Enter Show Results Phase
+			SMILESTATE = 5;
+			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+			if ($next) {
+				// XXX This is a copy paste of the same block of code 'from state == 2', refactor
+				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
+				console.log('go to href = ' + $next.attr('href'));
+				$next.removeClass('disabled');
+				var a = $next[0]; // get the dom obj
+				var evt = document.createEvent('MouseEvents');
+				evt.initEvent( 'click', true, true );
+				a.dispatchEvent(evt);
+				if (cb) {
+					cb();
+				}
+			}
 		}
 	}
+	
 }
 
 function clearAnswerState() {
