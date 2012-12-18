@@ -43,7 +43,7 @@ var SMILEROUTES = {
 	,"mystate" : "/JunctionServerExecution/current/MSG/%s.txt"
 	,"postinquiry" : "/smile/question"
 }
-var VERSION = '0.9.9';
+var VERSION = '0.9.10';
 
 //
 // 1 - login screen
@@ -192,28 +192,41 @@ GlobalViewModel.doLoginReset = function() {
 	return false;
 }
 
-GlobalViewModel.doQReset = function() {
-	this.q1("");
-	this.q2("");
-	this.q3("");
-	this.q4("");
-	this.answer("");
-	this.imageuri("");
+GlobalViewModel.doInquiryReset = function() {
+	var self = this;
+	self.a1("");
+	self.a2("");
+	self.a3("");
+	self.a4("");
+	self.answer("");
+	self.rightanswer("a1");
+	self.question("");
+	self.picurl("");
 }
 
 GlobalViewModel.doSubmitQ = function() {
 	var self = this;
 	console.log(">>>>>>>>>>doSubmitQ");
 	var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
-	doPostInquiry(jsondata); 
+	doPostInquiry(jsondata, function() {
+		self.doInquiryReset();
+	});
 }
 
 GlobalViewModel.doSubmitQandDone = function() {
+	var self = this;
 	console.log("doSubmitQandDone");
-}
-
-GlobalViewModel.addQuestion = function() {
-	
+	var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
+	doPostInquiry(jsondata, function() {
+		self.doInquiryReset();
+		// XXX Localize this
+		$('div#inquiry-form-area').block({ 
+			message: '<h1>Done.  Please wait for the rest of the students to Creating Questions</h1>', 
+			css: { border: '3px solid #a00'
+			 	   ,width: '80%'
+			} 
+		});
+	});
 }
 
 $(document).ready(function() {
@@ -377,6 +390,9 @@ function doPostInquiry(inquirydata, cb) {
 				}
 			   , success: function(data) {
 					smileAlert('#globalstatus', 'Sent Inquiry Question', 'green', 5000);
+					if (cb) {
+						cb();
+					}
 					//
 					// We should track a count of successful submits
 					//
@@ -453,6 +469,7 @@ function statechange(from,to) {
 		if (to == 1) {} // Teacher reset game ... hang in phase 2
 		if (to == 3) { // Enter Make Questions Phase
 			SMILESTATE = 3;
+			$('div#inquiry-form-area').unblock();
 			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["3"].id + '"]');
 			if ($next) {
 				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["3"].label + ' phase.', 2500);

@@ -80,7 +80,7 @@
 									<p>Please wait for the class to begin.  Your teacher will give you instructions on whether to prepare questions or start answering questions.<!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span>--></p>
 								</li>
         						<li id="makeq-pane1Tab">
-									<div id="foobar">
+									<div id="inquiry-form-area">
 									<!-- NICE DEBUG TRICK -->KO:<span data-bind="text: ko.toJSON($data)"></span>
 									<form action="return false;">
 	  									<label>Question</label>
@@ -128,10 +128,12 @@
 	  											</label>
 											</div>
 										</div>
-										<ul class="button-group even two-up">
-	  										<li><a href="#" data-bind='click: doSubmitQ' class="button">Submit</a></li>
-	  										<li><a href="#" data-bind='click: doSubmitQandDone' class="button">Submit &amp; Done</a></li>
-										</ul>
+										<div id="submit-inquiry-area">
+											<ul class="button-group even two-up">
+		  										<li><a href="#" data-bind='click: doSubmitQ' class="button">Submit</a></li>
+		  										<li><a href="#" data-bind='click: doSubmitQandDone' class="button">Submit &amp; Done</a></li>
+											</ul>
+										</div>
 									</form>
 
 									</div>
@@ -252,5 +254,6 @@
 	<script type='text/javascript' src='js/sprintf-0.7-beta1.js'></script>
 	<script type='text/javascript' src='js/smilestudent.js'></script>
 	<script type='text/javascript' src='js/stacktrace-min-0.4.js'></script>
+	<script type='text/javascript' src='js/jquery.blockUI.js'></script>
 </body>
 </html>
