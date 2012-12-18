@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.12';
+var VERSION = '0.9.13';
 
 //
 // 1 - login screen
@@ -174,6 +174,8 @@ var GlobalViewModel =  {
 	,picurl : ko.observable("")
 	,rating : ko.observable("")
 	,isInquiryQAValid: ko.observable(false)
+	,answersarray: ko.observableArray([])
+	,ratingsarray: ko.observableArray([])
 	,version : VERSION
 };
 
@@ -282,10 +284,17 @@ GlobalViewModel.doSubmitQandDone = function() {
 	}
 }
 
+GlobalViewModel.doSaveAnswerState = function() {
+	var self = this;
+	console.log(">>>>>>>>>>doSaveAnswerState");
+	self.answersarray()[self.qidx()] = self.answer()[1]; // Drop the leading 'a' from the answer label
+	self.ratingsarray()[self.qidx()] = self.rating();
+}
+
 GlobalViewModel.doAnswerPrevQ = function() {
 	var self = this;
 	console.log(">>>>>>>>>>doAnswerPrevQ");
-	// doSaveAnswerState
+	self.doSaveAnswerState();
 	
 	// Check if there are more questions
 	
@@ -309,7 +318,7 @@ GlobalViewModel.doAnswerNextQ = function() {
 	var self = this;
 	console.log(">>>>>>>>>>doAnswerNextQ");
 	
-	// doSaveAnswerState
+	self.doSaveAnswerState();
 	
 	// Check if there are more questions
 	
@@ -325,6 +334,12 @@ GlobalViewModel.doAnswerNextQ = function() {
 			css: { border: '3px solid #a00'
 			 	   ,width: '80%'
 			} 
+		});
+		doPostAnswers(GlobalViewModel.answersarray(), GlobalViewModel.ratingsarray(), GlobalViewModel.username(), GlobalViewModel.clientip(), function(){
+			//
+			// Should we do something else?
+			//
+			smileAlert('#globalstatus', 'Submitted Answers for ' + GlobalViewModel.username(), 'blue', 5000);
 		});
 	}
 	/* if (self.validateInquiry()) {
@@ -501,16 +516,48 @@ function doPostInquiry(inquirydata, cb) {
 			   , data: inquirydata
 			   , error: function (xhr, text, err) {
 					// TODO: XXX Decide what to do if this post fails
-					smileAlert('#globalstatus', 'Unable to post inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
+					smileAlert('#globalstatus', 'Unable to post inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace', '5000');
 				}
 			   , success: function(data) {
 					smileAlert('#globalstatus', 'Sent Inquiry Question', 'green', 5000);
 					if (cb) {
-						cb();
+						cb(data);
 					}
 					//
 					// We should track a count of successful submits
 					//
+				}
+	});
+}
+
+//
+// Post the answers
+// 
+// Format:
+// {"MYRATING":[1,5,5,5,5,5,5,5,5,5,5,5],"MYANSWER":[1,4,4,4,4,4,4,4,4,4,4,4],
+// "NAME":"default.102","TYPE":"ANSWER","IP":"10.0.0.102"}
+function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
+	$.ajax({ cache: false
+			   , type: "POST"
+			   , dataType: "text"
+			   , url: SMILEROUTES["submitanswers"]
+			   , data: {"MSG":JSON.stringify({ "MYRATING" : ratingsarray,
+								"MYANSWER" : answersarray,
+								"NAME" : username,
+								"TYPE" : "ANSWER",
+								"IP" : clientip
+				 			})
+				}
+			   , error: function (xhr, text, err) {
+					// TODO: XXX Decide what to do if this post fails
+					smileAlert('#globalstatus', 'Unable to submit answers.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
+				}
+			   , success: function(data) {
+					if (data) {
+					}
+					if (cb) {
+						cb(data);
+					}
 				}
 	});
 }
@@ -534,6 +581,10 @@ function doGetInquiry(qnum) {
 						GlobalViewModel.a3(data.O3);
 						GlobalViewModel.a4(data.O4);
 						GlobalViewModel.othermsg((GlobalViewModel.qidx() + 1) + "/" + GlobalViewModel.numq());
+						if (GlobalViewModel.answersarray()[GlobalViewModel.qidx()]) {
+							GlobalViewModel.answer("a" + GlobalViewModel.answersarray()[GlobalViewModel.qidx()])
+						}
+
 						if (data.TYPE === "QUESTION_PIC") {
 							GlobalViewModel.picurl(data.PICURL);
 						} else {
@@ -645,6 +696,8 @@ function statechange(from,to, data, cb) {
 				GlobalViewModel.sessionstatemsg("Start Answering Questions until the teacher calls time");
 				GlobalViewModel.numq(data.NUMQ);
 				GlobalViewModel.qidx(0);
+				GlobalViewModel.answersarray([]);
+				GlobalViewModel.ratingsarray([]);
 				a.dispatchEvent(evt);
 				if (cb) {
 					cb();
@@ -662,6 +715,7 @@ function statechange(from,to, data, cb) {
 			SMILESTATE = 4;
 			var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
 			if ($next) {
+				// XXX This is a copy paste of the same block of code 'from state == 2', refactor
 				smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
 				console.log('go to href = ' + $next.attr('href'));
 				$next.removeClass('disabled');
@@ -671,6 +725,8 @@ function statechange(from,to, data, cb) {
 				GlobalViewModel.sessionstatemsg("Start Answering Questions until the teacher calls time");
 				GlobalViewModel.numq(data.NUMQ);
 				GlobalViewModel.qidx(0);
+				GlobalViewModel.answersarray([]);
+				GlobalViewModel.ratingsarray([]);
 				a.dispatchEvent(evt);
 				if (cb) {
 					cb();
@@ -693,7 +749,11 @@ function clearAnswerState() {
 	GlobalViewModel.a4("");
 	GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
 	GlobalViewModel.rating("");
-	$('#star-rating').rating();
+	GlobalViewModel.rating("5");
+	$('#star-rating').rating(function(vote, event){
+		console.log(vote, event);
+	    GlobalViewModel.rating(vote);
+	});
 }
 
 function restoreLoginState() {

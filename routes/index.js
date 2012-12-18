@@ -171,9 +171,14 @@ exports.handlePushMessage = function(req, res) {
 };
 
 exports.handlePushMsgPost = function(req, res) {
-  var message = req.body.MSG;
-  req.body = JSON.parse(message);
-  exports.handlePushMessage(req, res);
+  	var message = req.body.MSG;
+	try {
+  		req.body = JSON.parse(message);
+		exports.handlePushMessage(req, res);
+	} catch(e) {
+		res.handleError("Can't parse Incoming JSON")
+	}
+  	
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
