@@ -36,7 +36,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.2.10',
+  'VERSION_TAG' : '0.2.11',
   'VERSION_DESCRIPTION' : 'SMILE Server',
 };
 
@@ -71,6 +71,7 @@ js.get('/smile/student', routes.handleStudentGetAll);
 js.put('/smile/student', routes.handleStudentPut);
 js.post('/smile/student', routes.handleStudentPut);
 js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
+js.get('/smile/student/:id/result', routes.handleGetStudentResults, true);
 
 js.get('/smile/results', routes.handleResultsGet);
 js.get('/smile/all', routes.handleAllMessagesGet);
