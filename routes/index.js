@@ -55,6 +55,17 @@ exports.handleStudentGetAll = function(req, res) {
   return res.sendJSON(HTTP_STATUS_OK, game.students.getAll());
 };
 
+exports.handleGetStudentResults = function(req, res) {
+	var rightAnswers = game.questions.getRightAnswers();
+	var studentStatus = game.students.getStudentStatus(req.id);
+	if (studentStatus instanceof Error) {
+		res.handleError(studentStatus);
+	} else {
+		studentStatus["RIGHT_ANSWERS"] = rightAnswers;
+		return res.sendJSON(HTTP_STATUS_OK, studentStatus);
+	}
+};
+
 exports.handleStartSolveQuestionPut = function(req, res) {
   var timeLimit = 10; // The same time limit of old implementation.
   if (req.body.TIME_LIMIT) {

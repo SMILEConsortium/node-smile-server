@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.14';
+var VERSION = '0.9.15';
 
 //
 // 1 - login screen
@@ -514,6 +514,12 @@ function doSmileLogin(clientip, username, realname) {
 	});
 }
 
+function doGetResults() {
+	//
+	// TODO
+	//
+	console.log("IMPLEMENT");
+}
 function doPostInquiry(inquirydata, cb) {
 	$.ajax({ cache: false
 			   , type: "POST"
