@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.15';
+var VERSION = '0.9.17';
 
 //
 // 1 - login screen
@@ -214,7 +214,8 @@ GlobalViewModel.doLogin = function() {
 
 GlobalViewModel.validateInquiry = function() {
 	var self = this;
-	return (self.a1() != "" && self.a2() != "" && self.a3() != "" && self.a4() != "" && self.answer() != "" && self.question() != "");
+	console.log('a1: ' + self.a1() + ' a2: ' + self.a2() + ' a3: ' + self.a3() + ' a4 : ' + self.a4() + ' rightanswer: ' + self.rightanswer() + ' question: ' + self.question());
+	return (self.a1() != "" && self.a2() != "" && self.a3() != "" && self.a4() != "" && self.rightanswer() != "" && self.question() != "");
 }
 
 GlobalViewModel.doLoginReset = function() {
@@ -643,7 +644,11 @@ function doSMSG() {
 						});
 					};
 					if (msg === "WARN") {};
-					if ((msg === "") || (msg === null) || (msg === undefined)) { statechange(SMILESTATE, 1); }
+					if ((msg === "") || (msg === null) || (msg === undefined)) { 
+						// XXX Why in the world was I doing this?  I don't think we want to bump back to state 1
+						// Leave this around for a bit until I remember what of this
+						// statechange(SMILESTATE, 1); 
+					}
 					// Ignore anything else that we receive
 					// We should have a RESET_GAME
 				} else {
@@ -654,6 +659,7 @@ function doSMSG() {
 }
 
 function statechange(from,to, data, cb) {
+	console.log('transition: ' + from + ' : ' + to)
 	if (from == 1) { // FROM 1
 		if (SMILESTATE != 1) { return; }
 		// We can only loop back to 1 or go to 2 (waiting)
