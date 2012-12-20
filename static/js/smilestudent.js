@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.20';
+var VERSION = '0.9.21';
 
 //
 // 1 - login screen
@@ -312,8 +312,21 @@ GlobalViewModel.doAnswerNextQ = function() {
 	
 	self.doSaveAnswerState();
 	
+	// 
+	// Validate the answer
+	//
+	if (!self.validateInquiryAnswer()) {
+		$('div#answer-form-area').block({ 
+			message: '<h3>Please select an answer</h3>', 
+			css: { border: '3px solid #a00'
+			 	   ,width: '30%'
+			},
+			timeout: 5000
+		});
+		return;
+	}
+
 	// Check if there are more questions
-	
 	if ((GlobalViewModel.qidx()+1) < GlobalViewModel.numq()) {
 		GlobalViewModel.qidx(GlobalViewModel.qidx() + 1);
 		doGetInquiry(GlobalViewModel.qidx());
@@ -327,14 +340,13 @@ GlobalViewModel.doAnswerNextQ = function() {
 			 	   ,width: '80%'
 			} 
 		});
-		if (self.validateInquiryAnswer()) {
-			doPostAnswers(GlobalViewModel.answersarray(), GlobalViewModel.ratingsarray(), GlobalViewModel.username(), GlobalViewModel.clientip(), function(){
-				//
-				// Should we do something else?
-				//
-				smileAlert('#globalstatus', 'Submitted Answers for ' + GlobalViewModel.username(), 'blue', 5000);
-			});
-		}
+
+		doPostAnswers(GlobalViewModel.answersarray(), GlobalViewModel.ratingsarray(), GlobalViewModel.username(), GlobalViewModel.clientip(), function(){
+			//
+			// Should we do something else?
+			//
+			smileAlert('#globalstatus', 'Submitted Answers for ' + GlobalViewModel.username(), 'blue', 5000);
+		});
 	}
 	/* if (self.validateInquiry()) {
 		var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
