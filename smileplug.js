@@ -36,7 +36,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.2.18',
+  'VERSION_TAG' : '0.2.19',
   'VERSION_DESCRIPTION' : 'SMILE Server',
 };
 
