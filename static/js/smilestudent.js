@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.19';
+var VERSION = '0.9.20';
 
 //
 // 1 - login screen
@@ -160,7 +160,6 @@ var GlobalViewModel =  {
 	,qidx: ko.observable(0)
 	,picurl : ko.observable("")
 	,rating : ko.observable("")
-	,isInquiryQAValid: ko.observable(false)
 	,answersarray: ko.observableArray([])
 	,ratingsarray: ko.observableArray([])
 	,version : VERSION
@@ -178,14 +177,6 @@ GlobalViewModel.curq = ko.computed(function() {
     return self.qidx + 1;
 }, self);
 
-//
-// XXX This doesn't work, don't know why
-// probably delete this.
-//
-GlobalViewModel.isInquiryQAValid = ko.computed(function() {
-	var self = this;
-	return (self.a1 != "" && self.a2 != "" && self.a3 != "" && self.a4 != "" && self.answer != "" && self.question != "");
-}, self);
 
 GlobalViewModel.doLogin = function() {
 	var self = this;
@@ -233,7 +224,6 @@ GlobalViewModel.doInquiryReset = function() {
 	self.rightanswer("");
 	self.question("");
 	self.picurl("");
-	self.isInquiryQAValid("false");
 }
 
 GlobalViewModel.doSubmitQ = function() {
@@ -247,7 +237,7 @@ GlobalViewModel.doSubmitQ = function() {
 	} else {
 		console.log("Cannot validateInquiry");
 		$('div#inquiry-form-area').block({ 
-			message: '<h3>Please fill in all fields</h3>', 
+			message: '<h3>Please fill in all fields and check correct answer</h3>', 
 			css: { border: '3px solid #a00'
 			 	   ,width: '30%'
 			},
@@ -262,8 +252,10 @@ GlobalViewModel.doSubmitQandDone = function() {
 	if (self.validateInquirySubmission()) {
 		var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
 		doPostInquiry(jsondata, function() {
+			console.log("waiting for next phase");
 			self.doInquiryReset();
 			// XXX Localize this
+			
 			$('div#inquiry-form-area').block({ 
 				message: '<h1>Done.  Please wait for the rest of the students to finish Creating Questions</h1>', 
 				css: { border: '3px solid #a00'
@@ -272,9 +264,10 @@ GlobalViewModel.doSubmitQandDone = function() {
 			});
 		});
 	} else {
+		// XXX Refactoring candidate
 		console.log("Cannot validateInquiry");
 		$('div#inquiry-form-area').block({ 
-			message: '<h3>Please fill in all fields</h3>', 
+			message: '<h3>Please fill in all fields and check correct answer</h3>', 
 			css: { border: '3px solid #a00'
 			 	   ,width: '30%'
 			},
