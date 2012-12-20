@@ -46,8 +46,9 @@ var SMILEROUTES = {
 	,"submitanswers" : "/smile/pushmsg.php"
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
+	,"getresults" : "/smile/student/%s/result"
 }
-var VERSION = '0.9.21';
+var VERSION = '0.9.22';
 
 //
 // 1 - login screen
@@ -518,8 +519,20 @@ function doGetResults() {
 	//
 	// TODO
 	//
-	console.log("IMPLEMENT");
+	$.ajax({ cache: false
+			   , type: "GET" // XXX should be POST
+			   , dataType: "json"
+			   , url: sprintf(SMILEROUTES["getresults"], GlobalViewModel.clientip())
+			   , data: {}
+			   , error: function (xhr, text, err) {
+					smileAlert('#globalstatus', 'Cannot obtain results.  Please verify your connection or server status.', 'trace');
+				 }
+			   , success: function(data) {
+					displayResults(data);
+				}
+	});
 }
+
 function doPostInquiry(inquirydata, cb) {
 	$.ajax({ cache: false
 			   , type: "POST"
@@ -641,7 +654,7 @@ function doSMSG() {
 					if (msg === "START_SHOW") {
 						statechange(SMILESTATE,5, data, function() {
 							GlobalViewModel.sessionstatemsg("Done! Please review your Score.");
-							doGetResults();
+							doGetResults(data);
 						});
 					};
 					if (msg === "WARN") {};
@@ -833,6 +846,59 @@ function clearAnswerState() {
 		console.log(vote, event);
 	    GlobalViewModel.rating(vote);
 	});
+}
+
+/* 
+ {"NAME":"vsundoaq8620",
+  "MADE":"N","SOLVED":"Y","NUMQ":12,
+  "YOUR_ANSWERS":["1","1","4","1","1","4","2","4","3","2","3","4"],
+  "RIGHT_ANSWERS":[2,3,4,1,3,3,2,4,1,1,1,3],
+  "ANSWER_SCORING":[0,0,1,1,0,0,1,1,0,0,0,0],
+  "NUM_RIGHT":4,
+  "SCORE_AS_PERCENTAGE":0.3333333333333333}
+*/
+// XXX Let's refactor this to properly use knockout.js
+// Need to read up on the foreach iterator
+function displayResults(data) {
+	$('#results-area').empty();
+	var resultsHTML = "";
+	var i = 0;
+	var answers = data.YOUR_ANSWERS;
+	var rightanswer = data.RIGHT_ANSWERS;
+	var answer_scoring = data.ANSWER_SCORING;
+	var resultstr;
+	var percentage;
+	if (data.SOLVED === "Y") {
+		//
+		// Add a Score
+		//
+		try {
+			percentage = (data.SCORE_AS_PERCENTAGE*100).toPrecision(2);
+		} catch(e) {
+			percentage = 'N/A';
+		}
+		resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage+ "%)<H1>\n";
+		resultsHTML = resultsHTML + "<div class='row'>\n<div class='four columns centered'>\n";
+		resultsHTML = resultsHTML + "<ol>\n";
+
+		// 
+		// Show results for each answer
+		// XXX Improve this
+		for (i = 0; i < answers.length; i++) {
+			if (answer_scoring[i] == 1) {
+				resultstr = "&#x2713; Right";
+			} else {
+				resultstr = "&#x2717; Wrong";
+			}
+
+			resultsHTML = resultsHTML + "<li>" + resultstr + " : Your answer: " + answers[i] + "</li>\n";
+		}
+		resultsHTML = resultsHTML + "</ol>\n";
+		resultsHTML = resultsHTML + "</div>\n";
+	} else {
+		resultsHTML = "<H1>No Questions Answered, No Score Available</H1>\n"; // XXX LOCALIZE IT
+	}
+	$('#results-area').append(resultsHTML);
 }
 
 function restoreLoginState() {

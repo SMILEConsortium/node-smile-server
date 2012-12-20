@@ -7,7 +7,7 @@
 					  "Fish - RIP",
 					  "Benny - RIP",
 					  "dkords@gmail.com"],
-  	"version": "0.2.17",
+  	"version": "0.2.18",
   	"private": true,
   	"dependencies": {
     	"vows": "0.6.0",

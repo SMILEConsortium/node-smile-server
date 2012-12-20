@@ -36,7 +36,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
   'PORT' : 80,
   'HOST' : '0.0.0.0',
-  'VERSION_TAG' : '0.2.17',
+  'VERSION_TAG' : '0.2.18',
   'VERSION_DESCRIPTION' : 'SMILE Server',
 };
 
@@ -71,7 +71,8 @@ js.get('/smile/student', routes.handleStudentGetAll);
 js.put('/smile/student', routes.handleStudentPut);
 js.post('/smile/student', routes.handleStudentPut);
 js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
-js.get('/smile/student/:id/result', routes.handleGetStudentResults, true);
+// Use this to get a decent results calculation
+js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
 
 js.get('/smile/results', routes.handleResultsGet);
 js.get('/smile/all', routes.handleAllMessagesGet);
@@ -89,6 +90,7 @@ js.get('/smile/questionview/:id.jpg', routes.handleQuestionImageGet, true);
 // Compatibility with newer SMILE Student MULTILANG
 js.post('/smile/pushmsg.php', routes.handlePushMsgPost);
 js.get('/smile/current/MSG/smsg.txt', routes.handleCurrentMessageGet);
+// This gets the student status by IP, including their answers
 js.get('/smile/current/MSG/:id.txt', routes.handleStudentStatusGetByIP, true);
 js.get('/smile/current/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/current/:id.html', routes.handleQuestionHtmlGet, true);

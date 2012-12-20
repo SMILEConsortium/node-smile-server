@@ -55,13 +55,38 @@ exports.handleStudentGetAll = function(req, res) {
   return res.sendJSON(HTTP_STATUS_OK, game.students.getAll());
 };
 
-exports.handleGetStudentResults = function(req, res) {
+exports.handleStudentResultsGet = function(req, res) {
+	var studentStatus = game.studentsWrapper.getStudentStatus(req.id, game.questions.getNumberOfQuestions());
 	var rightAnswers = game.questions.getRightAnswers();
-	var studentStatus = game.students.getStudentStatus(req.id);
+	var myAnswers;
+	var RIGHT = 1;
+	var WRONG = 0;
 	if (studentStatus instanceof Error) {
 		res.handleError(studentStatus);
 	} else {
+		// Augment data with right answers
 		studentStatus["RIGHT_ANSWERS"] = rightAnswers;
+		studentStatus["ANSWER_SCORING"] = [];
+		studentStatus["NUM_RIGHT"] = 0;
+		studentStatus["SCORE_AS_PERCENTAGE"] = 0;
+		if (studentStatus.SOLVED === "Y") {
+			myAnswers = studentStatus["YOUR_ANSWERS"];
+			if (myAnswers) {
+				// Be careful to only check scores against the total # answered
+				for (var i = 0; i < myAnswers.length ; i++ ) {
+					if (rightAnswers[i] == myAnswers[i]) {
+						studentStatus.ANSWER_SCORING[i] = RIGHT;
+						studentStatus.NUM_RIGHT = studentStatus.NUM_RIGHT + 1;
+					} else {
+						studentStatus.ANSWER_SCORING[i] = WRONG;
+					}
+				}
+				
+				// Make sure to escape the data
+				studentStatus.SCORE_AS_PERCENTAGE = JSON.stringify(studentStatus.NUM_RIGHT/studentStatus.NUMQ);
+				studentStatus.NUM_RIGHT = JSON.stringify(studentStatus.NUM_RIGHT);
+			}
+		}
 		return res.sendJSON(HTTP_STATUS_OK, studentStatus);
 	}
 };
