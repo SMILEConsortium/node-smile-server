@@ -47,7 +47,7 @@ var SMILEROUTES = {
 	,"echoclientip" : "/smile/echoclientip"
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 }
-var VERSION = '0.9.17';
+var VERSION = '0.9.18';
 
 //
 // 1 - login screen
@@ -167,7 +167,7 @@ var GlobalViewModel =  {
 	,a2 : ko.observable("")
 	,a3 : ko.observable("")
 	,a4 : ko.observable("")
-	,rightanswer: ko.observable("a1")
+	,rightanswer: ko.observable("")
 	,numq: ko.observable("")
 	,curq: ko.observable(0)
 	,qidx: ko.observable(0)
@@ -238,7 +238,7 @@ GlobalViewModel.doInquiryReset = function() {
 	self.a3("");
 	self.a4("");
 	self.answer("");
-	self.rightanswer("a1");
+	self.rightanswer("");
 	self.question("");
 	self.picurl("");
 	self.isInquiryQAValid("false");
