@@ -228,7 +228,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="three columns">	
+			<div class="three columns">
 				<!-- <div data-bind="with: logindata"> -->
 				<div id="login-info">	
 					<h4>Instructions for <div data-bind="text: username" id="student-username">Student</div> <div data-bind="text: realname" id="student-realname"></div></h4>
@@ -242,7 +242,29 @@
 						<p><div id="logoutarea"><a data-bind="click: doLoginReset" class="secondary button" href="#logout-action">Logout</a></div></p>
 					</div>
 				</div>
-				<!-- </div> -->
+			</div>
+			<div id="iq-area" style="display:none">
+			<H3>Question <span data-bind="text: qidx() + 1"></span></H3>
+			<H4 class="subheader"><span data-bind="text: question"></span></H4>
+			<P><img data-bind="attr: { src: picurl }" /></P>
+			<br/>
+			<form>
+				<ul class="block-grid two-up">
+					<!-- Row Q1 -->
+					<li><label>A) <span data-bind="text: a1">1998</span></label></li>
+					<li><label for="a1"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio" value="a1" id="a1"> Correct?</label></li>
+					<!-- Row Q2 -->
+					<li><label>B) <span data-bind="text: a2">1836</span></label></li>
+					<li><label for="a2"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio" value="a2" id="a2"> Correct?</label></li>
+					<!-- Row Q3 -->
+					<li><label>C) <span data-bind="text: a3">1812</span3></label></li>
+					<li><label for="a3"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio" value="a3" id="a3"> Correct?</label></li>
+					<!-- Row Q4 -->
+					<li><label>D) <span data-bind="text: a4">1901</span></label></li>
+					<li><label for="a4"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio" value="a4" id="a4"> Correct?</label></li>
+				</ul>
+				<P><em>Rating:</em><span data-bind="text: rating">5</span></P>
+			</form>
 			</div>
 		</div>
 	</div>

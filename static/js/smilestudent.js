@@ -48,7 +48,7 @@ var SMILEROUTES = {
 	,"defaultpicurl" : "/images/1x1-pixel.png"
 	,"getresults" : "/smile/student/%s/result"
 }
-var VERSION = '0.9.22';
+var VERSION = '0.9.23';
 
 //
 // 1 - login screen
@@ -587,7 +587,7 @@ function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
 	});
 }
 
-function doGetInquiry(qnum) {
+function doGetInquiry(qnum, cb) {
 	$.ajax({ cache: false
 			   , type: "GET"
 			   , dataType: "json"
@@ -607,7 +607,7 @@ function doGetInquiry(qnum) {
 						GlobalViewModel.a4(data.O4);
 						GlobalViewModel.othermsg((GlobalViewModel.qidx() + 1) + "/" + GlobalViewModel.numq());
 						if (GlobalViewModel.answersarray()[GlobalViewModel.qidx()]) {
-							GlobalViewModel.answer("a" + GlobalViewModel.answersarray()[GlobalViewModel.qidx()])
+							GlobalViewModel.answer("a" + GlobalViewModel.answersarray()[GlobalViewModel.qidx()]);
 						} else {
 							GlobalViewModel.answer("");
 						}
@@ -616,6 +616,10 @@ function doGetInquiry(qnum) {
 							GlobalViewModel.picurl(data.PICURL);
 						} else {
 							GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
+						}
+						
+						if (cb) {
+							cb();
 						}
 					}
 				}
@@ -867,6 +871,8 @@ function displayResults(data) {
 	var rightanswer = data.RIGHT_ANSWERS;
 	var answer_scoring = data.ANSWER_SCORING;
 	var resultstr;
+	var resultclass;
+	
 	var percentage;
 	if (data.SOLVED === "Y") {
 		//
@@ -878,8 +884,7 @@ function displayResults(data) {
 			percentage = 'N/A';
 		}
 		resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage+ "%)<H1>\n";
-		resultsHTML = resultsHTML + "<div class='row'>\n<div class='four columns centered'>\n";
-		resultsHTML = resultsHTML + "<ol>\n";
+		resultsHTML = resultsHTML + "<div class='eight columns'>\n";
 
 		// 
 		// Show results for each answer
@@ -887,20 +892,46 @@ function displayResults(data) {
 		for (i = 0; i < answers.length; i++) {
 			if (answer_scoring[i] == 1) {
 				resultstr = "&#x2713; Right";
+				resultclass = 'rightanswer';
 			} else {
 				resultstr = "&#x2717; Wrong";
+				resultclass = 'wronganswer';
 			}
-
-			resultsHTML = resultsHTML + "<li>" + resultstr + " : Your answer: " + answers[i] + "</li>\n";
+			resultsHTML = resultsHTML + "<div class='row display'><div class='two columns'>Q: " + (i + 1) + "</div><div class='four columns " + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "</div><div class='two columns'><a class='tiny button' id='iq" + i + "' onclick='showIQ(" + i + ")' href='javascript:void(0);'>Details</a></div></div><!-- row -->\n";
 		}
-		resultsHTML = resultsHTML + "</ol>\n";
-		resultsHTML = resultsHTML + "</div>\n";
+		resultsHTML = resultsHTML + "</div><!-- eight columns-->\n";
 	} else {
 		resultsHTML = "<H1>No Questions Answered, No Score Available</H1>\n"; // XXX LOCALIZE IT
 	}
 	$('#results-area').append(resultsHTML);
 }
 
+function showIQ(qnum) {
+	$.blockUI({
+		message: '<h1>Loading Question Details</h1>',
+		css: {
+			border: 'none',
+			padding: '15px',
+			backgroundColor: '#000',
+			'-webkit-border-radius': '10px',
+			'-moz-border-radius': '10px',
+			opacity: .5, 
+			color: '#fff'
+		}
+	});
+	
+	doGetInquiry(qnum, function(data) {
+		$.unblockUI();
+		GlobalViewModel.answer("a" + GlobalViewModel.rightanswer());
+		$.blockUI({ 
+			message: $('#iq-area'), 
+			css: { 
+				top: '20%'
+			} 
+		});
+		$('.blockOverlay').attr('title','Click to return to results').click($.unblockUI); 
+	});
+}
 function restoreLoginState() {
 	// 
 	// XXX This needs to clean up the sidebar area too

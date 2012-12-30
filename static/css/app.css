@@ -4,8 +4,7 @@
    Table of Contents
 -----------------------------------------------------
 :: Shared Styles
-:: Page Name 1
-:: Page Name 2
+:: smile-student
 */
 
 
@@ -14,16 +13,27 @@
 ----------------------------------------- */
 
 
-
 /* -----------------------------------------
-   Page Name 1
+   smile-student
 ----------------------------------------- */
+.rightanswer { color: #5da423; }
+.wronganswer { color: #c60f13; }
 
-
-
-
-/* -----------------------------------------
-   Page Name 2
------------------------------------------ */
-
-
+/* Borrow these from the Foundation website docs, useful attributes for setting grid display */
+.row.display .column, .row.display .columns, .block-grid.display li {
+    background: none repeat scroll 0 0 #E7E7E7;
+    border: 1px solid #DDDDDD;
+    font-size: 11px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    text-indent: 3px;
+}
+.row.display .row {
+    margin-top: 6px;
+}
+.row.display .row .columns {
+    background: none repeat scroll 0 0 #DDDDDD;
+}
+.row.display .row .columns .row .columns {
+    background: none repeat scroll 0 0 #CCCCCC;
+}
