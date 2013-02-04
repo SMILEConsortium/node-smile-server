@@ -1,6 +1,6 @@
 {
-  	"name": "smile-junction-server",
-	"descrption": "SMILE Junction Server",
+  	"name": "smile-server",
+	"descrption": "SMILE Server",
 	"author": "Juan Pinazo <juan.pinazo@actminds.com>",
 	"contributors":  [ "Simba",
 					  "Keiko",

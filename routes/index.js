@@ -255,6 +255,35 @@ exports.handleQuestionHtmlGet = function(req, res) {
   res.end();
 };
 
+exports.handleQuestionHtmlGet = function(req, res) {
+  var questionNumber = parseInt(req.id);
+  var question = game.questions.getList()[questionNumber];
+  if (!question) {
+    return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
+  }
+  var studentName = question.NAME; // XXX
+  res.writeHead(200, {
+    'Content-Type' : 'text/html; charset=utf-8',
+  });
+  res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
+  res.write("<p>(Question created by " + studentName + ")</p>\n");
+  res.write("<P>Question:\n");
+  res.write(question.Q);
+  res.write("\n</P>\n");
+
+  if (question.TYPE == "QUESTION_PIC") {
+    res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
+  }
+
+  res.write("<P>\n");
+  res.write("(1) " + question.O1 + "<br>\n");
+  res.write("(2) " + question.O2 + "<br>\n");
+  res.write("(3) " + question.O3 + "<br>\n");
+  res.write("(4) " + question.O4 + "<br>\n");
+  res.write("</P>\n</body></html>\n");
+  res.end();
+};
+
 exports.handleQuestionJSONGet = function(req, res) {
   var questionNumber = parseInt(req.id);
   var question = game.questions.getList()[questionNumber];

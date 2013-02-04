@@ -37,9 +37,15 @@ smile_startsolve:
 smile_showresults:
 	$(CURL) -i -d "{}" -H "Content-Type: application/json" -X PUT http://localhost/smile/sendshowresults
 
+smile_all:
+	$(CURL) -i -X GET http://localhost/smile/all
+
 smile_game_student:
 	$(CURL) -i -X GET http://localhost/smile/student
 	@echo "\n\n"
+
+smile_results:
+	$(CURL) -i -X GET http://localhost/smile/results
 
 server_restart:
 	$(CURL) -i -X GET http://localhost/smile/restart
