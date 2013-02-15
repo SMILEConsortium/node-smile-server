@@ -1,3 +1,5 @@
+* 0.2.28 - 
+* 0.2.27 - Misc.
 * 0.2.26 - Adding updates for versions of android apps, bug fixing to prep for 0.5.2 SMILE Plug BSP release.
 * 0.2.25 - release bundle for 0.5.1 SMILE Plug BSP
 
