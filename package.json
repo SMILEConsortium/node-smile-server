@@ -10,7 +10,7 @@
   	"version": "0.2.28",
   	"private": true,
   	"dependencies": {
-    	"vows": "0.6.0",
+    	"vows": "0.7.0",
     	"request": "2.2.5",
     	"nlogger": "0.3.0",
     	"nodeunit": "0.2.1"

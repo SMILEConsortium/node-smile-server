@@ -273,7 +273,7 @@ suite.addBatch({
     },
     "should return error message in JSON format" : function(err, res, body) {
       assert.equal(res.body, JSON.stringify({
-        "message" : "The question provided refers to nonexistent student: 10.0.2.15"
+        "message" : "The question provided refers to nonexistent student: 10.0.2.15, name=default.15"
       }));
     },
   }
