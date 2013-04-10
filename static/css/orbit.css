@@ -8,17 +8,18 @@
  
 /* PUT IN YOUR SLIDER ID AND SIZE TO MAKE LOAD BEAUTIFULLY
    ================================================== */
-#caseStudies { 
-	width: 1000px;
-	height: 210px;
-	background: #fff url('../images/orbit/loading.gif') no-repeat center center;
-	overflow: hidden; }
-#caseStudies>img,  
+#caseStudies {
+    width: 1000px;
+    height: 210px;
+    background: #fff url('../images/orbit/loading.gif') no-repeat center center;
+    overflow: hidden;
+}
+
+#caseStudies>img,
 #caseStudies>div,
-#caseStudies>a { display: none; }
-
-
-
+#caseStudies>a {
+    display: none;
+}
 
 /* CONTAINER
    ================================================== */
@@ -26,14 +27,16 @@
 div.orbit-wrapper {
     width: 1px;
     height: 1px;
-    position: relative; }
+    position: relative;
+}
 
 div.orbit {
     width: 1px;
     height: 1px;
     position: relative;
-    overflow: hidden }
-    
+    overflow: hidden
+}
+
 div.orbit.with-bullets {
     margin-bottom: 40px;
 }
@@ -42,25 +45,27 @@ div.orbit>img {
     position: absolute;
     top: 0;
     left: 0;
-    /* display: none; */ }
+    /* display: none; */
+}
 
 div.orbit>a {
     border: none;
     position: absolute;
     top: 0;
     left: 0;
-    line-height: 0; 
-    display: none; }
+    line-height: 0;
+    display: none;
+}
 
 .orbit>div {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; }
+    height: 100%;
+}
 
 /* Note: If your slider only uses content or anchors, you're going to want to put the width and height declarations on the ".orbit>div" and "div.orbit>a" tags in addition to just the .orbit-wrapper */
-
 
 /* TIMER
    ================================================== */
@@ -74,7 +79,8 @@ div.timer {
     right: 10px;
     opacity: .6;
     cursor: pointer;
-    z-index: 1001; }
+    z-index: 1001;
+}
 
 span.rotator {
     display: block;
@@ -84,7 +90,8 @@ span.rotator {
     top: 0;
     left: -20px;
     background: url(../images/orbit/rotator-black.png) no-repeat;
-    z-index: 3; }
+    z-index: 3;
+}
 
 span.mask {
     display: block;
@@ -94,15 +101,18 @@ span.mask {
     top: 0;
     right: 0;
     z-index: 2;
-    overflow: hidden; }
+    overflow: hidden;
+}
 
 span.rotator.move {
-    left: 0 }
+    left: 0
+}
 
 span.mask.move {
     width: 40px;
     left: 0;
-    background: url(../images/orbit/timer-black.png) repeat 0 0; }
+    background: url(../images/orbit/timer-black.png) repeat 0 0;
+}
 
 span.pause {
     display: block;
@@ -113,42 +123,46 @@ span.pause {
     left: 0;
     background: url(../images/orbit/pause-black.png) no-repeat;
     z-index: 4;
-    opacity: 0; }
+    opacity: 0;
+}
 
 span.pause.active {
-    background: url(../images/orbit/pause-black.png) no-repeat 0 -40px }
+    background: url(../images/orbit/pause-black.png) no-repeat 0 -40px
+}
 
 div.timer:hover span.pause,
 span.pause.active {
-    opacity: 1 }
-
+    opacity: 1
+}
 
 /* CAPTIONS
    ================================================== */
 
 .orbit-caption {
     display: none;
-    font-family: "HelveticaNeue", "Helvetica-Neue", Helvetica, Arial, sans-serif; }
+    font-family: "HelveticaNeue", "Helvetica-Neue", Helvetica, Arial, sans-serif;
+}
 
 .orbit-wrapper .orbit-caption {
     background: #000;
-    background: rgba(0,0,0,.6);
+    background: rgba(0, 0, 0, .6);
     z-index: 1000;
     color: #fff;
-	text-align: center;
-	padding: 7px 0;
+    text-align: center;
+    padding: 7px 0;
     font-size: 13px;
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 100%; }
-
+    width: 100%;
+}
 
 /* DIRECTIONAL NAV
    ================================================== */
 
 div.slider-nav {
-    display: block }
+    display: block
+}
 
 div.slider-nav span {
     width: 78px;
@@ -158,15 +172,18 @@ div.slider-nav span {
     z-index: 1000;
     top: 50%;
     margin-top: -50px;
-    cursor: pointer; }
+    cursor: pointer;
+}
 
 div.slider-nav span.right {
     background: url(../images/orbit/right-arrow.png);
-    right: 0; }
+    right: 0;
+}
 
 div.slider-nav span.left {
     background: url(../images/orbit/left-arrow.png);
-    left: 0; }
+    left: 0;
+}
 
 /* BULLET NAV
    ================================================== */
@@ -177,8 +194,9 @@ div.slider-nav span.left {
     list-style: none;
     bottom: -40px;
     left: 50%;
-	margin-left: -50px;
-    padding: 0; }
+    margin-left: -50px;
+    padding: 0;
+}
 
 .orbit-bullets li {
     float: left;
@@ -189,31 +207,37 @@ div.slider-nav span.left {
     background: url(../images/orbit/bullets.jpg) no-repeat 4px 0;
     width: 13px;
     height: 12px;
-    overflow: hidden; }
+    overflow: hidden;
+}
 
 .orbit-bullets li.active {
     color: #222;
-    background-position: -8px 0; }
-    
+    background-position: -8px 0;
+}
+
 .orbit-bullets li.has-thumb {
     background: none;
     width: 100px;
-    height: 75px; }
+    height: 75px;
+}
 
 .orbit-bullets li.active.has-thumb {
     background-position: 0 0;
-    border-top: 2px solid #000; }
-    
+    border-top: 2px solid #000;
+}
+
 /* FLUID LAYOUT
    ================================================== */
 .orbit .fluid-placeholder {
-  visibility: hidden;
-  position: static;
-  display: block;
-  width: 100%;
+    visibility: hidden;
+    position: static;
+    display: block;
+    width: 100%;
 }
 
-.orbit, .orbit-wrapper { width: 100% !important; }
+.orbit, .orbit-wrapper {
+    width: 100% !important;
+}
 
 .orbit-bullets {
     position: absolute;
@@ -221,8 +245,9 @@ div.slider-nav span.left {
     list-style: none;
     bottom: -50px;
     left: 50%;
-	margin-left: -50px;
-    padding: 0; }
+    margin-left: -50px;
+    padding: 0;
+}
 
 .orbit-bullets li {
     float: left;
@@ -233,17 +258,21 @@ div.slider-nav span.left {
     background: url(../images/orbit/bullets.jpg) no-repeat 4px 0;
     width: 13px;
     height: 12px;
-    overflow: hidden; }
+    overflow: hidden;
+}
 
 .orbit-bullets li.has-thumb {
     background: none;
     width: 100px;
-    height: 75px; }
+    height: 75px;
+}
 
 .orbit-bullets li.active {
     color: #222;
-    background-position: -8px 0; }
+    background-position: -8px 0;
+}
 
 .orbit-bullets li.active.has-thumb {
     background-position: 0 0;
-    border-top: 2px solid #000; }
+    border-top: 2px solid #000;
+}

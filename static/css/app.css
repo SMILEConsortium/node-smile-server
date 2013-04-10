@@ -7,17 +7,20 @@
 :: smile-student
 */
 
-
 /* -----------------------------------------
    Shared Styles
 ----------------------------------------- */
 
-
 /* -----------------------------------------
    smile-student
 ----------------------------------------- */
-.rightanswer { color: #5da423; }
-.wronganswer { color: #c60f13; }
+.rightanswer {
+    color: #5da423;
+}
+
+.wronganswer {
+    color: #c60f13;
+}
 
 /* Borrow these from the Foundation website docs, useful attributes for setting grid display */
 .row.display .column, .row.display .columns, .block-grid.display li {
@@ -28,12 +31,15 @@
     padding-top: 6px;
     text-indent: 3px;
 }
+
 .row.display .row {
     margin-top: 6px;
 }
+
 .row.display .row .columns {
     background: none repeat scroll 0 0 #DDDDDD;
 }
+
 .row.display .row .columns .row .columns {
     background: none repeat scroll 0 0 #CCCCCC;
 }
