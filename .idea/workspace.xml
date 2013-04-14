@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="60b0b17b-643d-427c-95bd-28af699f8e4e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="60b0b17b-643d-427c-95bd-28af699f8e4e" name="Default" comment="" />
     <ignored path="node-smile-server.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365979375403" ignored="false" />
     <file path="/index.js" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365637478531" ignored="false" />
-    <file path="/a.js" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365637963524" ignored="false" />
+    <file path="/a.js" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365979467864" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/request/tests/server.js" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365637987089" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/nodeunit/test/test-runtest.js" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365637987094" ignored="false" />
     <file path="$PROJECT_DIR$/node_modules/nodeunit/test/test-base.js" changelist="60b0b17b-643d-427c-95bd-28af699f8e4e" time="1365637987094" ignored="false" />
@@ -124,7 +122,7 @@
       <file leaf-file-name="game.test.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/functional/game.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="94" column="0" selection-start="2228" selection-end="2228" vertical-scroll-proportion="0.0">
+            <state line="94" column="0" selection-start="2230" selection-end="2230" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -142,7 +140,7 @@
       <file leaf-file-name="00-sendinitmessage.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/helper/00-sendinitmessage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="1" column="0" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -151,7 +149,7 @@
       <file leaf-file-name="question.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/smile/question.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="1" selection-start="1108" selection-end="1108" vertical-scroll-proportion="0.0">
+            <state line="32" column="1" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -169,7 +167,7 @@
       <file leaf-file-name="question.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/unit/question.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="85" column="0" selection-start="19433" selection-end="19466" vertical-scroll-proportion="0.7837838">
               <folding />
             </state>
           </provider>
@@ -205,6 +203,7 @@
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/lib/smile/question.js" />
+        <option value="$PROJECT_DIR$/tests/unit/question.js" />
       </list>
     </option>
   </component>
@@ -402,7 +401,7 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="preferences.sourceCode.JavaScript" />
+    <property name="options.lastSelected" value="preferences.keymap" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
   </component>
@@ -410,6 +409,23 @@
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="sslv3">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="60b0b17b-643d-427c-95bd-28af699f8e4e" name="Default" comment="" />
@@ -531,7 +547,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/smile/question.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="1" selection-start="1108" selection-end="1108" vertical-scroll-proportion="0.0">
+        <state line="32" column="1" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -565,7 +581,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/functional/game.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="0" selection-start="2228" selection-end="2228" vertical-scroll-proportion="0.0">
+        <state line="94" column="0" selection-start="2230" selection-end="2230" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -579,7 +595,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/helper/00-sendinitmessage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="1" column="0" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -600,7 +616,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/unit/question.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="85" column="0" selection-start="19433" selection-end="19466" vertical-scroll-proportion="0.7837838">
           <folding />
         </state>
       </provider>
