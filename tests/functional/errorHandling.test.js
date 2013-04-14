@@ -256,7 +256,7 @@ var question = {
     "O2": "d",
     "O1": "f",
     "TYPE": 'QUESTION'
-}
+};
 
 suite.addBatch({
     "A PUT to /smile/question with nonexistent student": {
@@ -279,7 +279,7 @@ suite.addBatch({
     }
 });
 
-var studentNoIP = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22NAME%22%3A%22test%22%7D"
+var studentNoIP = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22NAME%22%3A%22test%22%7D";
 
 suite.addBatch({
     "A POST to /JunctionServerExecution/pushmsg.php with no IP": {

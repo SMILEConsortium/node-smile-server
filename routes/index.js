@@ -152,7 +152,7 @@ reset = function() {
     oldGame = game;
     game = new Game();
     delete oldGame;
-}
+};
 
 exports.handleResetGet = function(req, res) {
     reset();
@@ -172,7 +172,7 @@ exports.handlePushMessage = function(req, res) {
     var message = req.body;
     game.registerMessage(message);
     var type = message.TYPE || null;
-    var error;
+    var error = null;
     switch (type) {
         case null:
             // Ignoring the message does not have a type
@@ -212,7 +212,7 @@ exports.handlePushMsgPost = function(req, res) {
         req.body = JSON.parse(message);
         exports.handlePushMessage(req, res);
     } catch (e) {
-        res.handleError("Can't parse Incoming JSON")
+        res.handleError("Can't parse Incoming JSON");
     }
 
 };

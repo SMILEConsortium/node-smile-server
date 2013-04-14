@@ -13,7 +13,7 @@ var q1 = {
     "O3": "O Pato",
     "O4": "O Tigre",
     "A": 2
-}
+};
 
 var q2 = {
     "NAME": "test",
@@ -23,7 +23,7 @@ var q2 = {
     "O3": "E",
     "O4": "R",
     "A": 3
-}
+};
 
 var q3 = {
     "NAME": "test2",
@@ -33,25 +33,25 @@ var q3 = {
     "O3": "E",
     "O4": "R",
     "A": 1
-}
+};
 
 var msgOK = {
     "NAME": "test",
     "IP": "172.16.129.242",
-}
+};
 
 var msgOK2 = {
     "NAME": "test2",
     "IP": "172.16.129.243",
-}
+};
 
 var msgNoIP = {
     "NAME": "test",
-}
+};
 
 var msgNoName = {
     "IP": "172.16.129.242",
-}
+};
 
 exports.testEmptyStudents = function(test) {
     test.expect(2);
@@ -109,12 +109,12 @@ exports.testStatusOfStudents = function(test) {
         "NAME": "test",
         "MADE": "N",
         "SOLVED": "N"
-    }
+    };
     var status2 = {
         "NAME": "test2",
         "MADE": "N",
         "SOLVED": "N"
-    }
+    };
     test.equal(JSON.stringify(status1), JSON.stringify(myStudents.getStudentStatus("172.16.129.242")));
     test.equal(JSON.stringify(status2), JSON.stringify(myStudents.getStudentStatus("172.16.129.243")));
     test.throws(function() {
@@ -139,12 +139,12 @@ exports.testAnswerQuestions = function(test) {
         "SOLVED": "Y",
         "NUMQ": 1,
         "YOUR_ANSWERS": [ 2, 4 ]
-    }
+    };
     var status2 = {
         "NAME": "test2",
         "MADE": "N",
         "SOLVED": "N"
-    }
+    };
     test.equal(JSON.stringify(status1), JSON.stringify(myStudents.getStudentStatus("172.16.129.242", 1)));
     test.equal(JSON.stringify(status2), JSON.stringify(myStudents.getStudentStatus("172.16.129.243", 1)));
     test.throws(function() {

@@ -26,7 +26,7 @@ var questionInput = {
     "O2": "w",
     "O1": "q",
     "TYPE": 'QUESTION_PIC'
-}
+};
 
 var questionResult = {
     "NAME": "default.15",
@@ -39,7 +39,7 @@ var questionResult = {
     "O1": "q",
     "TYPE": 'QUESTION_PIC',
     "PICURL": '/smile/questionview/0.jpg'
-}
+};
 
 var question2 = {
     "NAME": "default.15",
@@ -51,7 +51,7 @@ var question2 = {
     "O2": "d",
     "O1": "f",
     "TYPE": 'QUESTION'
-}
+};
 
 var student = {
     name: "default.15",
@@ -63,7 +63,7 @@ var student = {
     answers: [ 3, 3 ],
     ratings: [ 4, 4 ],
     score: 0
-}
+};
 
 var students = {};
 students["10.0.2.15"] = student;
@@ -74,7 +74,7 @@ var status = {
     "SOLVED": "Y",
     "NUMQ": 2,
     "YOUR_ANSWERS": [ 3, 3 ]
-}
+};
 
 var encodedAnswer = 'MSG=%7B%22MYRATING%22%3A%5B4%2C4%5D%2C%22MYANSWER%22%3A%5B3%2C3%5D%2C%22NAME%22%3A%22default.15%22%2C%22TYPE%22%3A%22ANSWER%22%2C%22IP%22%3A%2210.0.2.15%22%7D';
 var suite = vows.describe('Tests "Receive Questions"');

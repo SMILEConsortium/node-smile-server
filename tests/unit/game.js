@@ -15,7 +15,7 @@ var q1 = {
     "O4": "O Tigre",
     "A": 2,
     "IP": "172.16.129.241"
-}
+};
 
 var q2 = {
     "NAME": "test",
@@ -26,7 +26,7 @@ var q2 = {
     "O4": "R",
     "A": 3,
     "IP": "172.16.129.242"
-}
+};
 
 var q3 = {
     "NAME": "test",
@@ -37,7 +37,7 @@ var q3 = {
     "O4": "R",
     "A": 3,
     "IP": "172.16.129.242"
-}
+};
 
 var q4 = {
     "NAME": "test2",
@@ -48,22 +48,22 @@ var q4 = {
     "O4": "R",
     "A": 3,
     "IP": "172.16.129.243"
-}
+};
 
 var msgOK = {
     "NAME": "test",
     "IP": "172.16.129.242",
-}
+};
 
 var msgOK2 = {
     "NAME": "test2",
     "IP": "172.16.129.243",
-}
+};
 
 var msgOK3 = {
     "NAME": "test3",
     "IP": "172.16.129.244",
-}
+};
 
 exports.testIsDupQuestion = function(test) {
     var game = new Game();
@@ -81,7 +81,7 @@ exports.testIsDupQuestion = function(test) {
     game.addQuestion(q2); // XXX this should fail
     test.equals(2, game.questions.getNumberOfQuestions());
     test.done();
-}
+};
 
 exports.testcalcScoreAndRating = function(test) {
     test.expect(8);
@@ -99,8 +99,8 @@ exports.testcalcScoreAndRating = function(test) {
     student1.registerRatings([ 4, 5 ]);
     student2.registerAnswers([ 3, 4 ]);
     student2.registerRatings([ 3, 1 ]);
-    game.calcScoreAndRating(student1)
-    game.calcScoreAndRating(student2)
+    game.calcScoreAndRating(student1);
+    game.calcScoreAndRating(student2);
     test.equals(1, student1.getScore());
     test.equals(0, student2.getScore());
     test.equals(JSON.stringify([ 4, 3 ]), JSON.stringify(game.questionRatings[0]));

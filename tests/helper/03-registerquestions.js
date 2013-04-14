@@ -22,7 +22,7 @@ var question1 = {
     "O2": "w",
     "O1": "q",
     "TYPE": 'QUESTION_PIC'
-}
+};
 
 var encodedQuestion2 = 'MSG=%7B%22NAME%22%3A%22test2%22%2C%22Q%22%3A%22asdfgh%22%2C%22A%22%3A%222%22%2C%22IP%22%3A%2210.0.2.16%22%2C%22O4%22%3A%22f%22%2C%22O3%22%3A%22d%22%2C%22O2%22%3A%22s%22%2C%22O1%22%3A%22a%22%2C%22TYPE%22%3A%22QUESTION%22%7D';
 

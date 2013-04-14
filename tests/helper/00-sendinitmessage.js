@@ -16,4 +16,4 @@ request({
     method: 'PUT',
     headers: HEADERS_JSON,
     body: JSON.stringify({})
-})
+});

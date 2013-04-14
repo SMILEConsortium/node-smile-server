@@ -25,7 +25,7 @@ var question = {
     "O2": "w",
     "O1": "q",
     "TYPE": 'QUESTION'
-}
+};
 
 var encodedQuestion = 'MSG=%7B%22NAME%22%3A%22default.15%22%2C%22Q%22%3A%22qwerty%22%2C%22A%22%3A%223%22%2C%22IP%22%3A%2210.0.2.15%22%2C%22O4%22%3A%22r%22%2C%22O3%22%3A%22e%22%2C%22O2%22%3A%22w%22%2C%22O1%22%3A%22q%22%2C%22TYPE%22%3A%22QUESTION%22%7D';
 
@@ -100,7 +100,7 @@ var questionTeacher = {
     "O2": "c",
     "O1": "v",
     "TYPE": 'QUESTION'
-}
+};
 
 suite.addBatch({
     "Insert teacher question": {

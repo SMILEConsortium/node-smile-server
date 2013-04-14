@@ -14,8 +14,8 @@ HEADERS_ENCODED = {
     'Content-Type': 'application/x-www-form-urlencoded'
 };
 
-var msgOK = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.242%22%2C%22NAME%22%3A%22test%22%7D"
-var msgOK2 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.243%22%2C%22NAME%22%3A%22test2%22%7D"
+var msgOK = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.242%22%2C%22NAME%22%3A%22test%22%7D";
+var msgOK2 = "MSG=%7B%22TYPE%22%3A%22HAIL%22%2C%22IP%22%3A%22172.16.129.243%22%2C%22NAME%22%3A%22test2%22%7D";
 
 
 var student = {
@@ -25,7 +25,7 @@ var student = {
     "answers": [],
     "ratings": [],
     "score": 0
-}
+};
 var student2 = {
     "name": "test2",
     "ip": "172.16.129.243",
@@ -33,7 +33,7 @@ var student2 = {
     "answers": [],
     "ratings": [],
     "score": 0
-}
+};
 
 var studentId = '172.16.129.242';
 var studentId2 = '172.16.129.243';

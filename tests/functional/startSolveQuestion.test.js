@@ -20,7 +20,7 @@ var startSolveQuestionMessage = {
     'TYPE': 'START_SOLVE',
     'NUMQ': 1,
     'RANSWER': [3]
-}
+};
 
 var question = {
     "NAME": "default.15",
@@ -32,7 +32,7 @@ var question = {
     "O2": "w",
     "O1": "q",
     "TYPE": 'QUESTION'
-}
+};
 
 var suite = vows.describe('Tests "Start Solve Question"');
 

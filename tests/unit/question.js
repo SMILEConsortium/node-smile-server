@@ -11,7 +11,7 @@ var q1 = {
     "O3": "O Pato",
     "O4": "O Tigre",
     "A": 2
-}
+};
 
 var q2 = {
     "NAME": "test",
@@ -21,7 +21,7 @@ var q2 = {
     "O3": "E",
     "O4": "R",
     "A": 3
-}
+};
 
 var q3 = {
     "NAME": "test2",
@@ -31,7 +31,7 @@ var q3 = {
     "O3": "E",
     "O4": "R",
     "A": 1
-}
+};
 
 var qNoName = {
     "Q": "Quem roeu a roupa do rei de Roma?",
@@ -40,7 +40,7 @@ var qNoName = {
     "O3": "O Pato",
     "O4": "O Tigre",
     "A": 2
-}
+};
 
 exports.testEmptyQuestions = function(test) {
     test.expect(1);

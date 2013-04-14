@@ -75,7 +75,7 @@ var student1 = {
     answers: [],
     ratings: [],
     score: 0
-}
+};
 
 var student2 = {
     name: "test2",
@@ -87,7 +87,7 @@ var student2 = {
     answers: [],
     ratings: [],
     score: 0
-}
+};
 
 var students = {};
 students["10.0.2.15"] = student1;
@@ -197,7 +197,7 @@ var questionInput1 = {
     "O2": "w",
     "O1": "q",
     "TYPE": 'QUESTION_PIC'
-}
+};
 
 var questionResult1 = {
     "NAME": "test",
@@ -210,7 +210,7 @@ var questionResult1 = {
     "O1": "q",
     "TYPE": 'QUESTION_PIC',
     "PICURL": '/smile/questionview/0.jpg'
-}
+};
 
 var question2 = {
     "NAME": "test2",
@@ -222,7 +222,7 @@ var question2 = {
     "O2": "s",
     "O1": "a",
     "TYPE": 'QUESTION'
-}
+};
 
 var encodedQuestion2 = 'MSG=%7B%22NAME%22%3A%22test2%22%2C%22Q%22%3A%22asdfgh%22%2C%22A%22%3A%222%22%2C%22IP%22%3A%2210.0.2.16%22%2C%22O4%22%3A%22f%22%2C%22O3%22%3A%22d%22%2C%22O2%22%3A%22s%22%2C%22O1%22%3A%22a%22%2C%22TYPE%22%3A%22QUESTION%22%7D';
 
@@ -414,7 +414,7 @@ var status1 = {
     "SOLVED": "Y",
     "NUMQ": 2,
     "YOUR_ANSWERS": [ 3, 3 ]
-}
+};
 
 var status2 = {
     "NAME": "test2",
@@ -422,7 +422,7 @@ var status2 = {
     "SOLVED": "Y",
     "NUMQ": 2,
     "YOUR_ANSWERS": [ 2, 4 ]
-}
+};
 
 var encodedAnswer1 = 'MSG=%7B%22MYRATING%22%3A%5B2%2C5%5D%2C%22MYANSWER%22%3A%5B3%2C3%5D%2C%22NAME%22%3A%22test%22%2C%22TYPE%22%3A%22ANSWER%22%2C%22IP%22%3A%2210.0.2.15%22%7D';
 var encodedAnswer2 = 'MSG=%7B%22MYRATING%22%3A%5B2%2C2%5D%2C%22MYANSWER%22%3A%5B2%2C4%5D%2C%22NAME%22%3A%22test2%22%2C%22TYPE%22%3A%22ANSWER%22%2C%22IP%22%3A%2210.0.2.16%22%7D';

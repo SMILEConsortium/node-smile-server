@@ -19,11 +19,11 @@ request({
     method: 'POST',
     headers: HEADERS_ENCODED,
     body: encodedStudent1,
-})
+});
 
 request({
     uri: BASE_URL + "/JunctionServerExecution/pushmsg.php",
     method: 'POST',
     headers: HEADERS_ENCODED,
     body: encodedStudent2,
-})
+});
