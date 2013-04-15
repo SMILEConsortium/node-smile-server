@@ -7,10 +7,10 @@ OK = 'OK';
 HTTP_STATUS_OK = '200';
 
 var MESSAGE_START_MAKE_QUESTION = {
-    'TYPE': 'START_MAKE'
+    'TYPE' : 'START_MAKE'
 };
 var MESSAGE_WAIT_CONNECT = {
-    'TYPE': 'WAIT_CONNECT'
+    'TYPE' : 'WAIT_CONNECT'
 };
 
 var game = new Game();
@@ -73,7 +73,7 @@ exports.handleStudentResultsGet = function(req, res) {
             myAnswers = studentStatus["YOUR_ANSWERS"];
             if (myAnswers) {
                 // Be careful to only check scores against the total # answered
-                for (var i = 0; i < myAnswers.length; i++) {
+                for ( var i = 0; i < myAnswers.length; i++) {
                     if (rightAnswers[i] == myAnswers[i]) {
                         studentStatus.ANSWER_SCORING[i] = RIGHT;
                         studentStatus.NUM_RIGHT = studentStatus.NUM_RIGHT + 1;
@@ -174,32 +174,33 @@ exports.handlePushMessage = function(req, res) {
     var type = message.TYPE || null;
     var error = null;
     switch (type) {
-        case null:
-            // Ignoring the message does not have a type
-            console.warn("Unrecognized type: " + type);
-            break;
-        case 'QUESTION':
-            error = game.addQuestion(message);
-            break;
-        case 'QUESTION_PIC':
-            error = game.addQuestion(message);
-            break;
-        case 'HAIL':
-            error = game.studentsWrapper.addStudent(message);
-            break;
-        case 'ANSWER':
-            error = game.registerAnswerByMessage(message);
-            break;
-        default:
-            error = new Error("Unrecognized type: " + type);
-            break;
+    case null:
+        // Ignoring the message does not have a type
+        console.warn("Unrecognized type: " + type);
+        break;
+    case 'QUESTION':
+        error = game.addQuestion(message);
+        break;
+    case 'QUESTION_PIC':
+        error = game.addQuestion(message);
+        break;
+    case 'HAIL':
+        error = game.studentsWrapper.addStudent(message);
+        break;
+    case 'ANSWER':
+        error = game.registerAnswerByMessage(message);
+        break;
+    default:
+        error = new Error("Unrecognized type: " + type);
+        break;
     }
     if (error) {
         // Something wrong happened
         return res.handleError(error);
     } else {
         if (req.id) {
-            return res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: " + req.id);
+            return res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: "
+                    + req.id);
         } else {
             return res.sendText(HTTP_STATUS_OK, OK);
         }
@@ -234,7 +235,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
     }
     var studentName = question.NAME; // XXX
     res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Type' : 'text/html; charset=utf-8',
     });
     res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
     res.write("<p>(Question created by " + studentName + ")</p>\n");
@@ -263,7 +264,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
     }
     var studentName = question.NAME; // XXX
     res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Type' : 'text/html; charset=utf-8',
     });
     res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
     res.write("<p>(Question created by " + studentName + ")</p>\n");
@@ -305,7 +306,7 @@ exports.handleQuestionImageGet = function(req, res) {
     }
     var dataBuffer = new Buffer(game.questions.getQuestionPicture(questionNumber), 'base64');
     res.writeHead(200, {
-        'Content-Type': 'image/jpeg',
+        'Content-Type' : 'image/jpeg',
     });
     res.write(dataBuffer);
     res.end();
@@ -319,7 +320,7 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
     }
     var studentName = question.NAME; // XXX
     res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Type' : 'text/html; charset=utf-8',
     });
     res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
     res.write("<p>(Question created by " + studentName + ")</p>\n");
@@ -338,7 +339,8 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
     res.write("(4) " + question.O4 + (parseInt(question.A) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
     res.write("</P>\n");
     res.write("Correct Answer: " + question.A + "<br>\n");
-    res.write("<P> Num correct people: " + game.questionCorrectCountMap[questionNumber] + " / " + game.students.getNumberOfStudents() + "<br>\n");
+    res.write("<P> Num correct people: " + game.questionCorrectCountMap[questionNumber] + " / " + game.students.getNumberOfStudents()
+            + "<br>\n");
     res.write("Average rating: " + game.getQuestionAverageRating(questionNumber) + "<br>\n");
 
     res.write("</body></html>\n");
@@ -361,5 +363,7 @@ exports.handleEchoClientIP = function(req, res) {
         clientip = '127.0.0.1';
     }
     console.log('received ping from ' + clientip);
-    return res.sendJSON(HTTP_STATUS_OK, {'ip': clientip});
+    return res.sendJSON(HTTP_STATUS_OK, {
+        'ip' : clientip
+    });
 };

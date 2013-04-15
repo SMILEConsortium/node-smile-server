@@ -13,7 +13,8 @@
         "vows": "0.7.0",
         "request": "2.2.5",
         "nlogger": "0.3.0",
-        "nodeunit": "0.2.1"
+        "nodeunit": "0.2.1",
+        "sha1": "1.0.1"
     },
     "directories": {
         "lib": "."

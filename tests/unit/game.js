@@ -18,7 +18,7 @@ var q1 = {
 };
 
 var q2 = {
-    "NAME": "test",
+    "NAME" : "test",
     "Q": "qwerty",
     "O1": "Q",
     "O2": "W",
@@ -70,15 +70,15 @@ exports.testIsDupQuestion = function(test) {
     var myStudents = game.studentsWrapper;
     myStudents.addStudent(msgOK);
     myStudents.addStudent(msgOK2);
-    console.log(game.students);
+//    console.log(game.students);
     game.addQuestion(q2);
     game.addQuestion(q3);
-    console.log(game.questions);
+//    console.log(game.questions);
     test.equals(2, game.questions.getNumberOfQuestions());
-    test.equals(true, game.isDupQuestion(q2));
     test.equals(false, game.isDupQuestion(q1));
+    test.equals(true, game.isDupQuestion(q2));
     test.equals(true, game.isDupQuestion(q3));
-    game.addQuestion(q2); // XXX this should fail
+    game.addQuestion(q2); // this should be ignored
     test.equals(2, game.questions.getNumberOfQuestions());
     test.done();
 };
