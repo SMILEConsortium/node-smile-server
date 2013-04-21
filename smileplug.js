@@ -100,7 +100,7 @@ var restart = function(req, res) {
     app.close();
     app.runServer(js.CONFIG['PORT']);
     res.sendText(HTTP_STATUS_OK, OK);
-}
+};
 
 js.get('/smile/restart', restart);
 
