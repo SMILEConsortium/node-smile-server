@@ -7,7 +7,7 @@ var util = require('util');
 var querystring = require('querystring');
 
 PORT = 8000;
-LOAD_TEST_SIZE = 60;
+LOAD_TEST_SIZE = 400; // should be divisible by 4
 BASE_URL = "http://localhost:" + PORT;
 
 HEADERS_JSON = {
@@ -20,46 +20,43 @@ HEADERS_ENCODED = {
 
 if (require.main === module) {
     app.runServer(PORT);
-    startGame(registerStudents);
-    makeQuestions(registerQuestions);
-    solveQuestions(answerQuestions);
-    finishGame(checkGameData);
+    startGame();
 }
 
-function startGame(callback) {
+function startGame() {
     request({
         uri : BASE_URL + '/smile/sendinitmessage',
         method : 'PUT',
         headers : HEADERS_JSON,
         body : JSON.stringify({})
-    }, callback);
+    }, registerStudents);
 }
 
-function makeQuestions(callback) {
+function makeQuestions() {
     request({
         uri : BASE_URL + '/smile/startmakequestion',
         method : 'PUT',
         headers : HEADERS_JSON,
         body : JSON.stringify({})
-    }, callback);
+    }, registerQuestions);
 };
 
-function solveQuestions(callback) {
+function solveQuestions() {
     request({
         uri : BASE_URL + '/smile/startsolvequestion',
         method : 'PUT',
         headers : HEADERS_JSON,
         body : JSON.stringify({})
-    }, callback);
+    }, answerQuestions);
 };
 
-function finishGame(callback) {
+function finishGame() {
     request({
         uri : BASE_URL + '/smile/sendshowresults',
         method : 'PUT',
         headers : HEADERS_JSON,
         body : JSON.stringify({})
-    }, callback);
+    }, checkGameData);
 };
 
 function generateEncodedMessage(messageCreator, template, seq) {
@@ -71,12 +68,12 @@ function generateEncodedMessage(messageCreator, template, seq) {
 
 function registerStudents() {
     var template = '{"TYPE":"HAIL","IP":"192.168.1.%s","NAME":"test%s"}';
-    
+
     var messageCreator = function(templ, seq) {
         return util.format(templ, seq, seq);
     };
 
-    registerMessages(messageCreator, template, LOAD_TEST_SIZE);
+    registerMessages(messageCreator, template, LOAD_TEST_SIZE, makeQuestions);
 }
 
 function registerQuestions() {
@@ -97,10 +94,11 @@ function registerQuestions() {
         templ['A'] = seq % 4 + 1;
         return util.format(JSON.stringify(templ), seq, seq, seq, seq, seq, seq, seq);
     };
-    registerMessages(messageCreator, template, LOAD_TEST_SIZE);
+    registerMessages(messageCreator, template, LOAD_TEST_SIZE, solveQuestions);
 }
 
-function registerMessages(messageCreator, template, size) {
+function registerMessages(messageCreator, template, size, callback) {
+    waiting = size;
     for ( var i = 1; i <= size; i++) {
         var encodedMessage = generateEncodedMessage(messageCreator, template, i);
 
@@ -109,6 +107,10 @@ function registerMessages(messageCreator, template, size) {
             method : 'POST',
             headers : HEADERS_ENCODED,
             body : encodedMessage,
+        }, function() {
+            if (--waiting == 0) {
+                callback();
+            }
         });
 
         logger.info('Generated: ' + JSON.stringify(querystring.parse(encodedMessage)));
@@ -116,7 +118,145 @@ function registerMessages(messageCreator, template, size) {
 }
 
 function answerQuestions() {
+    var template = {
+        "MYRATING" : [],
+        "MYANSWER" : [],
+        "NAME" : "test%s",
+        "TYPE" : "ANSWER",
+        "IP" : '192.168.1.%s',
+    };
+    var messageCreator = function(templ, seq) {
+
+        allNiceExpr = function(i) {
+            return 5; // all nice
+        };
+
+        halfNiceExpr = function(i) {
+            return i <= LOAD_TEST_SIZE / 2 ? 0 : 5; // half nice
+        };
+
+        noneNiceExpr = function(i) {
+            return 0; // none nice
+        };
+
+        allCorrectExpr = function(i) {
+            return i % 4 + 1; // all correct
+        };
+
+        quarterCorrectExpr = function(i) {
+            return 1; // 1/4 correct
+        };
+
+        noneCorrectExpr = function(i) {
+            return i % 4 == 0 ? 3 : 1; // none correct
+        };
+
+        buildAnswerArray = function(expr) {
+            var numbers = [];
+            for ( var i = 1; i <= LOAD_TEST_SIZE; i++) {
+                numbers[i - 1] = expr(i);
+            }
+            return numbers;
+        };
+
+        var n = seq % 4;
+        switch (n) {
+        case 1: // Grumpy
+            console.log("GRUMPY");
+            template["MYRATING"] = buildAnswerArray(noneNiceExpr); // none nice
+            template["MYANSWER"] = buildAnswerArray(quarterCorrectExpr); // quarter correct
+            break;
+        case 2: // Happy
+            console.log("HAPPY");
+            template["MYRATING"] = buildAnswerArray(allNiceExpr); // all nice
+            template["MYANSWER"] = buildAnswerArray(quarterCorrectExpr); // quarter correct
+            break;
+        case 3: // Sleepy
+            console.log("SLEEPY");
+            template["MYRATING"] = buildAnswerArray(allNiceExpr); // all nice
+            template["MYANSWER"] = buildAnswerArray(noneCorrectExpr); // none correct
+            break;
+        case 0: // Doc
+            console.log("DOC");
+            template["MYRATING"] = buildAnswerArray(halfNiceExpr); // half nice
+            template["MYANSWER"] = buildAnswerArray(allCorrectExpr); // all correct
+            break;
+        default:
+            template["MYRATING"] = buildAnswerArray(halfNiceExpr); // half nice
+            template["MYANSWER"] = buildAnswerArray(allCorrectExpr); // all correct
+            break;
+        }
+        return util.format(JSON.stringify(templ), seq, seq);
+    };
+    registerMessages(messageCreator, template, LOAD_TEST_SIZE, finishGame);
+}
+
+function bestScoredStudentNames() {
+    var studentNames = [];
+    for ( var i = 1; i <= LOAD_TEST_SIZE; i++) {
+        if (i % 4 == 0) {
+            studentNames.push('test' + i);
+        }
+    }
+    return studentNames;
+}
+
+function bestRatedQuestionStudentNames() {
+    var studentNames = [];
+    var half = LOAD_TEST_SIZE / 2;
+    for ( var i = half + 1; i <= LOAD_TEST_SIZE; i++) {
+        studentNames.push('test' + i);
+    }
+    return studentNames;
+}
+
+function rightAnswers() {
+    var answers = [];
+    for ( var i = 1; i <= LOAD_TEST_SIZE; i++) {
+        answers.push(i % 4 + 1);
+    }
+    return answers;
+}
+
+function averageRatings() {
+    var averageRatings = [];
+    var half = LOAD_TEST_SIZE / 2;
+    for ( var i = 1; i <= LOAD_TEST_SIZE; i++) {
+        if (i <= half) {
+            averageRatings.push(2.5);
+        } else {
+            averageRatings.push(3.75);
+        }
+    }
+    return averageRatings;
+}
+
+function questionsCorrectPercentage() {
+    var questionsCorrectPercentage = [];
+    for ( var i = 1; i <= LOAD_TEST_SIZE; i++) {
+        if (i % 4 == 0) {
+            questionsCorrectPercentage.push(75);
+        } else {
+            questionsCorrectPercentage.push(25);
+        }
+    }
+    return questionsCorrectPercentage;
 }
 
 function checkGameData() {
+    request({
+        uri : BASE_URL + '/smile/results',
+        method : 'GET',
+        headers : HEADERS_JSON,
+    }, function(error, response, body) {
+        var result = JSON.parse(body);
+        assert.equal(result['winnerScore'], LOAD_TEST_SIZE);
+        assert.equal(result['winnerRating'], 3.75);
+        assert.equal(JSON.stringify(result['bestScoredStudentNames']), JSON.stringify(bestScoredStudentNames()));
+        assert.equal(JSON.stringify(result['bestRatedQuestionStudentNames']), JSON.stringify(bestRatedQuestionStudentNames()));
+        assert.equal(result['numberOfQuestions'], LOAD_TEST_SIZE);
+        assert.equal(JSON.stringify(result['rightAnswers']), JSON.stringify(rightAnswers()));
+        assert.equal(JSON.stringify(result['averageRatings']), JSON.stringify(averageRatings()));
+        assert.equal(JSON.stringify(result['questionsCorrectPercentage']), JSON.stringify(questionsCorrectPercentage()));
+    });
 }
