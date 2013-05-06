@@ -1,7 +1,7 @@
 == Application ==
 
  * Pre-requisites:
-  - NodeJS 0.4.12
+  - NodeJS >= 0.8.16
   - NPM >= 1.0
 
  * Run application

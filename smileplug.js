@@ -34,10 +34,10 @@ var url = require('url');
 var starttime = (new Date()).getTime();
 
 js.CONFIG = {
-    'PORT': process.env.PORT || 80,
-    'HOST': '0.0.0.0',
-    'VERSION_TAG': '0.2.28',
-    'VERSION_DESCRIPTION': 'SMILE Server',
+    'PORT' : process.env.PORT || 80,
+    'HOST' : '0.0.0.0',
+    'VERSION_TAG' : '0.2.28',
+    'VERSION_DESCRIPTION' : 'SMILE Server',
 };
 
 //
@@ -114,6 +114,44 @@ js.get('/JunctionServerExecution/current/:id.jpg', routes.handleQuestionImageGet
 
 // General utility routes
 js.get('/smile/echoclientip', routes.handleEchoClientIP);
+
+// Temporary hack for managing /SMILE and uppercase URLs. See https://github.com/SMILEConsortium/node-smile-server/issues/13
+var routeMap = {
+    'PUT' : {},
+    'GET' : {},
+    'POST' : {}
+};
+
+Object.keys(js.ROUTE_MAP).forEach(function(method) {
+    var methodMap = js.ROUTE_MAP[method];
+    Object.keys(methodMap).forEach(function(k) {
+        var value = methodMap[k];
+        routeMap[method][k] = value;
+        routeMap[method][k.toUpperCase()] = value;
+        routeMap[method][k.replace('smile', 'SMILE')] = value;
+    });
+});
+
+var reMap = {
+    'PUT' : {},
+    'GET' : {},
+    'POST' : {}
+};
+
+Object.keys(js.RE_MAP).forEach(function(method) {
+    var methodMap = js.RE_MAP[method];
+    Object.keys(methodMap).forEach(function(k) {
+        var value = methodMap[k];
+        reMap[method][k] = value;
+        reMap[method][k.toUpperCase()] = value;
+        reMap[method][k.replace('smile', 'SMILE')] = value;
+    });
+});
+
+js.ROUTE_MAP = routeMap;
+js.RE_MAP = reMap;
+// Hack end
+
 //console.info(js.ROUTE_MAP);
 //console.info(js.RE_MAP);
 
