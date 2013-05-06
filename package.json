@@ -14,6 +14,7 @@
         "request": "2.2.5",
         "nlogger": "0.3.0",
         "nodeunit": "0.2.1",
+        "async" : "0.2.8",
         "sha1": "1.0.1"
     },
     "directories": {

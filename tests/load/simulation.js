@@ -5,6 +5,7 @@ var app = require('../../smileplug');
 var logger = require('nlogger').logger(module);
 var util = require('util');
 var querystring = require('querystring');
+var async = require('async');
 
 PORT = 8000;
 LOAD_TEST_SIZE = 400; // should be divisible by 4
@@ -98,9 +99,9 @@ function registerQuestions() {
 }
 
 function registerMessages(messageCreator, template, size, callback) {
-    waiting = size;
-    for ( var i = 1; i <= size; i++) {
-        var encodedMessage = generateEncodedMessage(messageCreator, template, i);
+    counter = 1;
+    var f = function(completedCallback) {
+        var encodedMessage = generateEncodedMessage(messageCreator, template, counter);
 
         request({
             uri : BASE_URL + "/JunctionServerExecution/pushmsg.php",
@@ -108,13 +109,18 @@ function registerMessages(messageCreator, template, size, callback) {
             headers : HEADERS_ENCODED,
             body : encodedMessage,
         }, function() {
-            if (--waiting == 0) {
-                callback();
-            }
+            ++counter;
+            completedCallback(null, counter);
         });
 
         logger.info('Generated: ' + JSON.stringify(querystring.parse(encodedMessage)));
+    };
+    var functions = [];
+    for ( var i = 1; i <= size; i++) {
+        functions.push(f);
     }
+    async.series(functions, callback);
+
 }
 
 function answerQuestions() {
@@ -250,13 +256,23 @@ function checkGameData() {
         headers : HEADERS_JSON,
     }, function(error, response, body) {
         var result = JSON.parse(body);
+        console.info("Checking winnerScore. ");
         assert.equal(result['winnerScore'], LOAD_TEST_SIZE);
+        console.info("Checking winnerRating. ");
         assert.equal(result['winnerRating'], 3.75);
+        console.info("Checking bestScoredStudentNames. ");
         assert.equal(JSON.stringify(result['bestScoredStudentNames']), JSON.stringify(bestScoredStudentNames()));
+        console.info("Checking bestRatedQuestionStudentNames. ");
         assert.equal(JSON.stringify(result['bestRatedQuestionStudentNames']), JSON.stringify(bestRatedQuestionStudentNames()));
+        console.info("Checking numberOfQuestions. ");
         assert.equal(result['numberOfQuestions'], LOAD_TEST_SIZE);
+        console.info("Checking rightAnswers. ");
         assert.equal(JSON.stringify(result['rightAnswers']), JSON.stringify(rightAnswers()));
+        console.info("Checking averageRatings. ");
         assert.equal(JSON.stringify(result['averageRatings']), JSON.stringify(averageRatings()));
+        console.info("Checking questionsCorrectPercentage. ");
         assert.equal(JSON.stringify(result['questionsCorrectPercentage']), JSON.stringify(questionsCorrectPercentage()));
+        app.close();
+        console.info("Done.");
     });
 }
