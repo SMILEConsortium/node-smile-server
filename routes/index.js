@@ -164,6 +164,27 @@ exports.handleResetPut = function(req, res) {
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleCsvPushQuestions = function(req, res) {
+    var rawQuestions = req.body;
+    if (!rawQuestions) {
+        error = new Error("No questions to parse.");
+        return res.handleError(error);
+    }
+    rawQuestions.forEach(function(rawQuestion) {
+        var question = {};
+        question["NAME"] = "teacher";
+        question["Q"] = rawQuestion["question"];
+        question["O1"] = rawQuestion["choice1"];
+        question["O2"] = rawQuestion["choice2"];
+        question["O3"] = rawQuestion["choice3"];
+        question["O4"] = rawQuestion["choice4"];
+        question["A"] = rawQuestion["answers"].replace("choice", "");
+        question["TYPE"] = rawQuestion["has_image"] === "true" ? "QUESTION_PIC" : "QUESTION";
+        game.addQuestion(question);
+    });
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
 //
 // Backward compatibility
 //

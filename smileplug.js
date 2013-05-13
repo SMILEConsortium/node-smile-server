@@ -62,6 +62,9 @@ js.post('/smile/sendshowresults', routes.handleSendShowResultsPut);
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 js.get('/smile/question', routes.handleQuestionGetAll);
+js.put('/smile/question/csv', routes.handleCsvPushQuestions);
+js.post('/smile/question/csv', routes.handleCsvPushQuestions);
+
 
 js.put('/smile/question/:id', routes.handlePushMessage, true);
 js.post('/smile/question/:id', routes.handlePushMessage, true);
