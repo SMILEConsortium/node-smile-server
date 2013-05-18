@@ -24,6 +24,15 @@ exports.handleQuestionGet = function(req, res) {
     }
 };
 
+exports.handleRatingMetadataPut = function(req, res) {
+    game.setRatingMetadata(req.body);
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleRatingMetadataGet = function(req, res) {
+    return res.sendJSON(HTTP_STATUS_OK, game.getRatingMetadata());
+};
+
 exports.handleQuestionGetAll = function(req, res) {
     return res.sendJSON(HTTP_STATUS_OK, game.questions.getAll());
 };

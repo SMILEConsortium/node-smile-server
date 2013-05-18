@@ -59,6 +59,11 @@ js.post('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 js.put('/smile/sendshowresults', routes.handleSendShowResultsPut);
 js.post('/smile/sendshowresults', routes.handleSendShowResultsPut);
 
+js.put('/smile/metadata/rating', routes.handleRatingMetadataPut);
+js.post('/smile/metadata/rating', routes.handleRatingMetadataPut);
+js.get('/smile/metadata/rating', routes.handleRatingMetadataGet);
+
+
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 js.get('/smile/question', routes.handleQuestionGetAll);
