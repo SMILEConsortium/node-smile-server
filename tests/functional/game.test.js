@@ -460,6 +460,7 @@ suite.addBatch({
     }
 });
 
+
 suite.addBatch({
     "A POST to /JunctionServerExecution/pushmsg.php with an answer": {
         topic: function() {
@@ -596,6 +597,74 @@ suite.addBatch({
         },
     }
 });
+
+// Retake
+
+var MESSAGE_RETAKE = JSON.stringify({
+    'TYPE': 'RE_TAKE1',
+    'NUMQ': 2,
+    'RANSWER': [ 3, 2 ],
+    'TIME_LIMIT': 10
+});
+
+var encodedRetake = 'MSG=' + encodeURIComponent('{"TYPE":"RE_TAKE1","NUMQ":2,"RANSWER":[3,2],"TIME_LIMIT":10}');
+
+
+suite.addBatch({
+    "A POST to /JunctionServerExecution/pushmsg.php with a retake": {
+        topic: function() {
+            request({
+                uri: BASE_URL + '/JunctionServerExecution/pushmsg.php',
+                method: 'POST',
+                headers: HEADERS_ENCODED,
+                body: encodedRetake,
+            }, this.callback);
+        },
+        "should respond with 200": function(err, res, body) {
+            assert.equal(res.statusCode, 200);
+        },
+        "should answer with ok": function(err, res, body) {
+            assert.equal(res.body, "OK");
+        },
+    }
+});
+
+suite.addBatch({
+    "A GET to /JunctionServerExecution/current/MSG/smsg.txt": {
+        topic: function() {
+            request({
+                uri: BASE_URL + "/JunctionServerExecution/current/MSG/smsg.txt",
+                method: 'GET'
+            }, this.callback);
+        },
+        "should return the 'retake' message": function(err, res, body) {
+            assert.equal(res.body, MESSAGE_RETAKE);
+        }
+    }
+});
+
+suite.addBatch({
+    "A GET to /smile/results": {
+        topic: function() {
+            request({
+                uri: BASE_URL + '/smile/results',
+                method: 'GET'
+            }, this.callback);
+        },
+        "should return raw results": function(err, res, body) {
+            var expectedResults = {
+                "winnerScore": 0,
+                "winnerRating": 0,
+                "numberOfQuestions": 2,
+                "rightAnswers": [3,2],
+                "averageRatings": [],
+                "questionsCorrectPercentage": []
+            };
+            assert.equal(res.body, JSON.stringify(expectedResults));
+        },
+    }
+});
+
 
 // Reset
 

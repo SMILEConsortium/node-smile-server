@@ -193,11 +193,18 @@ exports.handlePushMessage = function(req, res) {
     var message = req.body;
     game.registerMessage(message);
     var type = message.TYPE || null;
+    if (type.indexOf("RE_TAKE") != -1) {
+        type = 'RE_TAKE';
+    }
     var error = null;
     switch (type) {
     case null:
         // Ignoring the message does not have a type
         console.warn("Unrecognized type: " + type);
+        break;
+    case 'RE_TAKE':
+        game.setCurrentMessage(message);
+        error = game.retake();
         break;
     case 'QUESTION':
         error = game.addQuestion(message);
