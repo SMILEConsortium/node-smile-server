@@ -109,7 +109,7 @@ js.get('/smile/current/:id.jpg', routes.handleQuestionImageGet, true);
 
 var restart = function(req, res) {
     app.close();
-    app.runServer(js.CONFIG['PORT']);
+    app.runServer(js.CONFIG.PORT);
     res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -169,5 +169,5 @@ js.RE_MAP = reMap;
 var app = module.exports = js.server;
 
 if (require.main === module) {
-    app.runServer(js.CONFIG['PORT']);
+    app.runServer(js.CONFIG.PORT);
 }
