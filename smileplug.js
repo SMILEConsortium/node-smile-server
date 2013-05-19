@@ -90,6 +90,9 @@ js.get('/smile/', routes.handleSmileRootGet);
 js.get('/smile/reset', routes.handleResetGet);
 js.put('/smile/reset', routes.handleResetPut);
 
+
+js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
+
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);
 js.get('/smile/questionview/:id.json', routes.handleQuestionJSONGet, true);

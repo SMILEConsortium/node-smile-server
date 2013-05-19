@@ -264,6 +264,54 @@ exports.handleStudentStatusGetByIP = function(req, res) {
     }
 };
 
+exports.handleMonitoringHtmlGet = function(req, res) {
+    //    # of students
+    //    Each student name + IP address
+    //    Highlight in red self assigned IP, and duplicates
+    //    # of questions submitted
+    //    # of students who has answered questions
+    var numberOfStudents = game.students.numberOfStudents;
+    var students = game.students.currentStudents;
+    var numberOfQuestions = game.questions.numberOfQuestions;
+    var numberOfStudentsAnswered = 0;
+    
+    res.writeHead(200, {
+        'Content-Type' : 'text/html; charset=utf-8',
+    });
+    res.write("<html>\n<head><title>SMILE Server Monitoring Tool</title></head>\n<body>\n");
+    res.write("<p>Number of students: " + numberOfStudents + "</p>\n");
+    res.write("<p>Number of questions: " + numberOfQuestions + "</p>\n");
+
+    res.write("<table border=\"1\"><thead><th>Student Name</th><th>Student IP</th></thead><tbody>\n");
+    var ipMap = {};
+    for (k in students) {
+        var student = students[k];
+        var name = student.name;
+        var ip = student.ip;
+        if (ipMap.hasOwnProperty(ip)) {
+            ipMap[ip].push(name);
+        } else {
+            ipMap[ip] = [ name ];
+        }
+        if (student.getStatus().solved) {
+            numberOfStudentsAnswered++;
+        }
+    }
+    for (k in students) {
+        var student = students[k];
+        var name = student.name;
+        var ip = student.ip;
+        var color = ip.indexOf("169.254") != -1 || ipMap[ip].length > 1 ? "red" : "green";
+        res.write("<tr><td>" + name + "</td><td style=\"color: " + color + "\">" + ip + "</td></tr>\n");
+    }
+    
+    res.write("</tbody></table>\n");
+
+    res.write("<p>Number of students who has answered questions: " + numberOfStudentsAnswered + "</p>\n");
+    res.write("</body></html>\n");
+    res.end();
+};
+
 exports.handleQuestionHtmlGet = function(req, res) {
     var questionNumber = parseInt(req.id);
     var question = game.questions.getList()[questionNumber];
