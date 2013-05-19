@@ -13,20 +13,20 @@ HEADERS_JSON = {
 var suite = vows.describe('Tests "Rating Metadata"');
 
 var defaultMetadata = {
-    1 : "very bad question",
-    2 : "bad question",
-    3 : "regular question",
-    4 : "good question",
-    5 : "fantastic question"
+    1 : "Low Quality Question",
+    2 : "Adequate Question",
+    3 : "Average Question",
+    4 : "Good Question",
+    5 : "High Quality Question"
 };
 
 var testMetadata = {
-    1 : "very bad question test",
-    2 : "bad question test",
-    3 : "regular question test",
-    4 : "good question test",
-    5 : "fantastic question test"
-};
+        1 : "Low Quality Question test",
+        2 : "Adequate Question test",
+        3 : "Average Question test",
+        4 : "Good Question test",
+        5 : "High Quality Question test"
+    };
 
 suite.addBatch({
     "startup" : function() {
