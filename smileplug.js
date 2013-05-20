@@ -90,6 +90,13 @@ js.get('/smile/', routes.handleSmileRootGet);
 js.get('/smile/reset', routes.handleResetGet);
 js.put('/smile/reset', routes.handleResetPut);
 
+js.put('/smile/store', routes.handleStore);
+js.post('/smile/store', routes.handleStore);
+
+js.put('/smile/backup', routes.handleBackup);
+js.post('/smile/backup', routes.handleBackup);
+js.get('/smile/backup', routes.handleBackup);
+
 
 js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
 

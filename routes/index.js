@@ -1,6 +1,7 @@
 var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
+var fs = require('fs');
 
 OK = 'OK';
 
@@ -23,6 +24,28 @@ exports.handleQuestionGet = function(req, res) {
         return res.sendJSON(HTTP_STATUS_OK, questions);
     }
 };
+
+function storeData(obj) {
+    var json = JSON.stringify(obj);
+    fs.writeFile(__dirname + "/../storage/" + new Date().toISOString(), json, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("The file was saved!");
+        }
+    });
+}
+exports.handleStore = function(req, res) {
+    storeData(req.body);
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleBackup = function(req, res) {
+    storeData(game.messages.past);
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+
 
 exports.handleRatingMetadataPut = function(req, res) {
     game.setRatingMetadata(req.body);
