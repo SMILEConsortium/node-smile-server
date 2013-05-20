@@ -14,6 +14,7 @@
         "request": "2.2.5",
         "nlogger": "0.3.0",
         "nodeunit": "0.2.1",
+        "formidable": "1.0.14",
         "async" : "0.2.8",
         "fast-csv" : "0.0.1",
         "sha1": "1.0.1"

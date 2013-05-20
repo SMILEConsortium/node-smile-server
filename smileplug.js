@@ -97,6 +97,9 @@ js.put('/smile/backup', routes.handleBackup);
 js.post('/smile/backup', routes.handleBackup);
 js.get('/smile/backup', routes.handleBackup);
 
+js.put('/smile/upload/image', routes.handleImageUpload);
+js.post('/smile/upload/image', routes.handleImageUpload);
+
 
 js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
 

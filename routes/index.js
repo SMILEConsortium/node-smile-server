@@ -35,6 +35,7 @@ function storeData(obj) {
         }
     });
 }
+
 exports.handleStore = function(req, res) {
     storeData(req.body);
     return res.sendText(HTTP_STATUS_OK, OK);
@@ -45,7 +46,15 @@ exports.handleBackup = function(req, res) {
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
-
+exports.handleImageUpload = function(req, res) {
+    var file = req.file;
+    var imageData = fs.readFileSync(file.path, 'binary');
+    var base64data = new Buffer(imageData, 'binary').toString('base64');
+    var data = {};
+    data.success = "true";
+    data.base64 = base64data;
+    return res.sendJSON(HTTP_STATUS_OK, data);
+};
 
 exports.handleRatingMetadataPut = function(req, res) {
     game.setRatingMetadata(req.body);

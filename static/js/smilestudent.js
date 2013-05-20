@@ -124,7 +124,7 @@ var SMILEInquiry2 = function(question, answer1, answer2, answer3, answer4, right
  *
  */
 var GlobalViewModel = {
-    username: ko.observable(nameGen(8)).extend({ required: "Please enter a username" }), realname: ko.observable(""), clientip: ko.observable(""), loginstatusmsg: ko.observable(""), sessionstatemsg: ko.observable(""), othermsg: ko.observable(""), hasSubmitted: ko.observable(false), iqx: ko.observableArray([new SMILEInquiry2()]), answer: ko.observable(""), question: ko.observable(""), a1: ko.observable(""), a2: ko.observable(""), a3: ko.observable(""), a4: ko.observable(""), rightanswer: ko.observable(""), numq: ko.observable(""), curq: ko.observable(0), qidx: ko.observable(0), picurl: ko.observable(""), rating: ko.observable(""), answersarray: ko.observableArray([]), ratingsarray: ko.observableArray([]), version: VERSION
+    username: ko.observable(nameGen(8)).extend({ required: "Please enter a username" }), realname: ko.observable(""), clientip: ko.observable(""), loginstatusmsg: ko.observable(""), sessionstatemsg: ko.observable(""), othermsg: ko.observable(""), hasSubmitted: ko.observable(false), iqx: ko.observableArray([new SMILEInquiry2()]), answer: ko.observable(""), question: ko.observable(""), a1: ko.observable(""), a2: ko.observable(""), a3: ko.observable(""), a4: ko.observable(""), rightanswer: ko.observable(""), numq: ko.observable(""), curq: ko.observable(0), qidx: ko.observable(0), picurl: ko.observable(""), pic: ko.observable(""), rating: ko.observable(""), answersarray: ko.observableArray([]), ratingsarray: ko.observableArray([]), version: VERSION
 };
 
 GlobalViewModel.fullName = ko.computed(function() {
@@ -186,13 +186,14 @@ GlobalViewModel.doInquiryReset = function() {
     self.rightanswer("");
     self.question("");
     self.picurl("");
+    self.pic("");
 }
 
 GlobalViewModel.doSubmitQ = function() {
     var self = this;
     console.log(">>>>>>>>>>doSubmitQ");
     if (self.validateInquirySubmission()) {
-        var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
+        var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl(), self.pic());
         doPostInquiry(jsondata, function() {
             self.doInquiryReset();
         });
@@ -211,7 +212,7 @@ GlobalViewModel.doSubmitQandDone = function() {
     var self = this;
     console.log("doSubmitQandDone");
     if (self.validateInquirySubmission()) {
-        var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl());
+        var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl(), self.pic());
         doPostInquiry(jsondata, function() {
             console.log("waiting for next phase");
             self.doInquiryReset();
@@ -893,7 +894,7 @@ function restoreLoginState() {
  * That's dangerous, and we should plan to encode any funky unicode input or other malicious attempts to break 
  * something
  */
-function generateJSONInquiry(clientip, username, question, answer1, answer2, answer3, answer4, rightanswer, picurl) {
+function generateJSONInquiry(clientip, username, question, answer1, answer2, answer3, answer4, rightanswer, picurl, pic) {
     var jsonmsg = {};
 
     jsonmsg.NAME = username;
@@ -902,11 +903,11 @@ function generateJSONInquiry(clientip, username, question, answer1, answer2, ans
     jsonmsg.O2 = answer2;
     jsonmsg.O3 = answer3;
     jsonmsg.O4 = answer4;
-    if ((picurl === "") || (picurl === undefined)) {
+    if ((pic === "") || (pic === undefined)) {
         jsonmsg.TYPE = "QUESTION";
     } else {
         jsonmsg.TYPE = "QUESTION_PIC";
-        jsonmsg.PIC = picurl;
+        jsonmsg.PIC = pic;
     }
     jsonmsg.Q = question;
     jsonmsg.A = rightanswer[1]; // Drop the leading 'a'
