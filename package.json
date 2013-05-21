@@ -10,7 +10,6 @@
     "version": "0.3.0",
     "private": true,
     "dependencies": {
-        "vows": "0.7.0",
         "request": "2.2.5",
         "nlogger": "0.3.0",
         "nodeunit": "0.2.1",
@@ -18,6 +17,10 @@
         "async" : "0.2.8",
         "fast-csv" : "0.0.1",
         "sha1": "1.0.1"
+    },
+    "devDependencies": {
+        "vows": "0.7.0",
+        "jshint": "2.1.0"
     },
     "directories": {
         "lib": "."
