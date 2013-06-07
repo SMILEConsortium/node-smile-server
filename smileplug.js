@@ -59,6 +59,11 @@ js.post('/smile/sendinitmessage', routes.handleSendInitMessagePut);
 js.put('/smile/sendshowresults', routes.handleSendShowResultsPut);
 js.post('/smile/sendshowresults', routes.handleSendShowResultsPut);
 
+js.put('/smile/metadata/rating', routes.handleRatingMetadataPut);
+js.post('/smile/metadata/rating', routes.handleRatingMetadataPut);
+js.get('/smile/metadata/rating', routes.handleRatingMetadataGet);
+
+
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 js.get('/smile/question', routes.handleQuestionGetAll);
@@ -85,6 +90,19 @@ js.get('/smile/', routes.handleSmileRootGet);
 js.get('/smile/reset', routes.handleResetGet);
 js.put('/smile/reset', routes.handleResetPut);
 
+js.put('/smile/store', routes.handleStore);
+js.post('/smile/store', routes.handleStore);
+
+js.put('/smile/backup', routes.handleBackup);
+js.post('/smile/backup', routes.handleBackup);
+js.get('/smile/backup', routes.handleBackup);
+
+js.put('/smile/upload/image', routes.handleImageUpload);
+js.post('/smile/upload/image', routes.handleImageUpload);
+
+
+js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
+
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);
 js.get('/smile/questionview/:id.json', routes.handleQuestionJSONGet, true);
@@ -101,7 +119,7 @@ js.get('/smile/current/:id.jpg', routes.handleQuestionImageGet, true);
 
 var restart = function(req, res) {
     app.close();
-    app.runServer(js.CONFIG['PORT']);
+    app.runServer(js.CONFIG.PORT);
     res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -161,5 +179,5 @@ js.RE_MAP = reMap;
 var app = module.exports = js.server;
 
 if (require.main === module) {
-    app.runServer(js.CONFIG['PORT']);
+    app.runServer(js.CONFIG.PORT);
 }

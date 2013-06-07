@@ -8,353 +8,506 @@
 <!--[if IE 8]>
 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html lang="en"> <!--<![endif]-->
+<html lang="en">
+<!--<![endif]-->
 <head>
-    <meta charset="utf-8"/>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+<meta charset="utf-8" />
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 
-    <!-- Set the viewport width to device width for mobile -->
-    <meta name="viewport" content="width=device-width"/>
+<!-- Set the viewport width to device width for mobile -->
+<meta name="viewport" content="width=device-width" />
 
-    <title>Welcome to The SMILE Plug</title>
+<title>Welcome to The SMILE Plug</title>
 
-    <!-- Included CSS Files -->
-    <!-- Combine and Compress These CSS Files -->
-    <link rel="stylesheet" href="css/foundation.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="css/rating.css"/>
-    <script src="js/modernizr.foundation.js"></script>
+<!-- Included CSS Files -->
+<!-- Combine and Compress These CSS Files -->
+<link rel="stylesheet" href="css/foundation.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/rating.css" />
+<link rel="stylesheet" href="css/fineuploader-3.5.0.css" />
 
-    <!-- IE Fix for HTML5 Tags -->
-    <!--[if lt IE 9]>
+<script src="js/modernizr.foundation.js"></script>
+
+<!-- IE Fix for HTML5 Tags -->
+<!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
 </head>
 <body>
 
-<!-- container -->
-<div class="container">
+	<!-- container -->
+	<div class="container">
 
-<div class="row">
-    <div class="twelve columns">
-        <h2>Welcome to The SMILEPlug</h2>
-        <img src="images/smile.jpg"/><img src="images/marvell_horiz_logo.jpg"/>
+		<div class="row">
+			<div class="twelve columns">
+				<h2>Welcome to The SMILEPlug</h2>
+				<img src="images/smile.jpg" />
+				<img src="images/marvell_horiz_logo.jpg" />
 
-        <p>SMILE turns a traditional classroom into a highly interactive learning environment by engaging students in
-            critical reasoning and problem solving while enabling them to generate, share, and evaluate multimedia-rich
-            inquiries.</p>
-        <hr/>
-    </div>
-</div>
-<div class="row">
-<div class="nine columns">
-<h3>SMILE Student <span data-bind="text: version"></span></h3>
+				<p>SMILE turns a traditional classroom into a highly interactive
+					learning environment by engaging students in critical reasoning and
+					problem solving while enabling them to generate, share, and
+					evaluate multimedia-rich inquiries.</p>
+				<hr />
+			</div>
+		</div>
+		<div class="row">
+			<div class="nine columns">
+				<h3>
+					SMILE Student
+					<span data-bind="text: version"></span>
+				</h3>
 
-<div class="row">
-    <div class="eight columns">
-        <div id="globalstatus"></div>
-    </div>
-</div>
-<div class="row">
-<div class="twelve columns">
-<div class="panel">
-    <dl class="tabs pill">
-        <dd class="active"><a class="wizard disabled" href="#login-pane1">1. Login</a></dd>
-        <dd><a class="wizard disabled" href="#start-pane1">2. Get Ready</a></dd>
-        <dd><a class="wizard disabled" href="#makeq-pane1">3. Make Qs</a></dd>
-        <dd><a class="wizard disabled" href="#answerq-pane1">4. Answer Qs</a></dd>
-        <dd><a class="wizard disabled" href="#results-pane1">5. Results</a></dd>
-    </dl>
-    <ul class="tabs-content">
-        <li class="active" id="login-pane1Tab">
-            <!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span>
+				<div class="row">
+					<div class="eight columns">
+						<div id="globalstatus"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="twelve columns">
+						<div class="panel">
+							<dl class="tabs pill">
+								<dd class="active">
+									<a class="wizard disabled" href="#login-pane1">1. Login</a>
+								</dd>
+								<dd>
+									<a class="wizard disabled" href="#start-pane1">2. Get Ready</a>
+								</dd>
+								<dd>
+									<a class="wizard disabled" href="#makeq-pane1">3. Make Qs</a>
+								</dd>
+								<dd>
+									<a class="wizard disabled" href="#answerq-pane1">4. Answer
+										Qs</a>
+								</dd>
+								<dd>
+									<a class="wizard disabled" href="#results-pane1">5. Results</a>
+								</dd>
+							</dl>
+							<ul class="tabs-content">
+								<li class="active" id="login-pane1Tab">
+									<!-- NICE DEBUG TRICK -->
+									<!-- KO:<span data-bind="text: ko.toJSON($data)"></span>
 								<form action="return false;"> -->
-            <label data-bind="css: { error: username.hasError }">Username</label><span
-                data-bind='visible: username.hasError, text: username.validationMessage'> </span>
-            <input data-bind='value: username, valueUpdate: "afterkeydown"' type="text"
-                   placeholder="Username"/>
+									<label data-bind="css: { error: username.hasError }">Username</label>
+									<span
+										data-bind='visible: username.hasError, text: username.validationMessage'>
+									</span>
+									<input data-bind='value: username, valueUpdate: "afterkeydown"'
+										type="text" placeholder="Username" />
 
-            <label>Real Name</label>
-            <input data-bind='value: realname, valueUpdate: "afterkeydown"' type="text" class="twelve"
-                   placeholder="Real Name(Optional)"/>
-            <label>Client IPAddress</label>
-            <input data-bind='value: clientip' type="text" class="twelve" disabled="true"
-                   placeholder="unknown (Will be provided by server)"/>
-            <ul class="button-group even two-up">
-                <li><a href="#" data-bind='click: doLogin, disable: hasSubmitted' class="button">Submit</a>
-                </li>
-                <li><a href="#" data-bind='click: doLoginReset' class="button">Reset</a></li>
-            </ul>
-            </form>
-
-
-        </li>
-        <li id="start-pane1Tab">
-            <p>Please wait for the class to begin. Your teacher will give you instructions on whether to
-                prepare questions or start answering questions.<!-- NICE DEBUG TRICK -->
-                <!-- KO:<span data-bind="text: ko.toJSON($data)"></span>--></p>
-        </li>
-        <li id="makeq-pane1Tab">
-            <div id="inquiry-form-area">
-                <!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span> -->
-                <form action="return false;">
-                    <label>Question</label>
-                    <textarea data-bind="value: question" rows="5" cols="20"></textarea>
-
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>Answer 1</label>
-                            <input data-bind="value: a1, valueUpdate: 'keyup'" type="text"/>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a1"><input value="a1" data-bind="checked: rightanswer"
-                                                   name="answer-options" type="radio" id="a1"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>Answer 2</label>
-                            <input data-bind="value: a2" type="text"/>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a2">
-                                <input value="a2" data-bind="checked: rightanswer" name="answer-options"
-                                       type="radio" id="a2"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>Answer 3</label>
-                            <input data-bind="value: a3" type="text"/>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a3">
-                                <input value="a3" data-bind="checked: rightanswer" name="answer-options"
-                                       type="radio" id="a3"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>Answer 4</label>
-                            <input data-bind="value: a4" type="text"/>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a4">
-                                <input value="a4" data-bind="checked: rightanswer" name="answer-options"
-                                       type="radio" id="a4"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div id="submit-inquiry-area">
-                        <ul class="button-group even two-up">
-                            <li><a href="#" data-bind='click: doSubmitQ' class="button">Submit</a></li>
-                            <li><a href="#" data-bind='click: doSubmitQandDone' class="button">Submit &amp;
-                                Done</a></li>
-                        </ul>
-                    </div>
-                </form>
-
-            </div>
-        </li>
-        <li id="answerq-pane1Tab">
-            <!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span> -->
-            <div id="answer-form-area">
-                <H3>Question <span data-bind="text: qidx() + 1"></span></H3>
-                <H4 class="subheader"><span data-bind="text: question"></span></H4>
-
-                <P><img data-bind="attr: { src: picurl }"/></P>
-                <br/>
-
-                <form>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>A) <span data-bind="text: a1">1998</span></label>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a1">
-                                <input data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a1" id="a1"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>B) <span data-bind="text: a2">1836</span></label>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a2">
-                                <input data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a2" id="a2"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>C) <span data-bind="text: a3">1812</span3></label>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a3">
-                                <input data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a3" id="a3"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="eight columns">
-                            <label>D) <span data-bind="text: a4">1901</span></label>
-                        </div>
-                        <div class="four mobile-one columns">
-                            <label for="a4">
-                                <input data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a4" id="a4"> Correct?
-                            </label>
-                        </div>
-                    </div>
-                    <P><em>Rating:</em></P>
-
-                    <div id="star-rating">
-                        <input data-bind="checked: rating" type="radio" name="rating" class="rating"
-                               value="1"/>
-                        <input data-bind="checked: rating" type="radio" name="rating" class="rating"
-                               value="2"/>
-                        <input data-bind="checked: rating" type="radio" name="rating" class="rating"
-                               value="3"/>
-                        <input data-bind="checked: rating" type="radio" name="rating" class="rating"
-                               value="4"/>
-                        <input data-bind="checked: rating" type="radio" name="rating" class="rating"
-                               value="5"/>
-                    </div>
-                    <br/>
-                    <ul class="button-group even two-up">
-                        <li><a href="#" data-bind='click: doAnswerPrevQ' class="button">Prev</a></li>
-                        <li><a href="#" data-bind='click: doAnswerNextQ' class="button">Next</a></li>
-
-                    </ul>
-                </form>
-            </div>
-        </li>
-
-        <li id="results-pane1Tab">
-            <!-- NICE DEBUG TRICK --><!-- KO:<span data-bind="text: ko.toJSON($data)"></span> -->
-            <div id="results-area">
-                <H3>Congrats. You got 5/10 correct.</h3>
-                <ul>
-                    <li>Q1 - Correct</li>
-                    <li>Q2 - Correct</li>
-                    <li>Q3 - Correct</li>
-                    <li>Q4 - Correct</li>
-                    <li>Q5 - Correct</li>
-                    <li>Q6 - Incorrect</li>
-                    <li>Q7 - Incorrect</li>
-                    <li>Q8 - Incorrect</li>
-                    <li>Q9 - Incorrect</li>
-                    <li>Q10- Incorrect</li>
-                </ul>
-            </div>
-        </li>
-    </ul>
-</div>
-</div>
-</div>
-</div>
-<div class="three columns">
-    <!-- <div data-bind="with: logindata"> -->
-    <div id="login-info">
-        <h4>Instructions for
-            <div data-bind="text: username" id="student-username">Student</div>
-            <div data-bind="text: realname" id="student-realname"></div>
-        </h4>
-        <div id="login-status">
-            <div id="login-panel" class="panel callout radius">
-                <h5>
-                    <div data-bind="text: loginstatusmsg"></div>
-                </h5>
-                &nbsp;
-                <p>@
-
-                <div data-bind="text: clientip" id="student-clientip">127.0.0.1</div>
-                </p>
-                <p>
-
-                <div data-bind="text: sessionstatemsg"></div>
-                </p>
-                <p>
-
-                <div data-bind="text: othermsg"></div>
-                </p>
-            </div>
-            <p>
-
-            <div id="logoutarea"><a data-bind="click: doLoginReset" class="secondary button" href="#logout-action">Logout</a>
-            </div>
-            </p>
-        </div>
-    </div>
-</div>
-<div id="iq-area" style="display:none">
-    <H3>Question <span data-bind="text: qidx() + 1"></span></H3>
-    <H4 class="subheader"><span data-bind="text: question"></span></H4>
-
-    <P><img data-bind="attr: { src: picurl }"/></P>
-    <br/>
-
-    <form>
-        <ul class="block-grid two-up">
-            <!-- Row Q1 -->
-            <li><label>A) <span data-bind="text: a1">1998</span></label></li>
-            <li><label for="a1"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a1" id="a1"> Correct?</label></li>
-            <!-- Row Q2 -->
-            <li><label>B) <span data-bind="text: a2">1836</span></label></li>
-            <li><label for="a2"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a2" id="a2"> Correct?</label></li>
-            <!-- Row Q3 -->
-            <li><label>C) <span data-bind="text: a3">1812</span3></label></li>
-            <li><label for="a3"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a3" id="a3"> Correct?</label></li>
-            <!-- Row Q4 -->
-            <li><label>D) <span data-bind="text: a4">1901</span></label></li>
-            <li><label for="a4"><input disabled="true" data-bind="checked: answer" name="answer-options" type="radio"
-                                       value="a4" id="a4"> Correct?</label></li>
-        </ul>
-        <P><em>Rating:</em><span data-bind="text: rating">5</span></P>
-    </form>
-</div>
-</div>
-</div>
-<!-- container -->
+									<label>Real Name</label>
+									<input data-bind='value: realname, valueUpdate: "afterkeydown"'
+										type="text" class="twelve" placeholder="Real Name(Optional)" />
+									<label>Client IPAddress</label>
+									<input data-bind='value: clientip' type="text" class="twelve"
+										disabled="true"
+										placeholder="unknown (Will be provided by server)" />
+									<ul class="button-group even two-up">
+										<li>
+											<a href="#" data-bind='click: doLogin, disable: hasSubmitted'
+												class="button">Submit</a>
+										</li>
+										<li>
+											<a href="#" data-bind='click: doLoginReset' class="button">Reset</a>
+										</li>
+									</ul>
+									</form>
 
 
-<!-- Included JS Files -->
+								</li>
+								<li id="start-pane1Tab">
+									<p>
+										Please wait for the class to begin. Your teacher will give you
+										instructions on whether to prepare questions or start
+										answering questions.
+										<!-- NICE DEBUG TRICK -->
+										<!-- KO:<span data-bind="text: ko.toJSON($data)"></span>-->
+									</p>
+								</li>
+								<li id="makeq-pane1Tab">
+									<div id="inquiry-form-area">
+										<!-- NICE DEBUG TRICK -->
+										<!-- KO:<span data-bind="text: ko.toJSON($data)"></span> -->
+										<form action="return false;">
+											<label>Question</label>
+											<textarea data-bind="value: question" rows="5" cols="20"></textarea>
 
-<script src="js/jquery.js"></script>
-<script src="js/jquery.foundation.reveal.js"></script>
-<script src="js/jquery.foundation.orbit.js"></script>
-<script src="js/jquery.foundation.navigation.js"></script>
-<script src="js/jquery.foundation.buttons.js"></script>
-<script src="js/jquery.foundation.tabs.js"></script>
-<script src="js/jquery.foundation.forms.js"></script>
-<script src="js/jquery.foundation.tooltips.js"></script>
-<script src="js/jquery.foundation.accordion.js"></script>
-<script src="js/jquery.placeholder.js"></script>
-<script src="js/jquery.foundation.alerts.js"></script>
-<!-- XXX PATCHED -->
-<!-- End Combine and Compress These JS Files -->
-<!-- <script src="js/foundation.js"></script> -->
-<script src="js/app.js"></script>
-<!-- Switch to minified version after development -->
-<script type='text/javascript' src='js/knockout-2.1.0.debug.js'></script>
-<script type='text/javascript' src='js/underscore-1.3.3.js'></script>
-<script type='text/javascript' src='js/async-0.1.22.js'></script>
-<!-- Got this from: http://www.diveintojavascript.com/projects/javascript-sprintf -->
-<script type='text/javascript' src='js/sprintf-0.7-beta1.js'></script>
-<script type='text/javascript' src='js/smilestudent.js'></script>
-<script type='text/javascript' src='js/stacktrace-min-0.4.js'></script>
-<script type='text/javascript' src='js/jquery.blockUI.js'></script>
-<script type="text/javascript" src="js/rating.js"></script>
+											<div class="row">
+												<div class="eight columns">
+													<label>Answer 1</label>
+													<input data-bind="value: a1, valueUpdate: 'keyup'"
+														type="text" />
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a1">
+														<input value="a1" data-bind="checked: rightanswer"
+															name="answer-options" type="radio" id="a1">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<label>Answer 2</label>
+													<input data-bind="value: a2" type="text" />
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a2">
+														<input value="a2" data-bind="checked: rightanswer"
+															name="answer-options" type="radio" id="a2">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<label>Answer 3</label>
+													<input data-bind="value: a3" type="text" />
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a3">
+														<input value="a3" data-bind="checked: rightanswer"
+															name="answer-options" type="radio" id="a3">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<label>Answer 4</label>
+													<input data-bind="value: a4" type="text" />
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a4">
+														<input value="a4" data-bind="checked: rightanswer"
+															name="answer-options" type="radio" id="a4">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<div id="fine-uploader"></div>
+												</div>
+											</div>
+											<div id="submit-inquiry-area">
+												<ul class="button-group even two-up">
+													<li>
+														<a id="submitQbutton" href="#" data-bind='click: doSubmitQ' class="button">Submit</a>
+													</li>
+													<li>
+														<a href="#" data-bind='click: doSubmitQandDone'
+															class="button">Submit &amp; Done</a>
+													</li>
+												</ul>
+											</div>
+										</form>
+
+									</div>
+								</li>
+								<li id="answerq-pane1Tab">
+									<!-- NICE DEBUG TRICK -->
+									<!-- KO:<span data-bind="text: ko.toJSON($data)"></span> -->
+									<div id="answer-form-area">
+										<H3>
+											Question
+											<span data-bind="text: qidx() + 1"></span>
+										</H3>
+										<H4 class="subheader">
+											<span data-bind="text: question"></span>
+										</H4>
+
+										<P>
+											<img data-bind="attr: { src: picurl }" />
+										</P>
+										<br />
+
+										<form>
+											<div class="row">
+												<div class="eight columns">
+													<label>
+														A)
+														<span data-bind="text: a1">1998</span>
+													</label>
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a1">
+														<input data-bind="checked: answer" name="answer-options"
+															type="radio" value="a1" id="a1">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<label>
+														B)
+														<span data-bind="text: a2">1836</span>
+													</label>
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a2">
+														<input data-bind="checked: answer" name="answer-options"
+															type="radio" value="a2" id="a2">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<label>
+														C)
+														<span data-bind="text: a3">
+															1812
+															</span3>
+													</label>
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a3">
+														<input data-bind="checked: answer" name="answer-options"
+															type="radio" value="a3" id="a3">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="eight columns">
+													<label>
+														D)
+														<span data-bind="text: a4">1901</span>
+													</label>
+												</div>
+												<div class="four mobile-one columns">
+													<label for="a4">
+														<input data-bind="checked: answer" name="answer-options"
+															type="radio" value="a4" id="a4">
+														Correct?
+													</label>
+												</div>
+											</div>
+											<P>
+												<em>Rating:</em>
+											</P>
+
+											<div id="star-rating">
+												<input data-bind="checked: rating" type="radio"
+													name="rating" class="rating" value="1" />
+												<input data-bind="checked: rating" type="radio"
+													name="rating" class="rating" value="2" />
+												<input data-bind="checked: rating" type="radio"
+													name="rating" class="rating" value="3" />
+												<input data-bind="checked: rating" type="radio"
+													name="rating" class="rating" value="4" />
+												<input data-bind="checked: rating" type="radio"
+													name="rating" class="rating" value="5" />
+											</div>
+											<br />
+											<ul class="button-group even two-up">
+												<li>
+													<a href="#" data-bind='click: doAnswerPrevQ' class="button">Prev</a>
+												</li>
+												<li>
+													<a href="#" data-bind='click: doAnswerNextQ' class="button">Next</a>
+												</li>
+
+											</ul>
+										</form>
+									</div>
+								</li>
+
+								<li id="results-pane1Tab">
+									<!-- NICE DEBUG TRICK -->
+									<!-- KO:<span data-bind="text: ko.toJSON($data)"></span> -->
+									<div id="results-area">
+										<H3>Congrats. You got 5/10 correct.</h3>
+										<ul>
+											<li>Q1 - Correct</li>
+											<li>Q2 - Correct</li>
+											<li>Q3 - Correct</li>
+											<li>Q4 - Correct</li>
+											<li>Q5 - Correct</li>
+											<li>Q6 - Incorrect</li>
+											<li>Q7 - Incorrect</li>
+											<li>Q8 - Incorrect</li>
+											<li>Q9 - Incorrect</li>
+											<li>Q10- Incorrect</li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="three columns">
+				<!-- <div data-bind="with: logindata"> -->
+				<div id="login-info">
+					<h4>
+						Instructions for
+						<div data-bind="text: username" id="student-username">Student</div>
+						<div data-bind="text: realname" id="student-realname"></div>
+					</h4>
+					<div id="login-status">
+						<div id="login-panel" class="panel callout radius">
+							<h5>
+								<div data-bind="text: loginstatusmsg"></div>
+							</h5>
+							&nbsp;
+							<p>@
+							<div data-bind="text: clientip" id="student-clientip">127.0.0.1</div>
+							</p>
+							<p>
+							<div data-bind="text: sessionstatemsg"></div>
+							</p>
+							<p>
+							<div data-bind="text: othermsg"></div>
+							</p>
+						</div>
+						<p>
+						<div id="logoutarea">
+							<a data-bind="click: doLoginReset" class="secondary button"
+								href="#logout-action">Logout</a>
+						</div>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div id="iq-area" style="display: none">
+				<H3>
+					Question
+					<span data-bind="text: qidx() + 1"></span>
+				</H3>
+				<H4 class="subheader">
+					<span data-bind="text: question"></span>
+				</H4>
+
+				<P>
+					<img data-bind="attr: { src: picurl }" />
+				</P>
+				<br />
+
+				<form>
+					<ul class="block-grid two-up">
+						<!-- Row Q1 -->
+						<li>
+							<label>
+								A)
+								<span data-bind="text: a1">1998</span>
+							</label>
+						</li>
+						<li>
+							<label for="a1">
+								<input disabled="true" data-bind="checked: answer"
+									name="answer-options" type="radio" value="a1" id="a1">
+								Correct?
+							</label>
+						</li>
+						<!-- Row Q2 -->
+						<li>
+							<label>
+								B)
+								<span data-bind="text: a2">1836</span>
+							</label>
+						</li>
+						<li>
+							<label for="a2">
+								<input disabled="true" data-bind="checked: answer"
+									name="answer-options" type="radio" value="a2" id="a2">
+								Correct?
+							</label>
+						</li>
+						<!-- Row Q3 -->
+						<li>
+							<label>
+								C)
+								<span data-bind="text: a3">
+									1812
+									</span3>
+							</label>
+						</li>
+						<li>
+							<label for="a3">
+								<input disabled="true" data-bind="checked: answer"
+									name="answer-options" type="radio" value="a3" id="a3">
+								Correct?
+							</label>
+						</li>
+						<!-- Row Q4 -->
+						<li>
+							<label>
+								D)
+								<span data-bind="text: a4">1901</span>
+							</label>
+						</li>
+						<li>
+							<label for="a4">
+								<input disabled="true" data-bind="checked: answer"
+									name="answer-options" type="radio" value="a4" id="a4">
+								Correct?
+							</label>
+						</li>
+					</ul>
+					<P>
+						<em>Rating:</em>
+						<span data-bind="text: rating">5</span>
+					</P>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- container -->
+
+
+	<!-- Included JS Files -->
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.foundation.reveal.js"></script>
+	<script src="js/jquery.foundation.orbit.js"></script>
+	<script src="js/jquery.foundation.navigation.js"></script>
+	<script src="js/jquery.foundation.buttons.js"></script>
+	<script src="js/jquery.foundation.tabs.js"></script>
+	<script src="js/jquery.foundation.forms.js"></script>
+	<script src="js/jquery.foundation.tooltips.js"></script>
+	<script src="js/jquery.foundation.accordion.js"></script>
+	<script src="js/jquery.placeholder.js"></script>
+	<script src="js/jquery.foundation.alerts.js"></script>
+	<!-- XXX PATCHED -->
+	<!-- End Combine and Compress These JS Files -->
+	<!-- <script src="js/foundation.js"></script> -->
+	<script src="js/app.js"></script>
+	<!-- Switch to minified version after development -->
+	<script type='text/javascript' src='js/knockout-2.1.0.debug.js'></script>
+	<script type='text/javascript' src='js/underscore-1.3.3.js'></script>
+	<script type='text/javascript' src='js/async-0.1.22.js'></script>
+	<!-- Got this from: http://www.diveintojavascript.com/projects/javascript-sprintf -->
+	<script type='text/javascript' src='js/sprintf-0.7-beta1.js'></script>
+	<script type='text/javascript' src='js/smilestudent.js'></script>
+	<script type='text/javascript' src='js/stacktrace-min-0.4.js'></script>
+	<script type='text/javascript' src='js/jquery.blockUI.js'></script>
+	<script type="text/javascript" src="js/rating.js"></script>
+	<script type="text/javascript"
+		src="js/jquery.fineuploader-3.5.0.min.js"></script>
+	<script>
+        function createUploader() {
+            var uploader = new qq.FineUploader({
+                element : $('#fine-uploader')[0],
+                callbacks : {
+                    onComplete : function(id, name, response) {
+                        GlobalViewModel.pic(response.base64);
+                    }
+                },
+                validation : {
+                    allowedExtensions : [ 'jpeg', 'jpg', 'gif', 'png' ],
+                },
+                request : {
+                    endpoint : '/smile/upload/image'
+                }
+            });
+        }
+        window.onload = createUploader;
+    </script>
+
 </body>
 </html>

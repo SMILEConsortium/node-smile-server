@@ -7,10 +7,6 @@ HEADERS_JSON = {
     'Content-Type': 'application/json'
 };
 
-HEADERS_ENCODED = {
-    'Content-Type': 'application/x-www-form-urlencoded'
-};
-
 var question1 = {
     "NAME": "test",
     "Q": "qwerty testão",
@@ -24,18 +20,9 @@ var question1 = {
     "TYPE": 'QUESTION_PIC'
 };
 
-var encodedQuestion2 = 'MSG=%7B%22NAME%22%3A%22test2%22%2C%22Q%22%3A%22asdfgh%22%2C%22A%22%3A%222%22%2C%22IP%22%3A%2210.0.2.16%22%2C%22O4%22%3A%22f%22%2C%22O3%22%3A%22d%22%2C%22O2%22%3A%22s%22%2C%22O1%22%3A%22a%22%2C%22TYPE%22%3A%22QUESTION%22%7D';
-
 request({
-    uri: BASE_URL + "/smile/question",
+    uri: BASE_URL + "/smile/store",
     method: 'PUT',
     headers: HEADERS_JSON,
     body: JSON.stringify(question1)
-});
-
-request({
-    uri: BASE_URL + "/JunctionServerExecution/pushmsg.php",
-    method: 'POST',
-    headers: HEADERS_ENCODED,
-    body: encodedQuestion2,
 });

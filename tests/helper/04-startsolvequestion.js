@@ -1,6 +1,6 @@
 request = require('request');
 
-PORT = 80;
+PORT = process.env.PORT || 80;
 BASE_URL = "http://localhost:" + PORT;
 
 HEADERS_JSON = {

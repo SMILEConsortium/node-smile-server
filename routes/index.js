@@ -1,6 +1,7 @@
 var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
+var fs = require('fs');
 
 OK = 'OK';
 
@@ -22,6 +23,46 @@ exports.handleQuestionGet = function(req, res) {
     } else {
         return res.sendJSON(HTTP_STATUS_OK, questions);
     }
+};
+
+function storeData(obj) {
+    var json = JSON.stringify(obj);
+    fs.writeFile(__dirname + "/../storage/" + new Date().toISOString(), json, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("The file was saved!");
+        }
+    });
+}
+
+exports.handleStore = function(req, res) {
+    storeData(req.body);
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleBackup = function(req, res) {
+    storeData(game.messages.past);
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleImageUpload = function(req, res) {
+    var file = req.file;
+    var imageData = fs.readFileSync(file.path, 'binary');
+    var base64data = new Buffer(imageData, 'binary').toString('base64');
+    var data = {};
+    data.success = "true";
+    data.base64 = base64data;
+    return res.sendJSON(HTTP_STATUS_OK, data);
+};
+
+exports.handleRatingMetadataPut = function(req, res) {
+    game.setRatingMetadata(req.body);
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleRatingMetadataGet = function(req, res) {
+    return res.sendJSON(HTTP_STATUS_OK, game.getRatingMetadata());
 };
 
 exports.handleQuestionGetAll = function(req, res) {
@@ -65,12 +106,12 @@ exports.handleStudentResultsGet = function(req, res) {
         res.handleError(studentStatus);
     } else {
         // Augment data with right answers
-        studentStatus["RIGHT_ANSWERS"] = rightAnswers;
-        studentStatus["ANSWER_SCORING"] = [];
-        studentStatus["NUM_RIGHT"] = 0;
-        studentStatus["SCORE_AS_PERCENTAGE"] = 0;
+        studentStatus.RIGHT_ANSWERS = rightAnswers;
+        studentStatus.ANSWER_SCORING = [];
+        studentStatus.NUM_RIGHT = 0;
+        studentStatus.SCORE_AS_PERCENTAGE = 0;
         if (studentStatus.SOLVED === "Y") {
-            myAnswers = studentStatus["YOUR_ANSWERS"];
+            myAnswers = studentStatus.YOUR_ANSWERS;
             if (myAnswers) {
                 // Be careful to only check scores against the total # answered
                 for ( var i = 0; i < myAnswers.length; i++) {
@@ -99,10 +140,10 @@ exports.handleStartSolveQuestionPut = function(req, res) {
     var numberOfQuestions = game.questions.getNumberOfQuestions();
     var rightAnswers = game.questions.getRightAnswers();
     var message = {};
-    message['TYPE'] = 'START_SOLVE';
-    message['NUMQ'] = numberOfQuestions;
-    message['RANSWER'] = rightAnswers;
-    message['TIME_LIMIT'] = timeLimit;
+    message.TYPE = 'START_SOLVE';
+    message.NUMQ = numberOfQuestions;
+    message.RANSWER = rightAnswers;
+    message.TIME_LIMIT = timeLimit;
 
     game.setCurrentMessage(message);
     return res.sendText(HTTP_STATUS_OK, OK);
@@ -131,15 +172,15 @@ exports.handleResultsGet = function(req, res) {
 exports.handleSendShowResultsPut = function(req, res) {
     var result = game.calculateResults();
     var message = {};
-    message['TYPE'] = 'START_SHOW';
-    message['WINSCORE'] = result.bestScoredStudentNames;
-    message['WINRATING'] = result.bestRatedQuestionStudentNames;
-    message['HIGHSCORE'] = result.winnerScore;
-    message['HIGHRATING'] = result.winnerRating;
-    message['NUMQ'] = result.numberOfQuestions;
-    message['RANSWER'] = result.rightAnswers;
-    message["AVG_RATINGS"] = result.averageRatings;
-    message["RPERCENT"] = result.questionsCorrectPercentage;
+    message.TYPE = 'START_SHOW';
+    message.WINSCORE = result.bestScoredStudentNames;
+    message.WINRATING = result.bestRatedQuestionStudentNames;
+    message.HIGHSCORE = result.winnerScore;
+    message.HIGHRATING = result.winnerRating;
+    message.NUMQ = result.numberOfQuestions;
+    message.RANSWER = result.rightAnswers;
+    message.AVG_RATINGS = result.averageRatings;
+    message.RPERCENT = result.questionsCorrectPercentage;
     game.setCurrentMessage(message);
     return res.sendText(HTTP_STATUS_OK, OK);
 };
@@ -151,7 +192,6 @@ exports.handleAllMessagesGet = function(req, res) {
 reset = function() {
     oldGame = game;
     game = new Game();
-    delete oldGame;
 };
 
 exports.handleResetGet = function(req, res) {
@@ -172,14 +212,14 @@ exports.handleCsvPushQuestions = function(req, res) {
     }
     rawQuestions.forEach(function(rawQuestion) {
         var question = {};
-        question["NAME"] = "teacher";
-        question["Q"] = rawQuestion["question"];
-        question["O1"] = rawQuestion["choice1"];
-        question["O2"] = rawQuestion["choice2"];
-        question["O3"] = rawQuestion["choice3"];
-        question["O4"] = rawQuestion["choice4"];
-        question["A"] = rawQuestion["answers"].replace("choice", "");
-        question["TYPE"] = rawQuestion["has_image"] === "true" ? "QUESTION_PIC" : "QUESTION";
+        question.NAME = "teacher";
+        question.Q = rawQuestion.question;
+        question.O1 = rawQuestion.choice1;
+        question.O2 = rawQuestion.choice2;
+        question.O3 = rawQuestion.choice3;
+        question.O4 = rawQuestion.choice4;
+        question.A = rawQuestion.answers.replace("choice", "");
+        question.TYPE = rawQuestion.has_image === "true" ? "QUESTION_PIC" : "QUESTION";
         game.addQuestion(question);
     });
     return res.sendText(HTTP_STATUS_OK, OK);
@@ -193,11 +233,18 @@ exports.handlePushMessage = function(req, res) {
     var message = req.body;
     game.registerMessage(message);
     var type = message.TYPE || null;
+    if (type.indexOf("RE_TAKE") != -1) {
+        type = 'RE_TAKE';
+    }
     var error = null;
     switch (type) {
     case null:
         // Ignoring the message does not have a type
         console.warn("Unrecognized type: " + type);
+        break;
+    case 'RE_TAKE':
+        game.setCurrentMessage(message);
+        error = game.retake();
         break;
     case 'QUESTION':
         error = game.addQuestion(message);
@@ -220,8 +267,8 @@ exports.handlePushMessage = function(req, res) {
         return res.handleError(error);
     } else {
         if (req.id) {
-            return res.sendText(HTTP_STATUS_OK, "This server does not support question update. The question you sent has been added to: "
-                    + req.id);
+            var msg = "This server does not support question update. The question you sent has been added to: " + req.id;
+            return res.sendText(HTTP_STATUS_OK, msg);
         } else {
             return res.sendText(HTTP_STATUS_OK, OK);
         }
@@ -248,8 +295,56 @@ exports.handleStudentStatusGetByIP = function(req, res) {
     }
 };
 
+exports.handleMonitoringHtmlGet = function(req, res) {
+    //    # of students
+    //    Each student name + IP address
+    //    Highlight in red self assigned IP, and duplicates
+    //    # of questions submitted
+    //    # of students who has answered questions
+    var numberOfStudents = game.students.numberOfStudents;
+    var students = game.students.currentStudents;
+    var numberOfQuestions = game.questions.numberOfQuestions;
+    var numberOfStudentsAnswered = 0;
+
+    res.writeHead(200, {
+        'Content-Type' : 'text/html; charset=utf-8',
+    });
+    res.write("<html>\n<head><title>SMILE Server Monitoring Tool</title></head>\n<body>\n");
+    res.write("<p>Number of students: " + numberOfStudents + "</p>\n");
+    res.write("<p>Number of questions: " + numberOfQuestions + "</p>\n");
+
+    res.write("<table border=\"1\"><thead><th>Student Name</th><th>Student IP</th></thead><tbody>\n");
+    var ipMap = {};
+    for ( var k in students) {
+        student = students[k];
+        name = student.name;
+        ip = student.ip;
+        if (ipMap.hasOwnProperty(ip)) {
+            ipMap[ip].push(name);
+        } else {
+            ipMap[ip] = [ name ];
+        }
+        if (student.getStatus().solved) {
+            numberOfStudentsAnswered++;
+        }
+    }
+    for ( var key in students) {
+        var student = students[key];
+        var name = student.name;
+        var ip = student.ip;
+        var color = ip.indexOf("169.254") != -1 || ipMap[ip].length > 1 ? "red" : "green";
+        res.write("<tr><td>" + name + "</td><td style=\"color: " + color + "\">" + ip + "</td></tr>\n");
+    }
+
+    res.write("</tbody></table>\n");
+
+    res.write("<p>Number of students who has answered questions: " + numberOfStudentsAnswered + "</p>\n");
+    res.write("</body></html>\n");
+    res.end();
+};
+
 exports.handleQuestionHtmlGet = function(req, res) {
-    var questionNumber = parseInt(req.id);
+    var questionNumber = parseInt(req.id, 10);
     var question = game.questions.getList()[questionNumber];
     if (!question) {
         return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
@@ -278,7 +373,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
 };
 
 exports.handleQuestionHtmlGet = function(req, res) {
-    var questionNumber = parseInt(req.id);
+    var questionNumber = parseInt(req.id, 10);
     var question = game.questions.getList()[questionNumber];
     if (!question) {
         return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
@@ -307,7 +402,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
 };
 
 exports.handleQuestionJSONGet = function(req, res) {
-    var questionNumber = parseInt(req.id);
+    var questionNumber = parseInt(req.id, 10);
     var question = game.questions.getList()[questionNumber];
     if (!question) {
         return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
@@ -317,7 +412,7 @@ exports.handleQuestionJSONGet = function(req, res) {
 };
 
 exports.handleQuestionImageGet = function(req, res) {
-    var questionNumber = parseInt(req.id);
+    var questionNumber = parseInt(req.id, 10);
     var question = game.questions.getList()[questionNumber];
     if (!question) {
         return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
@@ -334,7 +429,7 @@ exports.handleQuestionImageGet = function(req, res) {
 };
 
 exports.handleQuestionResultHtmlGet = function(req, res) {
-    var questionNumber = parseInt(req.id);
+    var questionNumber = parseInt(req.id, 10);
     var question = game.questions.getList()[questionNumber];
     if (!question) {
         return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
@@ -354,14 +449,14 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
     }
 
     res.write("<P>\n");
-    res.write("(1) " + question.O1 + (parseInt(question.A) === 1 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("(2) " + question.O2 + (parseInt(question.A) === 2 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("(3) " + question.O3 + (parseInt(question.A) === 3 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("(4) " + question.O4 + (parseInt(question.A) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+    res.write("(1) " + question.O1 + (parseInt(question.A, 10) === 1 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+    res.write("(2) " + question.O2 + (parseInt(question.A, 10) === 2 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+    res.write("(3) " + question.O3 + (parseInt(question.A, 10) === 3 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
+    res.write("(4) " + question.O4 + (parseInt(question.A, 10) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
     res.write("</P>\n");
     res.write("Correct Answer: " + question.A + "<br>\n");
-    res.write("<P> Num correct people: " + game.questionCorrectCountMap[questionNumber] + " / " + game.students.getNumberOfStudents()
-            + "<br>\n");
+    var numCorrectPeople = game.questionCorrectCountMap[questionNumber];
+    res.write("<P> Num correct people: " + numCorrectPeople + " / " + game.students.getNumberOfStudents() + "<br>\n");
     res.write("Average rating: " + game.getQuestionAverageRating(questionNumber) + "<br>\n");
 
     res.write("</body></html>\n");
