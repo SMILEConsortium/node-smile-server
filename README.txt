@@ -7,6 +7,13 @@
  * Run application
   $ node smileplug.js
 
+== Bundled Client Applications ==
+
+* SMILE Student for Android 2.1.9
+* SMILE Teacher for Android 0.2.9
+* SMILE Teacher for Java 0.5
+* Plugmin 0.5.1 for Android
+
 == Tests =
 
  * Install test dependencies:

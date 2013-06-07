@@ -1,6 +1,6 @@
 /**
  #
- #Copyright (c) 2011-2012 Razortooth Communications, LLC. All rights reserved.
+ #Copyright (c) 2011-2013 Razortooth Communications, LLC. All rights reserved.
  #
  #Redistribution and use in source and binary forms, with or without modification,
  #are permitted provided that the following conditions are met:
@@ -36,7 +36,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
     'PORT' : process.env.PORT || 80,
     'HOST' : '0.0.0.0',
-    'VERSION_TAG' : '0.3.0',
+    'VERSION_TAG' : '0.3.1',
     'VERSION_DESCRIPTION' : 'SMILE Server',
 };
 
