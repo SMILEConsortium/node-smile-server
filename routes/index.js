@@ -353,6 +353,61 @@ exports.handleQuestionHtmlGet = function(req, res) {
     res.writeHead(200, {
         'Content-Type' : 'text/html; charset=utf-8',
     });
+	
+	// Preparing values for solving questions screen
+	var json_solving_questions = {
+		questionNum: (questionNumber + 1),
+		author: studentName,
+		question: question.Q,
+		questionType: question.TYPE,
+		picturePath: '/smile/current/'+questionNumber+".jpg", 
+		option1: question.O1,
+		option2: question.O2,
+		option3: question.O3,
+		option4: question.O4
+	};
+
+	var solving_questions = JSON.stringify(json_solving_questions);
+
+	var headers = {
+		'Content-Type': 'application/json',
+		'Content-Length': solving_questions.length
+	};
+
+	var options = {
+		host: 'localhost',
+		port: 80,
+		path: '/smile/current/'+questionNumber+'.html',
+		method: 'POST',
+		headers: headers
+	};
+	
+// Setup the request.  The options parameter is the object defined above.
+var http = require('http');
+var req = http.request(options, function(res) {
+  res.setEncoding('utf-8');
+
+  var responseString = '';
+
+  res.on('data', function(data) {
+    responseString += data;
+  });
+
+  res.on('end', function() {
+    var resultObject = JSON.parse(responseString);
+  });
+});
+
+req.on('error', function(e) {
+  // TODO: handle error.
+});
+
+console.log('JSON request ==> '+solving_questions);
+
+res.write(solving_questions);
+
+	/* Should be removed soon
+	
     res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
     res.write("<p>(Question created by " + studentName + ")</p>\n");
     res.write("<P>Question:\n");
@@ -369,8 +424,11 @@ exports.handleQuestionHtmlGet = function(req, res) {
     res.write("(3) " + question.O3 + "<br>\n");
     res.write("(4) " + question.O4 + "<br>\n");
     res.write("</P>\n</body></html>\n");
+	*/
     res.end();
 };
+
+/* Already existing just above this comment. Should be removed after a while i
 
 exports.handleQuestionHtmlGet = function(req, res) {
     var questionNumber = parseInt(req.id, 10);
@@ -400,6 +458,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
     res.write("</P>\n</body></html>\n");
     res.end();
 };
+*/
 
 exports.handleQuestionJSONGet = function(req, res) {
     var questionNumber = parseInt(req.id, 10);
@@ -438,6 +497,64 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
     res.writeHead(200, {
         'Content-Type' : 'text/html; charset=utf-8',
     });
+	
+	
+	// Preparing values for detailresult.xml	
+	var detail_result = {
+		questionNum: (questionNumber + 1),
+		author: studentName,
+		question: question.Q,
+		questionType: question.TYPE,
+		picturePath: '/smile/current/'+questionNumber+".jpg", 
+		answer: question.A,
+		option1: question.O1,
+		option2: question.O2,
+		option3: question.O3,
+		option4: question.O4,
+		numCorrectPeople: game.questionCorrectCountMap[questionNumber],
+		numberOfStudents: game.students.getNumberOfStudents(),
+		averageRating: game.getQuestionAverageRating(questionNumber) 
+	};
+
+	var detail_resultString = JSON.stringify(detail_result);
+
+	var headers = {
+		'Content-Type': 'application/json',
+		'Content-Length': detail_resultString.length
+	};
+
+	var options = {
+		host: 'localhost',
+		port: 80,
+		path: '/smile/current/'+questionNumber+'_result.html',
+		method: 'POST',
+		headers: headers
+	};
+	
+// Setup the request.  The options parameter is the object defined above.
+var http = require('http');
+var req = http.request(options, function(res) {
+  res.setEncoding('utf-8');
+
+  var responseString = '';
+
+  res.on('data', function(data) {
+    responseString += data;
+  });
+
+  res.on('end', function() {
+    var resultObject = JSON.parse(responseString);
+  });
+});
+
+req.on('error', function(e) {
+  // TODO: handle error.
+});
+
+console.log('JSON request ==> '+detail_resultString);
+	
+	/*  #### TODO => This code will be removed soon #####
+	
     res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
     res.write("<p>(Question created by " + studentName + ")</p>\n");
     res.write("<P>Question:\n");
@@ -460,7 +577,8 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
     res.write("Average rating: " + game.getQuestionAverageRating(questionNumber) + "<br>\n");
 
     res.write("</body></html>\n");
-
+	*/
+	res.write(detail_resultString);
     res.end();
 };
 
