@@ -1,6 +1,6 @@
 /**
  #
- #Copyright (c) 2011 Razortooth Communications, LLC. All rights reserved.
+ #Copyright (c) 2011-2013 Razortooth Communications, LLC. All rights reserved.
  #
  #Redistribution and use in source and binary forms, with or without modification,
  #are permitted provided that the following conditions are met:
@@ -497,7 +497,8 @@ function doPostInquiry(inquirydata, cb) {
 // {"MYRATING":[1,5,5,5,5,5,5,5,5,5,5,5],"MYANSWER":[1,4,4,4,4,4,4,4,4,4,4,4],
 // "NAME":"default.102","TYPE":"ANSWER","IP":"10.0.0.102"}
 function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
-    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({ "MYRATING": ratingsarray,
+    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({ 
+        "MYRATING": ratingsarray,
         "MYANSWER": answersarray,
         "NAME": username,
         "TYPE": "ANSWER",
