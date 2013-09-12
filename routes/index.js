@@ -384,7 +384,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
 	
 // Setup the request.  The options parameter is the object defined above.
 var http = require('http');
-var req = http.request(options, function(res) {
+req = http.request(options, function(res) {
   res.setEncoding('utf-8');
 
   var responseString = '';
@@ -533,7 +533,7 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
 	
 // Setup the request.  The options parameter is the object defined above.
 var http = require('http');
-var req = http.request(options, function(res) {
+req = http.request(options, function(res) {
   res.setEncoding('utf-8');
 
   var responseString = '';
