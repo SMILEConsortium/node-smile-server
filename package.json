@@ -17,7 +17,8 @@
         "async" : "0.2.8",
         "fast-csv" : "0.0.1",
         "sha1": "1.0.1",
-        "pouchdb": "0.0.14"
+        "pouchdb": "0.0.14",
+        "winston": ">=0.7.2"
     },
     "devDependencies": {
         "vows": "0.7.0",

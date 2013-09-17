@@ -8,6 +8,7 @@ all:
 	./install.sh
 
 lint:
+	$(JSLINT) lib/smile/persisteus.js
 	$(JSLINT) routes/index.js
 	$(JSLINT) smileplug.js
 	$(JSLINT) lib/smile/game.js

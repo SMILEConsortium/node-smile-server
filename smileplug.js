@@ -31,7 +31,6 @@
 var js = require('./lib/js.js');
 var routes = require('./routes');
 var url = require('url');
-var pouchdb = require('pouchdb');
 
 var starttime = (new Date()).getTime();
 
