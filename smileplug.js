@@ -28,6 +28,12 @@
  #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
+/**
+* smileplug.js
+*
+* @class js
+* @constructor
+*/
 var js = require('./lib/js.js');
 var routes = require('./routes');
 var url = require('url');
@@ -91,9 +97,17 @@ js.get('/smile/', routes.handleSmileRootGet);
 js.get('/smile/reset', routes.handleResetGet);
 js.put('/smile/reset', routes.handleResetPut);
 
+/**
+    Store session data
+    @method /smile/store
+**/
 js.put('/smile/store', routes.handleStore);
 js.post('/smile/store', routes.handleStore);
 
+/**
+    Handle complete DB in couchdb export compatible
+    @method /smile/backup
+**/
 js.put('/smile/backup', routes.handleBackup);
 js.post('/smile/backup', routes.handleBackup);
 js.get('/smile/backup', routes.handleBackup);

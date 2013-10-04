@@ -2,7 +2,7 @@ var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
 var fs = require('fs');
-
+var Persisteus = require('persisteus');
 OK = 'OK';
 
 HTTP_STATUS_OK = '200';
@@ -15,6 +15,7 @@ var MESSAGE_WAIT_CONNECT = {
 };
 
 var game = new Game();
+var persisteus = new Persisteus(); // For now,  no config, just take the default settings
 
 exports.handleQuestionGet = function(req, res) {
     var questions = game.questions.getQuestions(req.id);
@@ -27,11 +28,12 @@ exports.handleQuestionGet = function(req, res) {
 
 function storeData(obj) {
     var json = JSON.stringify(obj);
-    fs.writeFile(__dirname + "/../storage/" + new Date().toISOString(), json, function(err) {
+    var filename = __dirname + "/../storage/" + new Date().toISOString();
+    fs.writeFile(filename, json, function(err) {
         if (err) {
             console.log(err);
         } else {
-            console.log("The file was saved!");
+            console.log("The file was saved in: " + filename);
         }
     });
 }
@@ -42,6 +44,7 @@ exports.handleStore = function(req, res) {
 };
 
 exports.handleBackup = function(req, res) {
+
     storeData(game.messages.past);
     return res.sendText(HTTP_STATUS_OK, OK);
 };

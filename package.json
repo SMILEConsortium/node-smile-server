@@ -22,6 +22,7 @@
     },
     "devDependencies": {
         "vows": "0.7.0",
+        "yuidocjs": "0.3.45",
         "jshint": "2.1.0"
     },
     "directories": {
