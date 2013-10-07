@@ -41,7 +41,7 @@ var url = require('url');
 var starttime = (new Date()).getTime();
 
 js.CONFIG = {
-    'PORT' : process.env.PORT || 8000,
+    'PORT' : process.env.PORT || 80,
     'HOST' : '0.0.0.0',
     'VERSION_TAG' : '0.3.1',
     'VERSION_DESCRIPTION' : 'SMILE Server',

@@ -2,7 +2,7 @@ var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
 var fs = require('fs');
-var Persisteus = require('persisteus');
+var Persisteus = require('../lib/smile/persisteus').Persisteus;
 OK = 'OK';
 
 HTTP_STATUS_OK = '200';
