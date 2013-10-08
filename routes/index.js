@@ -286,7 +286,6 @@ exports.handlePushMsgPost = function(req, res) {
     } catch (e) {
         res.handleError("Can't parse Incoming JSON");
     }
-
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
@@ -296,6 +295,30 @@ exports.handleStudentStatusGetByIP = function(req, res) {
     } else {
         return res.sendJSON(HTTP_STATUS_OK, studentStatus);
     }
+};
+
+exports.handleSessionStats = function(req, res) {
+    var numberOfStudentsAnswered = 0;
+    var students = game.students.currentStudents;
+    var ipMap = {};
+    for ( var k in students) {
+        student = students[k];
+        name = student.name;
+        ip = student.ip;
+        if (ipMap.hasOwnProperty(ip)) {
+            ipMap[ip].push(name);
+        } else {
+            ipMap[ip] = [ name ];
+        }
+        if (student.getStatus().solved) {
+            numberOfStudentsAnswered++;
+        }
+    }
+    return res.sendJSON(HTTP_STATUS_OK, { 
+        "numberOfStudents" : game.students.numberOfStudents,
+        "numberOfQuestions" : game.questions.numberOfQuestions,
+        "numberOfStudentsPostingAnswers" : numberOfStudentsAnswered
+    });
 };
 
 exports.handleMonitoringHtmlGet = function(req, res) {

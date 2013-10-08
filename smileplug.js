@@ -73,6 +73,10 @@ js.get('/smile/metadata/rating', routes.handleRatingMetadataGet);
 
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
+/**
+    Get the questions
+    @method /smile/question
+**/
 js.get('/smile/question', routes.handleQuestionGetAll);
 js.put('/smile/question/csv', routes.handleCsvPushQuestions);
 js.post('/smile/question/csv', routes.handleCsvPushQuestions);
@@ -89,6 +93,10 @@ js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
 // Use this to get a decent results calculation
 js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
 
+/**
+    Get session results metadata
+    @method /smile/results
+**/
 js.get('/smile/results', routes.handleResultsGet);
 js.get('/smile/all', routes.handleAllMessagesGet);
 js.get('/smile', routes.handleSmileRootGet);
@@ -99,6 +107,7 @@ js.put('/smile/reset', routes.handleResetPut);
 
 /**
     Store session data
+    XXX TODO
     @method /smile/store
 **/
 js.put('/smile/store', routes.handleStore);
@@ -106,6 +115,7 @@ js.post('/smile/store', routes.handleStore);
 
 /**
     Handle complete DB in couchdb export compatible
+    XXX TODO
     @method /smile/backup
 **/
 js.put('/smile/backup', routes.handleBackup);
@@ -116,6 +126,7 @@ js.put('/smile/upload/image', routes.handleImageUpload);
 js.post('/smile/upload/image', routes.handleImageUpload);
 
 
+js.get('/smile/view/sessionstats', routes.handleSessionStats, true);
 js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
 
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
