@@ -188,6 +188,10 @@ exports.handleSendShowResultsPut = function(req, res) {
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleAllSessionDataGet = function(req, res) {
+    return res.sendJSON(HTTP_STATUS_OK, game.getAllSessionData());
+};
+
 exports.handleAllMessagesGet = function(req, res) {
     return res.sendJSON(HTTP_STATUS_OK, game.messages.past);
 };

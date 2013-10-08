@@ -98,7 +98,9 @@ js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
     @method /smile/results
 **/
 js.get('/smile/results', routes.handleResultsGet);
-js.get('/smile/all', routes.handleAllMessagesGet);
+
+js.get('/smile/all', routes.handleAllSessionDataGet );
+js.get('/smile/debugdump', routes.handleAllMessagesGet);
 js.get('/smile', routes.handleSmileRootGet);
 js.get('/smile/', routes.handleSmileRootGet);
 
