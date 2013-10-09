@@ -100,7 +100,17 @@ js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
 js.get('/smile/results', routes.handleResultsGet);
 
 js.get('/smile/all', routes.handleAllSessionDataGet );
+
+/**
+    XXX TODO: Add debug logging of the session state
+    @method /smile/debugdump
+ **/
 js.get('/smile/debugdump', routes.handleAllMessagesGet);
+
+/** 
+    XXX TODO: Potentially useless routes ... should they return more than ok?
+    @method /smile/
+ **/
 js.get('/smile', routes.handleSmileRootGet);
 js.get('/smile/', routes.handleSmileRootGet);
 
@@ -117,7 +127,8 @@ js.post('/smile/store', routes.handleStore);
 
 /**
     Handle complete DB in couchdb export compatible
-    XXX TODO
+    XXX TODO I think we'll need to write a handler reload a PouchDB database from a doc dump.  Is it possible?
+    What's the mechanism in couchdb to do the same?
     @method /smile/backup
 **/
 js.put('/smile/backup', routes.handleBackup);

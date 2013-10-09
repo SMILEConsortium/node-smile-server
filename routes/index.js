@@ -3,6 +3,8 @@ var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
 var fs = require('fs');
 var Persisteus = require('../lib/smile/persisteus').Persisteus;
+var pdb = new Persisteus();
+
 OK = 'OK';
 
 HTTP_STATUS_OK = '200';
@@ -26,6 +28,14 @@ exports.handleQuestionGet = function(req, res) {
     }
 };
 
+/**
+    @method storeData
+
+    Used to save JSON data to the FS under <root>/storage/<date>.
+
+    This isn't completely useful, but we'll keep it around for historical value, and will use it to backup
+    our DB.
+**/
 function storeData(obj) {
     var json = JSON.stringify(obj);
     var filename = __dirname + "/../storage/" + new Date().toISOString();
@@ -44,7 +54,6 @@ exports.handleStore = function(req, res) {
 };
 
 exports.handleBackup = function(req, res) {
-
     storeData(game.messages.past);
     return res.sendText(HTTP_STATUS_OK, OK);
 };
@@ -87,6 +96,57 @@ exports.handleSmileRootGet = function(req, res) {
 
 exports.handleStartMakeQuestionPut = function(req, res) {
     game.setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
+
+    //
+    // Extract Teacher specific Sesssion Data
+    //
+    // teacherName : <Any text or numerical name>
+    // sessionName : <Any text or numerical name>
+    // groupName   : <Any text or numerical name>
+    //
+    var teacherMeta = null;
+    var queryData;
+    if ((req.method == 'POST') || (req.method == 'PUT')) {
+        req.on('data', function(data) {
+            queryData += data;
+            if(queryData.length > 1e6) {
+                queryData = "";
+                res.writeHead(413, {'Content-Type': 'text/plain'}).end();
+                req.connection.destroy();
+            }
+        });
+
+        req.on('end', function() {
+            teacherMeta = querystring.parse(queryData);
+        });
+    }
+
+    if (teacherMeta === null || teacherMeta === "") {
+        // XXX TODO: Put our defaults somewhere
+            game.teacherName = "Teacher";
+            game.sessionName = "IQ Session " + new Date().toISOString();
+            game.groupName = "IQ Group";
+    } else {
+        // Validate our data or supply defaults
+        if (!teacherMeta.teacherName) {
+            game.teacherName = "Teacher";
+        } else {
+            game.teacherName = teacherMeta.teacherName;
+        }
+
+        if (!teacherMeta.sessionName) {
+            game.sessionName = "IQ Session " + new Date().toISOString();
+        } else {
+            game.sessionName = teacherMeta.sessionName;
+        }
+
+        if (!teacherMeta.groupName) {
+            game.groupName = "IQ Group";
+        } else {
+            game.groupName = teacherMeta.groupName;
+        }
+    }
+
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -169,7 +229,17 @@ exports.handleStudentPut = function(req, res) {
 };
 
 exports.handleResultsGet = function(req, res) {
-    return res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
+    var results = game.calculateResults();
+    if (!game.resultsSaved) {
+        pdb.putSession(game.getAllSessionData(), function(err, result) {
+            if (err) { // XXX TODO: Add in logger instead of console logging
+                console.err(err);
+            } else {
+                console.log('Stored session successfully');
+            }
+        });
+    }
+    return res.sendJSON(HTTP_STATUS_OK, results);
 };
 
 exports.handleSendShowResultsPut = function(req, res) {
