@@ -229,15 +229,7 @@ exports.handleStudentPut = function(req, res) {
 
 exports.handleResultsGet = function(req, res) {
     var results = game.calculateResults();
-    if (!game.resultsSaved) {
-        pdb.putSession(game.getAllSessionData(), function(err, result) {
-            if (err) { // XXX TODO: Add in logger instead of console logging
-                console.err(err);
-            } else {
-                console.log('Stored session successfully');
-            }
-        });
-    }
+    
     return res.sendJSON(HTTP_STATUS_OK, results);
 };
 
@@ -253,6 +245,16 @@ exports.handleSendShowResultsPut = function(req, res) {
     message.RANSWER = result.rightAnswers;
     message.AVG_RATINGS = result.averageRatings;
     message.RPERCENT = result.questionsCorrectPercentage;
+    if (!game.resultsSaved) {
+        pdb.putSession(game.getAllSessionData(), function(err, result) {
+            if (err) { // XXX TODO: Add in logger instead of console logging
+                console.err(err);
+            } else {
+                console.log('Stored session successfully');
+                game.resultsSaved;
+            }
+        });
+    }
     game.setCurrentMessage(message);
     return res.sendText(HTTP_STATUS_OK, OK);
 };
