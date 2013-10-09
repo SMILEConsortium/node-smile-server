@@ -17,7 +17,6 @@ var MESSAGE_WAIT_CONNECT = {
 };
 
 var game = new Game();
-var persisteus = new Persisteus(); // For now,  no config, just take the default settings
 
 exports.handleQuestionGet = function(req, res) {
     var questions = game.questions.getQuestions(req.id);
