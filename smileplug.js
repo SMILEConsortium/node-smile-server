@@ -133,7 +133,7 @@ js.get('/smile/results', routes.handleResultsGet);
 js.get('/smile/session/all', routes.handleAllSessionDataGet );
 
 /**
-    Get session results metadata
+    Get session messages in an array
     @method /smile/all
 **/
 js.get('/smile/all', routes.handleAllMessagesGet);
