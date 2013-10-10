@@ -126,7 +126,17 @@ js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
 **/
 js.get('/smile/results', routes.handleResultsGet);
 
-js.get('/smile/all', routes.handleAllSessionDataGet );
+/**
+    Get all session data in a nice json object
+    @method /smile/results
+**/
+js.get('/smile/session/all', routes.handleAllSessionDataGet );
+
+/**
+    Get session results metadata
+    @method /smile/all
+**/
+js.get('/smile/all', routes.handleAllMessagesGet);
 
 /**
     XXX TODO: Add debug logging of the session state
