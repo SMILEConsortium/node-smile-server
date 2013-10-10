@@ -251,7 +251,7 @@ exports.handleSendShowResultsPut = function(req, res) {
                 console.err(err);
             } else {
                 console.log('Stored session successfully');
-                game.resultsSaved;
+                game.resultsSaved = true;
             }
         });
     }

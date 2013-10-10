@@ -79,8 +79,35 @@ js.post('/smile/question', routes.handlePushMessage);
 **/
 js.get('/smile/question', routes.handleQuestionGetAll);
 js.put('/smile/question/csv', routes.handleCsvPushQuestions);
+/**
+    Post the csv questions
+    @method /smile/question/csv
+**/
 js.post('/smile/question/csv', routes.handleCsvPushQuestions);
 
+/**
+    Post the IQSet as a CSV file
+
+    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    @method /smile/iqset
+**/
+// js.post('/smile/iqset/:contentid', routes.handlePostIQSet);
+
+/**
+    Post the IQSet as a CSV file
+
+    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    @method /smile/iqset
+**/
+// js.get('/smile/iqset/:contentid', routes.handleGetIQSet);
+
+/**
+    Get all the inquiry sets
+
+    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    @method /smile/iqset
+**/
+// js.get('/smile/iqsets', routes.handleGetAllIQSets);
 
 js.put('/smile/question/:id', routes.handlePushMessage, true);
 js.post('/smile/question/:id', routes.handlePushMessage, true);
