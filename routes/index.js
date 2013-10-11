@@ -74,8 +74,8 @@ exports.handlePostNewIQSet = function(req, res) {
                         return res.sendJSON(HTTP_STATUS_OK, iqset);
                     } else {
                         return res.sendJSON(HTTP_STATUS_OK, {
-                            'error': 'Unable to persist IQSet data';
-                        })
+                            'error': 'Unable to persist IQSet data'
+                        });
                     }
                 });
             }
