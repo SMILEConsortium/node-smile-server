@@ -47,6 +47,27 @@ suite.addBatch({
     }
 });
 
+// XXX Todo: Convert this to a multi-part urlencoded form upload
+/*
+suite.addBatch({
+    "A POST to /smile/iqset with a csv containing a complete question set" : {
+        topic : function() {
+            request({
+                uri : BASE_URL + '/smile/iqset',
+                method : 'POST',
+                headers : HEADERS_CSV,
+                body : csv,
+            }, this.callback);
+        },
+        "should respond with 200" : function(err, res, body) {
+            assert.equal(res.statusCode, 200);
+        },
+        "should answer with ok" : function(err, res, body) {
+            assert.equal(res.body, "OK");
+        },
+    }
+});
+*/
 suite.addBatch({
     "A GET to /smile/question should return a list containing the posted questions" : {
         topic : function() {

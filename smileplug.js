@@ -74,32 +74,44 @@ js.get('/smile/metadata/rating', routes.handleRatingMetadataGet);
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 /**
-    Get the questions
+    Get the questions from existing from existin session
     @method /smile/question
 **/
 js.get('/smile/question', routes.handleQuestionGetAll);
-js.put('/smile/question/csv', routes.handleCsvPushQuestions);
+
 /**
-    Post the csv questions
+    Post/Put the csv questions into existing session
     @method /smile/question/csv
 **/
+js.put('/smile/question/csv', routes.handleCsvPushQuestions);
 js.post('/smile/question/csv', routes.handleCsvPushQuestions);
 
-/**
-    Post the IQSet as a CSV file
 
+/**
+    Post the IQSet update to an existing :contentid.  If :contentid 
+    does not exist, create a new IQSet and return a new :contentid
+    If no params are present, send JSON data.
+    If q param is present, send JSON data for specific question to change
+    If img param is present, send the image content in the message body, or if no
+    message body, then parse the img param value for a valid URL to pull content XXX TODO
+    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    @method /smile/iqset/:contentid
+    @param q (optional) the question number.  Default is body will be 
+    @param image (optional) 
+**/
+// js.post('/smile/iqset/:id', routes.handlePostIQSet, true);
+
+/**
+    Post the IQSet as a CSV file, creating a new IQSet.  Duplicate posts will create
+    new IDs.
+
+    Message body contains a CSV file
+
+    XXX TODO: add params to handle type=csv or json
     Presumably this can be JSON data, but let's just handle the CSV situation for now
     @method /smile/iqset
 **/
-// js.post('/smile/iqset/:contentid', routes.handlePostIQSet);
-
-/**
-    Post the IQSet as a CSV file
-
-    Presumably this can be JSON data, but let's just handle the CSV situation for now
-    @method /smile/iqset
-**/
-// js.get('/smile/iqset/:contentid', routes.handleGetIQSet);
+js.post('/smile/iqset', routes.handlePostNewIQSet);
 
 /**
     Get all the inquiry sets
@@ -156,7 +168,7 @@ js.put('/smile/reset', routes.handleResetPut);
 
 /**
     Store session data
-    XXX TODO
+    XXX TODO Do we really want to expose this??? Shouldn't it be triggered by internal state?
     @method /smile/store
 **/
 js.put('/smile/store', routes.handleStore);
@@ -176,8 +188,8 @@ js.put('/smile/upload/image', routes.handleImageUpload);
 js.post('/smile/upload/image', routes.handleImageUpload);
 
 
-js.get('/smile/view/sessionstats', routes.handleSessionStats, true);
-js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
+js.get('/smile/view/sessionstats', routes.handleSessionStats, true); // XXX No regex?
+js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true); // XXX No regex?
 
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);

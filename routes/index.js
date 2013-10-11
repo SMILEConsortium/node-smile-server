@@ -2,6 +2,7 @@ var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
 var fs = require('fs');
+var csv = require("csv");
 var Persisteus = require('../lib/smile/persisteus').Persisteus;
 var pdb = new Persisteus();
 
@@ -55,6 +56,29 @@ exports.handleStore = function(req, res) {
 exports.handleBackup = function(req, res) {
     storeData(game.messages.past);
     return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handlePostNewIQSet = function(req, res) {
+    var file = req.file;
+    var csvData = fs.readFileSync(file.path, 'utf8');
+        csv().from.string(csvData,
+        {comment: '#'} ).to.array( function(data){
+            console.log(data);
+            var iqset = game.questions.parseCSVtoIQSetObj(data);
+
+            if (iqset.error) {
+                console.debug('Error parsing CSV, reason: ' + iqset.error);
+            }
+
+            return res.sendJSON(HTTP_STATUS_OK, iqset);
+        }).on('error', function(error){
+            console.log(error.message);
+            return res.sendJSON(HTTP_STATUS_OK, {
+                'error': error.message
+            });
+        });
+
+    
 };
 
 exports.handleImageUpload = function(req, res) {
@@ -288,6 +312,7 @@ exports.handleCsvPushQuestions = function(req, res) {
         error = new Error("No questions to parse.");
         return res.handleError(error);
     }
+
     rawQuestions.forEach(function(rawQuestion) {
         var question = {};
         question.NAME = "teacher";
@@ -632,6 +657,7 @@ req.on('error', function(e) {
   // TODO: handle error.
 });
 
+// XXX What is this for??
 console.log('JSON request ==> '+detail_resultString);
 	
 	/*  #### TODO => This code will be removed soon #####
