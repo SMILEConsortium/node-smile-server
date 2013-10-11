@@ -68,9 +68,17 @@ exports.handlePostNewIQSet = function(req, res) {
 
             if (iqset.error) {
                 console.debug('Error parsing CSV, reason: ' + iqset.error);
+            } else {
+                pdb.putIQSet(iqset, function(err, result) {
+                    if (!err) {
+                        return res.sendJSON(HTTP_STATUS_OK, iqset);
+                    } else {
+                        return res.sendJSON(HTTP_STATUS_OK, {
+                            'error': 'Unable to persist IQSet data';
+                        })
+                    }
+                });
             }
-
-            return res.sendJSON(HTTP_STATUS_OK, iqset);
         }).on('error', function(error){
             console.log(error.message);
             return res.sendJSON(HTTP_STATUS_OK, {
