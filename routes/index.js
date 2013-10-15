@@ -59,6 +59,7 @@ exports.handleBackup = function(req, res) {
 };
 
 exports.handlePostNewIQSet = function(req, res) {
+    // console.log(req);
     var file = req.file;
     var csvData = fs.readFileSync(file.path, 'utf8');
         csv().from.string(csvData,
@@ -68,6 +69,9 @@ exports.handlePostNewIQSet = function(req, res) {
 
             if (iqset.error) {
                 console.debug('Error parsing CSV, reason: ' + iqset.error);
+                return res.sendJSON(HTTP_STATUS_OK, {
+                            'error': 'Error parsing CSV, reason: ' + iqset.error
+                        });
             } else {
                 pdb.putIQSet(iqset, function(err, result) {
                     if (!err) {
@@ -80,7 +84,7 @@ exports.handlePostNewIQSet = function(req, res) {
                 });
             }
         }).on('error', function(error){
-            console.log(error.message);
+            console.error(error.message);
             return res.sendJSON(HTTP_STATUS_OK, {
                 'error': error.message
             });

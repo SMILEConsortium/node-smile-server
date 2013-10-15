@@ -14,6 +14,7 @@ lint:
 	$(JSLINT) lib/smile/game.js
 	$(JSLINT) lib/smile/question.js
 	$(JSLINT) lib/smile/student.js
+	$(JSLINT) tests/functional/csv.test.js
 
 test: 
 	@echo "\n == Run All tests minus nada tests=="
