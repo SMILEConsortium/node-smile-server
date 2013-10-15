@@ -26,6 +26,12 @@ var csvData2 = 'question,choice1,choice2,choice3,choice4,has_image,answers\n' +
               'What color is the sky?,Blue,Green,Yellow,Orange,,choice1\n' +
               'Qual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1\n';
 
+var csvData3 = 'Teacher Name:,Mrs. Parker\n' +
+               'Title:,JAMsj Barracks Set 2013\n' +
+               'Group Name: MLK Elementary Grade 5\n' +
+               'question,choice1,choice2,choice3,choice4,has_image,answers, owner_name, owner_IP\n' +
+               'What color is the sky?,Blue,Green,Yellow,Orange,,choice1\n' +
+               'Qual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1\n';
 // XXX Won't work for same reason as below
 var testContentBody = 
     '--foo\r\n' +
@@ -75,7 +81,7 @@ var body3 =
     '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
     'Content-Type: application/octet-stream\r\n' +
-    '\r\n' + csvData2 + '\r\n' +
+    '\r\n' + csvData3 + '\r\n' +
     '--foo\r\n';
 
 var suite = vows.describe('Tests "Questions as CSV"');
