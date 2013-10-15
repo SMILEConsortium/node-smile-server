@@ -26,7 +26,7 @@ var csvData2 = 'question,choice1,choice2,choice3,choice4,has_image,answers\n' +
               'What color is the sky?,Blue,Green,Yellow,Orange,,choice1\n' +
               'Qual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1\n';
 
-// var cvsData = '1,2,4,4\t\n';
+// XXX Won't work for same reason as below
 var testContentBody = 
     '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
@@ -34,6 +34,7 @@ var testContentBody =
     csvData +
     '--foo--\r\n';
 
+// XXX this also won't work, CRLF boundaries in data
 var testContentBody2 =
     '-----------------------------91665575413989190921767050510\r\n' +
     'Content-Disposition: form-data; name="qquuid"\r\n' +
@@ -50,6 +51,7 @@ var testContentBody2 =
     csvData +
     '-----------------------------91665575413989190921767050510\r\n';
 
+// XXX This case does work, though does not contain the data we need to submit
 var body =
     '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
@@ -62,6 +64,7 @@ var body =
     '\r\nThis is the second file\r\n' +
     '--foo--\r\n';
 
+// XXX This doesn't work with the CRLF boundaries in the data!!! Remove this
 var body2 = '--foo\r\n' +
     'Content-Disposition: form-data; name="file1"; filename="file1"\r\n' +
     'Content-Type: application/octet-stream\r\n' +
@@ -121,8 +124,8 @@ suite.addBatch({
             assert.equal(res.statusCode, 200);
         },
         "should answer with ok": function(err, res, body) {
-            console.error("Got something");
-            console.error(body2);
+            console.error("Received request body:");
+            // console.error(body2);
             assert.ok(res.body.iqdata !== null);
         },
     }

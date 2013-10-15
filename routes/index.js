@@ -64,9 +64,9 @@ exports.handlePostNewIQSet = function(req, res) {
     var csvData = fs.readFileSync(file.path, 'utf8');
         csv().from.string(csvData,
         {comment: '#'} ).to.array( function(data){
-            console.log(data);
+            // console.log(data);
             var iqset = game.questions.parseCSVtoIQSetObj(data);
-
+            console.log(iqset);
             if (iqset.error) {
                 console.debug('Error parsing CSV, reason: ' + iqset.error);
                 return res.sendJSON(HTTP_STATUS_OK, {
@@ -89,8 +89,6 @@ exports.handlePostNewIQSet = function(req, res) {
                 'error': error.message
             });
         });
-
-    
 };
 
 exports.handleImageUpload = function(req, res) {
