@@ -116,10 +116,10 @@ js.post('/smile/iqset', routes.handlePostNewIQSet);
 /**
     Get all the inquiry sets
 
-    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    Returns all the IQSets
     @method /smile/iqset
 **/
-// js.get('/smile/iqsets', routes.handleGetAllIQSets);
+js.get('/smile/iqsets', routes.handleGetAllIQSets);
 
 js.put('/smile/question/:id', routes.handlePushMessage, true);
 js.post('/smile/question/:id', routes.handlePushMessage, true);

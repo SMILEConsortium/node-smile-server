@@ -28,7 +28,7 @@ var csvData2 = 'question,choice1,choice2,choice3,choice4,has_image,answers\n' +
 
 var csvData3 = 'Teacher Name:,Mrs. Parker\n' +
                'Title:,JAMsj Barracks Set 2013\n' +
-               'Group Name: MLK Elementary Grade 5\n' +
+               'Group Name:,MLK Elementary Grade 5\n' +
                'question,choice1,choice2,choice3,choice4,has_image,answers, owner_name, owner_IP\n' +
                'What color is the sky?,Blue,Green,Yellow,Orange,,choice1\n' +
                'Qual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1\n';

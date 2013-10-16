@@ -58,6 +58,21 @@ exports.handleBackup = function(req, res) {
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
+exports.handleGetAllIQSets = function(req, res) {
+    //
+    // Ideally we'd be getting parameters of the incoming request
+    //
+    pdb.getAllIQSets(null, null, null, function(err, result) {
+        if (err) {
+            return res.sendJSON(HTTP_STATUS_OK, {
+                'error': 'Unable to fetch IQSets'
+            });
+        } else {
+            res.sendJSON(HTTP_STATUS_OK, result);
+        }
+    });
+};
+
 exports.handlePostNewIQSet = function(req, res) {
     // console.log(req);
     var file = req.file;
