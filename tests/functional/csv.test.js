@@ -129,7 +129,7 @@ suite.addBatch({
         "should respond with 200": function(err, res, body) {
             assert.equal(res.statusCode, 200);
         },
-        "should answer with ok": function(err, res, body) {
+        "should answer with data": function(err, res, body) {
             console.error("Received request body:");
             // console.error(body2);
             assert.ok(res.body.iqdata !== null);
@@ -137,6 +137,26 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    "A GET to /smile/iqsets to return all properly formed IQSets": {
+        topic: function() {
+            request({
+                uri: BASE_URL + '/smile/iqsets',
+                method: 'GET',
+            }, this.callback);
+        },
+        "should respond with 200": function(err, res, body) {
+            assert.equal(res.statusCode, 200);
+        },
+        "should answer with data": function(err, res, body) {
+            var dat = JSON.parse(body);
+            console.error("Received request body:");
+            // console.error(body);
+            assert.ok(body.rows !== null);
+            assert.ok(dat.total_rows > 0);
+        },
+    }
+});
 
 suite.addBatch({
     "A GET to /smile/question should return a list containing the posted questions" : {
