@@ -32,6 +32,10 @@ var csvData3 = 'Teacher Name:,Mrs. Parker\n' +
                'question,choice1,choice2,choice3,choice4,has_image,answers, owner_name, owner_IP\n' +
                'What color is the sky?,Blue,Green,Yellow,Orange,,choice1\n' +
                'Qual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1\n';
+
+var iqsetid1 = '0894DDFC-EDDE-430A-8FCF-C86C259D28AC';
+var iqset1data = ['JAMsj Barracks Set 2013', 'Mrs. Parker', 'MLK Elementary Grade 5'];
+
 // XXX Won't work for same reason as below
 var testContentBody = 
     '--foo\r\n' +
@@ -154,6 +158,41 @@ suite.addBatch({
             // console.error(body);
             assert.ok(body.rows !== null);
             assert.ok(dat.total_rows > 0);
+        },
+    }
+});
+
+suite.addBatch({
+    "A GET to /smile/iqset/:id to return an IQSet": {
+        topic: function() {
+            request({
+                uri: BASE_URL + '/smile/iqset/' + iqsetid1,
+                method: 'GET',
+            }, this.callback);
+        },
+        "should respond with 200": function(err, res, body) {
+            assert.equal(res.statusCode, 200);
+        },
+        "should answer with data": function(err, res, body) {
+            var dat = JSON.parse(body);
+            console.error("Received request body:");
+            // console.error(body);
+            assert.ok(body !== null);
+            assert.ok(!dat.error);
+            /*
+            ducktype: 'iqsetdoc',
+            date: '2013-10-17T04:46:22.753Z',
+            title: 'JAMsj Barracks Set 2013',
+            teachername: 'Mrs. Parker',
+            groupname: 'MLK Elementary Grade 5',
+            iqdata:
+            */
+            assert.equal('iqsetdoc',dat.ducktype);
+            assert.equal('2013-10-17T04:46:22.753Z', dat.date);
+            assert.equal('JAMsj Barracks Set 2013', dat.title);
+            assert.equal('Mrs. Parker', dat.teachername);
+            assert.equal('MLK Elementary Grade 5', dat.groupname);
+            assert.ok(dat.iqset !== null);
         },
     }
 });

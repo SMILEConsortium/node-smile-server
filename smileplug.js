@@ -102,6 +102,12 @@ js.post('/smile/question/csv', routes.handleCsvPushQuestions);
 // js.post('/smile/iqset/:id', routes.handlePostIQSet, true);
 
 /**
+    Get the IQSet based on an existing :id.  If :id does not exist
+    return { 'error': <Reason> }
+**/
+js.get('/smile/iqset/:id', routes.handleGetIQSet, true);
+
+/**
     Post the IQSet as a CSV file, creating a new IQSet.  Duplicate posts will create
     new IDs.
 
