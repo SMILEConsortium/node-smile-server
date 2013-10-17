@@ -157,6 +157,13 @@ js.get('/smile/session/current', routes.handleCurrentSessionDataGet );
 js.get('/smile/sessions', routes.handleAllSessionsGet );
 
 /**
+    Get all sessions (archived)
+    @method /smile/session/:id
+**/
+js.get('/smile/session/:id', routes.handleSessionsGet, true);
+
+
+/**
     Get session messages in an array
     @method /smile/all
 **/

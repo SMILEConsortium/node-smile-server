@@ -339,6 +339,21 @@ exports.handleAllSessionsGet = function(req, res) {
     });
 };
 
+exports.handleSessionsGet = function(req, res) {
+    //
+    // Ideally we'd be getting parameters of the incoming request
+    //
+    if (!req.id) {
+        return res.sendJSON(HTTP_STATUS_OK, {
+                'error': 'ID missing from request'
+            });
+    }
+
+    pdb.getSession(req.id, {}, function(err, result) {
+        res.sendJSON(HTTP_STATUS_OK, result);
+    });
+};
+
 exports.handleAllMessagesGet = function(req, res) {
     return res.sendJSON(HTTP_STATUS_OK, game.messages.past);
 };

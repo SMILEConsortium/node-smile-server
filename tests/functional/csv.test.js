@@ -36,6 +36,8 @@ var csvData3 = 'Teacher Name:,Mrs. Parker\n' +
 var iqsetid1 = '0894DDFC-EDDE-430A-8FCF-C86C259D28AC';
 var iqset1data = ['JAMsj Barracks Set 2013', 'Mrs. Parker', 'MLK Elementary Grade 5'];
 
+var sessionid1 = '1EE46B2C-E6CD-43FE-9B5A-B6FF82530E75';
+
 // XXX Won't work for same reason as below
 var testContentBody = 
     '--foo\r\n' +
@@ -217,6 +219,42 @@ suite.addBatch({
         },
     }
 });
+
+suite.addBatch({
+    "A GET to /smile/session/:id to return an IQSet": {
+        topic: function() {
+            request({
+                uri: BASE_URL + '/smile/session/' + sessionid1,
+                method: 'GET',
+            }, this.callback);
+        },
+        "should respond with 200": function(err, res, body) {
+            assert.equal(res.statusCode, 200);
+        },
+        "should answer with data": function(err, res, body) {
+            var dat = JSON.parse(body);
+            console.error("Received request body:");
+            // console.error(body);
+            assert.ok(body !== null);
+            assert.ok(!dat.error);
+            /*
+            ducktype: 'iqsetdoc',
+            date: '2013-10-17T04:46:22.753Z',
+            title: 'JAMsj Barracks Set 2013',
+            teachername: 'Mrs. Parker',
+            groupname: 'MLK Elementary Grade 5',
+            iqdata:
+            */
+            assert.equal('sessiondoc',dat.ducktype);
+            assert.equal('2013-10-17T06:34:59.069Z', dat.date);
+            assert.equal('2013-10-17T06:34:59.069Z Session', dat.title);
+            assert.equal('Teacher', dat.teachername);
+            assert.equal('General', dat.groupname);
+            assert.ok(dat.iqset !== null);
+        },
+    }
+});
+
 
 suite.addBatch({
     "A GET to /smile/question should return a list containing the posted questions" : {
