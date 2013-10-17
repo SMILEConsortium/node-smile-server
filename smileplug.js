@@ -145,10 +145,16 @@ js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
 js.get('/smile/results', routes.handleResultsGet);
 
 /**
-    Get all session data in a nice json object
-    @method /smile/results
+    Get all session data for current session in a nice json object
+    @method /smile/session/all
 **/
-js.get('/smile/session/all', routes.handleAllSessionDataGet );
+js.get('/smile/session/current', routes.handleCurrentSessionDataGet );
+
+/**
+    Get all sessions (archived)
+    @method /smile/sessions
+**/
+js.get('/smile/sessions', routes.handleAllSessionsGet );
 
 /**
     Get session messages in an array

@@ -198,6 +198,27 @@ suite.addBatch({
 });
 
 suite.addBatch({
+    "A GET to /smile/sessions to return sessions": {
+        topic: function() {
+            request({
+                uri: BASE_URL + '/smile/sessions',
+                method: 'GET',
+            }, this.callback);
+        },
+        "should respond with 200": function(err, res, body) {
+            assert.equal(res.statusCode, 200);
+        },
+        "should answer with data": function(err, res, body) {
+            var dat = JSON.parse(body);
+            console.error("Received request body:");
+            // console.error(body);
+            assert.ok(dat.rows !== null);
+            assert.ok(dat.total_rows > 0);
+        },
+    }
+});
+
+suite.addBatch({
     "A GET to /smile/question should return a list containing the posted questions" : {
         topic : function() {
             request({

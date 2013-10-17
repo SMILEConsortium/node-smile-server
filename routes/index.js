@@ -323,8 +323,20 @@ exports.handleSendShowResultsPut = function(req, res) {
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
-exports.handleAllSessionDataGet = function(req, res) {
+exports.handleCurrentSessionDataGet = function(req, res) {
     return res.sendJSON(HTTP_STATUS_OK, game.getAllSessionData());
+};
+
+exports.handleAllSessionsGet = function(req, res) {
+    pdb.getAllSessions(null, null, null, function(err, result) {
+        if (err) {
+            return res.sendJSON(HTTP_STATUS_OK, {
+                error: 'Unable to get all sessions'
+            });
+        } else {
+            return res.sendJSON(HTTP_STATUS_OK, result);
+        }
+    });
 };
 
 exports.handleAllMessagesGet = function(req, res) {
