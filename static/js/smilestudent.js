@@ -40,7 +40,7 @@ var EVENTLOOPINTERVAL = null;
 var SMILEROUTES = {
     "pushmsg": "/JunctionServerExecution/pushmsg.php", "smsg": "/JunctionServerExecution/current/MSG/smsg.txt", "mystate": "/JunctionServerExecution/current/MSG/%s.txt", "postinquiry": "/smile/question", "getinquiry": "/smile/questionview/%s.json", "submitanswers": "/smile/pushmsg.php", "echoclientip": "/smile/echoclientip", "defaultpicurl": "/images/1x1-pixel.png", "getresults": "/smile/student/%s/result"
 }
-var VERSION = '0.9.23';
+var VERSION = '0.9.24';
 
 //
 // 1 - login screen
@@ -336,9 +336,9 @@ $(document).ready(function() {
     //
     // Init Handlers
     //
-    $('dl.tabs dd a.wizard').on('click.fndtn', function(e) {
+    $('section a.wizard').on('click.fndtn', function(e) {
         e.stopPropagation();
-        var $activetab = $(this).parent().parent().find('dd.active a');
+        var $activetab = $(this).parent().parent().parent().find('section.active');
         if ($(this).hasClass('disabled')) {
             var txt = $activetab.text().split('.'); // XXX This is non-defensive
             smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.', '', 5000);
@@ -881,7 +881,8 @@ function restoreLoginState() {
         var a = $next[0]; // get the dom obj
         var evt = document.createEvent('MouseEvents');
         evt.initEvent('click', true, true);
-        a.dispatchEvent(evt);
+        // XXX NEED TO RESTORE THIS
+        // a.dispatchEvent(evt);
         GlobalViewModel.hasSubmitted(false);
         GlobalViewModel.sessionstatemsg("Waiting for teacher to begin"); // XXX Need to pull out localization msgs
         GlobalViewModel.loginstatusmsg("Please Login.  Then the teacher will tell you instructions."); // XXX Need to pull out localization msgs
