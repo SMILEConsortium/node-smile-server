@@ -339,14 +339,26 @@ $(document).ready(function() {
     $('section a.wizard').on('click.fndtn', function(e) {
         e.stopPropagation();
         var $activetab = $(this).parent().parent().parent().find('section.active');
+
         if ($(this).hasClass('disabled')) {
+            alert('hasClass disabled');
             var txt = $activetab.text().split('.'); // XXX This is non-defensive
             smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.', '', 5000);
             return false; // Do something else in here if required
         } else {
             // smileAlert('#globalstatus', 'Bubble ' + $(this).text(), 'green');
-            $(this).removeClass('disabled');
+
+            //
+            // Toggle the activate tab into disabled state
+            //
+            $activetab.removeClass('active');
             $activetab.addClass('disabled');
+
+            //
+            // Toggle the next state tab into activate state
+            //
+            $(this).removeClass('disabled');
+            $(this).parent().parent().addClass('active');
             console.log('clicked ' + $(this).attr('href'));
             window.location.href = $(this).attr('href');
         }
@@ -614,7 +626,7 @@ function statechange(from, to, data, cb) {
             smileAlert('#globalstatus', 'Cannot move to phase ' + to + ' yet.', 'red', 5000);
         } else { // Move to 2. Get Ready Phase
             SMILESTATE = 2;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["2"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["2"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.', 2500);
                 console.log('go to href = ' + $next.attr('href'));
@@ -638,7 +650,7 @@ function statechange(from, to, data, cb) {
         if (to == 3) { // Enter Make Questions Phase
             SMILESTATE = 3;
             $('div#inquiry-form-area').unblock();
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["3"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["3"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["3"].label + ' phase.', 2500);
                 console.log('go to href = ' + $next.attr('href'));
@@ -653,7 +665,7 @@ function statechange(from, to, data, cb) {
         if (to == 4) { // Enter Answer Questions Phase
             SMILESTATE = 4;
             $('div#answer-form-area').unblock();
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["4"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
                 console.log('go to href = ' + $next.attr('href'));
@@ -674,7 +686,7 @@ function statechange(from, to, data, cb) {
         }
         if (to == 5) {
             SMILESTATE = 5;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["5"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
@@ -702,7 +714,7 @@ function statechange(from, to, data, cb) {
         } // Not sure why this would happen
         if (to == 4) { // Enter Answer Questions Phase
             SMILESTATE = 4;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["4"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
@@ -724,7 +736,7 @@ function statechange(from, to, data, cb) {
         }
         if (to == 5) { // Enter Show Results Phase
             SMILESTATE = 5;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["5"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
@@ -752,7 +764,7 @@ function statechange(from, to, data, cb) {
         } // Not sure why this would happen
         if (to == 5) { // Enter Show Results Phase
             SMILESTATE = 5;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["5"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
@@ -871,7 +883,7 @@ function restoreLoginState() {
     //
     // XXX This needs to clean up the sidebar area too
     //
-    var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["1"].id + '"]');
+    var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["1"].id + '"]');
     $('#logoutarea').hide();
     if ($next) {
         stopSmileEventLoop();
@@ -881,8 +893,7 @@ function restoreLoginState() {
         var a = $next[0]; // get the dom obj
         var evt = document.createEvent('MouseEvents');
         evt.initEvent('click', true, true);
-        // XXX NEED TO RESTORE THIS
-        // a.dispatchEvent(evt);
+        a.dispatchEvent(evt);
         GlobalViewModel.hasSubmitted(false);
         GlobalViewModel.sessionstatemsg("Waiting for teacher to begin"); // XXX Need to pull out localization msgs
         GlobalViewModel.loginstatusmsg("Please Login.  Then the teacher will tell you instructions."); // XXX Need to pull out localization msgs
