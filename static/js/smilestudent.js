@@ -28,8 +28,6 @@
  #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-/*jshint -W043 */ // Ignore: Bad escaping of EOL
-
 //
 // GLOBALS
 //
@@ -41,8 +39,7 @@ var EVENTLOOPCYCLE = 1500; // LOOP WAIT TIME in MILLISECONDS
 var EVENTLOOPINTERVAL = null;
 var SMILEROUTES = {
     "pushmsg": "/JunctionServerExecution/pushmsg.php", "smsg": "/JunctionServerExecution/current/MSG/smsg.txt", "mystate": "/JunctionServerExecution/current/MSG/%s.txt", "postinquiry": "/smile/question", "getinquiry": "/smile/questionview/%s.json", "submitanswers": "/smile/pushmsg.php", "echoclientip": "/smile/echoclientip", "defaultpicurl": "/images/1x1-pixel.png", "getresults": "/smile/student/%s/result"
-};
-
+}
 var VERSION = '0.9.24';
 
 //
@@ -116,7 +113,7 @@ var SMILEInquiry2 = function(question, answer1, answer2, answer3, answer4, right
     } else {
         self.type = "QUESTION_PIC";
     }
-};
+}
 
 /**
  * We should refactor out any items that belong in specialized child ViewModels
@@ -153,18 +150,18 @@ GlobalViewModel.doLogin = function() {
     self.hasSubmitted(true);
 
     return false;
-};
+}
 
 GlobalViewModel.validateInquirySubmission = function() {
     var self = this;
     console.log('a1: ' + self.a1() + ' a2: ' + self.a2() + ' a3: ' + self.a3() + ' a4 : ' + self.a4() + ' rightanswer: ' + self.rightanswer() + ' question: ' + self.question());
-    return (self.a1() !== "" && self.a2() !== "" && self.a3() !== "" && self.a4() !== "" && self.rightanswer() !== "" && self.question() !== "");
-};
+    return (self.a1() != "" && self.a2() != "" && self.a3() != "" && self.a4() != "" && self.rightanswer() != "" && self.question() != "");
+}
 
 GlobalViewModel.validateInquiryAnswer = function() {
     var self = this;
-    return (self.answer() !== "");
-};
+    return (self.answer() != "");
+}
 
 GlobalViewModel.doLoginReset = function() {
     this.username(nameGen(8));
@@ -177,7 +174,7 @@ GlobalViewModel.doLoginReset = function() {
     window.location.href = window.location.pathname;
     window.location.reload(true);
     return false;
-};
+}
 
 GlobalViewModel.doInquiryReset = function() {
     var self = this;
@@ -190,7 +187,7 @@ GlobalViewModel.doInquiryReset = function() {
     self.question("");
     self.picurl("");
     self.pic("");
-};
+}
 
 GlobalViewModel.doSubmitQ = function() {
     var self = this;
@@ -209,7 +206,7 @@ GlobalViewModel.doSubmitQ = function() {
             timeout: 7000
         });
     }
-};
+}
 
 GlobalViewModel.doSubmitQandDone = function() {
     var self = this;
@@ -237,14 +234,14 @@ GlobalViewModel.doSubmitQandDone = function() {
             timeout: 7000
         });
     }
-};
+}
 
 GlobalViewModel.doSaveAnswerState = function() {
     var self = this;
     console.log(">>>>>>>>>>doSaveAnswerState");
     self.answersarray()[self.qidx()] = self.answer()[1]; // Drop the leading 'a' from the answer label
     self.ratingsarray()[self.qidx()] = self.rating();
-};
+}
 
 GlobalViewModel.doAnswerPrevQ = function() {
     var self = this;
@@ -267,7 +264,7 @@ GlobalViewModel.doAnswerPrevQ = function() {
          }
          }); */
     }
-};
+}
 
 GlobalViewModel.doAnswerNextQ = function() {
     var self = this;
@@ -316,7 +313,7 @@ GlobalViewModel.doAnswerNextQ = function() {
      });
      } */
 
-};
+}
 
 $(document).ready(function() {
     //
@@ -383,10 +380,9 @@ function smileAlert(targetid, text, alerttype, lifetime) {
     var redalert = 'alert';
     var bluealert = '';
     var greenalert = 'success';
-    var formatstr = 
-        '<div class="alert-box %s"> \
-        %s \
-        <a href="" class="close">&times;</a> \
+    var formatstr = '<div class="alert-box %s"> \
+		%s \
+	  	<a href="" class="close">&times;</a> \
 		</div>';
     if (!alerttype) {
         alerttype = defaultalert;
@@ -409,7 +405,7 @@ function smileAlert(targetid, text, alerttype, lifetime) {
     if (lifetime) {
         setInterval(function() {
             $(targetid).find('.alert-box').fadeOut().remove();
-        }, lifetime);
+        }, lifetime)
     }
 }
 
@@ -418,16 +414,15 @@ function nameGen(namelen) {
     var alphasetsize = ALPHASEQ.length;
     var digitsetsize = DIGITSEQ.length;
     var name = "";
-    var i;
 
     // Get alpha portion
-    for (i = 0; i < namelen; i++) {
+    for (var i = 0; i < namelen; i++) {
         dice = Math.floor((Math.random() * alphasetsize));
         name = name + ALPHASEQ[dice];
     }
 
     // Get digit portion, fixed at 4 digits
-    for (i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++) {
         dice = Math.floor((Math.random() * digitsetsize));
         name = name + DIGITSEQ[dice];
     }
@@ -437,14 +432,14 @@ function nameGen(namelen) {
 function randomIPGen() {
     var baseip = '127.0.0.';
     var MAXVAL = 255;
-    var dice = Math.floor((Math.random() * MAXVAL) + 1); // A value of 1-255
+    var dice = dice = Math.floor((Math.random() * MAXVAL) + 1); // A value of 1-255
     return(baseip + dice);
 }
 
 function setClientIP() {
     var clientip;
     $.ajax({ cache: false, type: "GET" // XXX should be POST
-        , dataType: "json", url: SMILEROUTES.echoclientip, data: {}, error: function(xhr, text, err) {
+        , dataType: "json", url: SMILEROUTES["echoclientip"], data: {}, error: function(xhr, text, err) {
             smileAlert('#globalstatus', 'Cannot obtain client IP address.  Please verify your connection or server status.', 'trace');
         }, success: function(data) {
             clientip = data.ip; // XXX We should be defensive in case garbage comes back
@@ -463,7 +458,8 @@ function setClientIP() {
 }
 
 function doSmileLogin(clientip, username, realname) {
-    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES.pushmsg , data: generateEncodedHail(clientip, username), error: function(xhr, text, err) {
+    var clientip;
+    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["pushmsg"], data: generateEncodedHail(clientip, username), error: function(xhr, text, err) {
         smileAlert('#globalstatus', 'Unable to login.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
         GlobalViewModel.hasSubmitted(false); // Reset this so clicks will work
     }, success: function(data) {
@@ -482,7 +478,7 @@ function doGetResults() {
     // TODO
     //
     $.ajax({ cache: false, type: "GET" // XXX should be POST
-        , dataType: "json", url: sprintf(SMILEROUTES.getresults, GlobalViewModel.clientip()), data: {}, error: function(xhr, text, err) {
+        , dataType: "json", url: sprintf(SMILEROUTES["getresults"], GlobalViewModel.clientip()), data: {}, error: function(xhr, text, err) {
             smileAlert('#globalstatus', 'Cannot obtain results.  Please verify your connection or server status.', 'trace');
         }, success: function(data) {
             displayResults(data);
@@ -491,7 +487,7 @@ function doGetResults() {
 }
 
 function doPostInquiry(inquirydata, cb) {
-    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES.postinquiry, data: inquirydata, error: function(xhr, text, err) {
+    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["postinquiry"], data: inquirydata, error: function(xhr, text, err) {
         // TODO: XXX Decide what to do if this post fails
         smileAlert('#globalstatus', 'Unable to post inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace', '5000');
     }, success: function(data) {
@@ -513,7 +509,7 @@ function doPostInquiry(inquirydata, cb) {
 // {"MYRATING":[1,5,5,5,5,5,5,5,5,5,5,5],"MYANSWER":[1,4,4,4,4,4,4,4,4,4,4,4],
 // "NAME":"default.102","TYPE":"ANSWER","IP":"10.0.0.102"}
 function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
-    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES.submitanswers, data: {"MSG": JSON.stringify({ 
+    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({ 
         "MYRATING": ratingsarray,
         "MYANSWER": answersarray,
         "NAME": username,
@@ -534,7 +530,7 @@ function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
 }
 
 function doGetInquiry(qnum, cb) {
-    $.ajax({ cache: false, type: "GET", dataType: "json", url: sprintf(SMILEROUTES.getinquiry, qnum), data: {}, error: function(xhr, text, err) {
+    $.ajax({ cache: false, type: "GET", dataType: "json", url: sprintf(SMILEROUTES["getinquiry"], qnum), data: {}, error: function(xhr, text, err) {
         // TODO: XXX Decide what to do if this post fails
         smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
     }, success: function(data) {
@@ -555,7 +551,7 @@ function doGetInquiry(qnum, cb) {
             if (data.TYPE === "QUESTION_PIC") {
                 GlobalViewModel.picurl(data.PICURL);
             } else {
-                GlobalViewModel.picurl(SMILEROUTES.defaultpicurl);
+                GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
             }
 
             if (cb) {
@@ -573,17 +569,18 @@ function doGetInquiry(qnum, cb) {
  * On error : smileAlert
  */
 function doSMSG() {
-    $.ajax({ cache: false, type: "GET", dataType: "json", url: SMILEROUTES.msg, data: {}, error: function(xhr, text, err) {
+    $.ajax({ cache: false, type: "GET", dataType: "json", url: SMILEROUTES["smsg"], data: {}, error: function(xhr, text, err) {
         smileAlert('#globalstatus', 'Status Msg Error.  Reason: ' + xhr.status + ':' + xhr.responseText + '.', 'trace');
     }, success: function(data) {
         if (data) {
-            msg = data.TYPE;
+            msg = data["TYPE"];
             // console.log(data); // XXX Remove debug
             if (msg === "START_MAKE") {
                 statechange(2, 3);
             }
             if (msg === "WAIT_CONNECT") {
             }
+            ;
             if (msg === "START_SOLVE") {
                 statechange(SMILESTATE, 4, data, function() {
                     clearAnswerState();
@@ -596,10 +593,10 @@ function doSMSG() {
                     doGetResults(data);
                 });
             }
-            
+            ;
             if (msg === "WARN") {
             }
-            
+            ;
             if ((msg === "") || (msg === null) || (msg === undefined)) {
                 // XXX Why in the world was I doing this?  I don't think we want to bump back to state 1
                 // Leave this around for a bit until I remember what of this
@@ -615,7 +612,7 @@ function doSMSG() {
 }
 
 function statechange(from, to, data, cb) {
-    console.log('transition: ' + from + ' : ' + to);
+    console.log('transition: ' + from + ' : ' + to)
     if (from == 1) { // FROM 1
         if (SMILESTATE != 1) {
             return;
@@ -661,7 +658,7 @@ function statechange(from, to, data, cb) {
                 var a = $next[0]; // get the dom obj
                 var evt = document.createEvent('MouseEvents');
                 evt.initEvent('click', true, true);
-                GlobalViewModel.sessionstatemsg("Start Making Questions until the teacher is ready to start Answering Questions");
+                GlobalViewModel.sessionstatemsg("Start Making Questions until the teacher is ready to start Answering Questions")
                 a.dispatchEvent(evt);
             }
         }
@@ -793,7 +790,7 @@ function clearAnswerState() {
     GlobalViewModel.a2("");
     GlobalViewModel.a3("");
     GlobalViewModel.a4("");
-    GlobalViewModel.picurl(SMILEROUTES.defaultpicurl);
+    GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
     GlobalViewModel.rating("");
     GlobalViewModel.rating("5");
     $('#star-rating').rating(function(vote, event) {
@@ -865,7 +862,7 @@ function showIQ(qnum) {
             backgroundColor: '#000',
             '-webkit-border-radius': '10px',
             '-moz-border-radius': '10px',
-            opacity: 0.5,
+            opacity: .5,
             color: '#fff'
         }
     });
@@ -958,4 +955,6 @@ $(window).unload(function() {
     // setTimeout(partSession(), 60000);  // XXX Give the user a minute to return
 });
 
-var SESSION_STATE_START_MAKE_TPL = '<p>Start Making Questions until the teacher is ready to start Answering Questions</p>';
+var SESSION_STATE_START_MAKE_TPL = ' \
+	<p>Start Making Questions until the teacher is ready to start Answering Questions</p> \
+';
