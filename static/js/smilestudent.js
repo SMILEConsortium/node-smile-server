@@ -38,8 +38,17 @@ var CLIENTIP = '127.0.0.1';
 var EVENTLOOPCYCLE = 1500; // LOOP WAIT TIME in MILLISECONDS
 var EVENTLOOPINTERVAL = null;
 var SMILEROUTES = {
-    "pushmsg": "/JunctionServerExecution/pushmsg.php", "smsg": "/JunctionServerExecution/current/MSG/smsg.txt", "mystate": "/JunctionServerExecution/current/MSG/%s.txt", "postinquiry": "/smile/question", "getinquiry": "/smile/questionview/%s.json", "submitanswers": "/smile/pushmsg.php", "echoclientip": "/smile/echoclientip", "defaultpicurl": "/images/1x1-pixel.png", "getresults": "/smile/student/%s/result"
+    "pushmsg": "/JunctionServerExecution/pushmsg.php",
+    "smsg": "/JunctionServerExecution/current/MSG/smsg.txt",
+    "mystate": "/JunctionServerExecution/current/MSG/%s.txt", 
+    "postinquiry": "/smile/question",
+    "getinquiry": "/smile/questionview/%s.json",
+    "submitanswers": "/smile/pushmsg.php",
+    "echoclientip": "/smile/echoclientip",
+    "defaultpicurl": "/images/1x1-pixel.png",
+    "getresults": "/smile/student/%s/result"
 }
+
 var VERSION = '0.9.24';
 
 //
