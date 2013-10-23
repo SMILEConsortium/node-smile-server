@@ -360,7 +360,8 @@ exports.handleAllMessagesGet = function(req, res) {
 
 reset = function() {
     oldGame = game;
-    game = new Game();
+    game = new Game(); // XXX Point to ponder, do we need to save before we destroy the server?
+    game.setCurrentMessage(message);
 };
 
 exports.handleResetGet = function(req, res) {
@@ -413,21 +414,24 @@ exports.handlePushMessage = function(req, res) {
         // Ignoring the message does not have a type
         console.warn("Unrecognized type: " + type);
         break;
-    case 'RE_TAKE':
-        game.setCurrentMessage(message);
-        error = game.retake();
-        break;
     case 'QUESTION':
         error = game.addQuestion(message);
         break;
     case 'QUESTION_PIC':
         error = game.addQuestion(message);
         break;
+    case 'ANSWER':
+        error = game.registerAnswerByMessage(message);
+        break;
     case 'HAIL':
         error = game.studentsWrapper.addStudent(message);
         break;
-    case 'ANSWER':
-        error = game.registerAnswerByMessage(message);
+    case 'RE_TAKE':
+        game.setCurrentMessage(message);
+        error = game.retake();
+        break;
+    case 'RESET':
+        game.setCurrentMessage({ TYPE: 'RESET'});
         break;
     default:
         error = new Error("Unrecognized type: " + type);
