@@ -350,7 +350,6 @@ $(document).ready(function() {
         var $activetab = $(this).parent().parent().parent().find('section.active');
 
         if ($(this).hasClass('disabled')) {
-            alert('hasClass disabled');
             var txt = $activetab.text().split('.'); // XXX This is non-defensive
             smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.', '', 5000);
             return false; // Do something else in here if required
@@ -839,9 +838,9 @@ function displayResults(data) {
         } catch (e) {
             percentage = 'N/A';
         }
-        resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage + "%)<H1>\n";
-        resultsHTML = resultsHTML + "<div class='eight columns'>\n";
-
+        resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage + "%)</H1>\n";
+        // resultsHTML = resultsHTML + "<div class='large-6 small-6 columns'>\n";
+        // resultsHTML = resultsHTML + "<div class='large-9 columns'>\n";
         //
         // Show results for each answer
         // XXX Improve this
@@ -853,13 +852,27 @@ function displayResults(data) {
                 resultstr = "&#x2717; Wrong";
                 resultclass = 'wronganswer';
             }
-            resultsHTML = resultsHTML + "<div class='row display'><div class='two columns'>Q: " + (i + 1) + "</div><div class='four columns " + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "</div><div class='two columns'><a class='tiny button' id='iq" + i + "' onclick='showIQ(" + i + ")' href='javascript:void(0);'>Details</a></div></div><!-- row -->\n";
+            // resultsHTML = resultsHTML + "<div class='row display'><div class='large-2 small-2 columns'>Q: " + (i + 1) + "</div><div class='large-2 small-2 columns " + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "</div><div class='large-2 small-2 columns'><a class='tiny button' id='iq" + i + "' onclick='showIQ(" + i + ")' href='javascript:void(0);'>Details</a></div></div><!-- row -->\n";
+            
+            resultsHTML+= 
+             "<div class=''>\n \
+                <div class='row display'><div class='" + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "&nbsp;&nbsp;&nbsp;<a class='tiny button' id='iq" + i + "' onclick='showIQ2(" + i + ")' href='javascript:void(0);'>Details</a></div></div> \
+             </div><!-- row -->\n";
+            
         }
-        resultsHTML = resultsHTML + "</div><!-- eight columns-->\n";
+        resultsHTML = resultsHTML + "</div><!-- 9 columns-->\n"; 
+        console.log(resultsHTML);
     } else {
         resultsHTML = "<H1>No Questions Answered, No Score Available</H1>\n"; // XXX LOCALIZE IT
     }
     $('#results-area').append(resultsHTML);
+}
+
+function showIQ2(qnum) {
+    doGetInquiry(qnum, function(data) {
+        GlobalViewModel.answer("a" + GlobalViewModel.rightanswer());
+        $('#iq-area').addClass('reveal-modal').foundation('reveal', 'open');
+    });
 }
 
 function showIQ(qnum) {
@@ -882,7 +895,8 @@ function showIQ(qnum) {
         $.blockUI({
             message: $('#iq-area'),
             css: {
-                top: '20%'
+                top: '20%',
+                width: '80%'
             }
         });
         $('.blockOverlay').attr('title', 'Click to return to results').click($.unblockUI);
