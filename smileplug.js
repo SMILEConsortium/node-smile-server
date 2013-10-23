@@ -28,9 +28,16 @@
  #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
+/**
+* smileplug.js
+*
+* @class js
+* @constructor
+*/
 var js = require('./lib/js.js');
 var routes = require('./routes');
 var url = require('url');
+
 var starttime = (new Date()).getTime();
 
 js.CONFIG = {
@@ -66,10 +73,59 @@ js.get('/smile/metadata/rating', routes.handleRatingMetadataGet);
 
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
+/**
+    Get the questions from existing from existin session
+    @method /smile/question
+**/
 js.get('/smile/question', routes.handleQuestionGetAll);
+
+/**
+    Post/Put the csv questions into existing session
+    @method /smile/question/csv
+**/
 js.put('/smile/question/csv', routes.handleCsvPushQuestions);
 js.post('/smile/question/csv', routes.handleCsvPushQuestions);
 
+
+/**
+    Post the IQSet update to an existing :contentid.  If :contentid 
+    does not exist, create a new IQSet and return a new :contentid
+    If no params are present, send JSON data.
+    If q param is present, send JSON data for specific question to change
+    If img param is present, send the image content in the message body, or if no
+    message body, then parse the img param value for a valid URL to pull content XXX TODO
+    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    @method /smile/iqset/:contentid
+    @param q (optional) the question number.  Default is body will be 
+    @param image (optional) 
+**/
+// js.post('/smile/iqset/:id', routes.handlePostIQSet, true);
+
+/**
+    Get the IQSet based on an existing :id.  If :id does not exist
+    return { 'error': <Reason> }
+**/
+js.get('/smile/iqset/:id', routes.handleGetIQSet, true);
+
+/**
+    Post the IQSet as a CSV file, creating a new IQSet.  Duplicate posts will create
+    new IDs.
+
+    Message body contains a CSV file
+
+    XXX TODO: add params to handle type=csv or json
+    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    @method /smile/iqset
+**/
+js.post('/smile/iqset', routes.handlePostNewIQSet);
+
+/**
+    Get all the inquiry sets
+
+    Returns all the IQSets
+    @method /smile/iqset
+**/
+js.get('/smile/iqsets', routes.handleGetAllIQSets);
 
 js.put('/smile/question/:id', routes.handlePushMessage, true);
 js.post('/smile/question/:id', routes.handlePushMessage, true);
@@ -82,17 +138,67 @@ js.get('/smile/student/:id/status', routes.handleStudentStatusGet, true);
 // Use this to get a decent results calculation
 js.get('/smile/student/:id/result', routes.handleStudentResultsGet, true);
 
+/**
+    Get session results metadata
+    @method /smile/results
+**/
 js.get('/smile/results', routes.handleResultsGet);
+
+/**
+    Get all session data for current session in a nice json object
+    @method /smile/session/all
+**/
+js.get('/smile/session/current', routes.handleCurrentSessionDataGet );
+
+/**
+    Get all sessions (archived)
+    @method /smile/sessions
+**/
+js.get('/smile/sessions', routes.handleAllSessionsGet );
+
+/**
+    Get all sessions (archived)
+    @method /smile/session/:id
+**/
+js.get('/smile/session/:id', routes.handleSessionsGet, true);
+
+
+/**
+    Get session messages in an array
+    @method /smile/all
+**/
 js.get('/smile/all', routes.handleAllMessagesGet);
+
+/**
+    XXX TODO: Add debug logging of the session state
+    @method /smile/debugdump
+ **/
+js.get('/smile/debugdump', routes.handleAllMessagesGet);
+
+/** 
+    XXX TODO: Potentially useless routes ... should they return more than ok?
+    @method /smile/
+ **/
 js.get('/smile', routes.handleSmileRootGet);
 js.get('/smile/', routes.handleSmileRootGet);
 
 js.get('/smile/reset', routes.handleResetGet);
 js.put('/smile/reset', routes.handleResetPut);
 
+/**
+    Store session data
+    XXX TODO Do we really want to expose this??? Shouldn't it be triggered by internal state?
+    @method /smile/store
+**/
 js.put('/smile/store', routes.handleStore);
 js.post('/smile/store', routes.handleStore);
 
+/**
+    Handle complete DB in couchdb export compatible
+    XXX TODO I think we'll need to write a handler reload a PouchDB database from a doc dump.  Is it possible?
+    What's the mechanism in couchdb to do the same?
+    @method /smile/backup
+**/
 js.put('/smile/backup', routes.handleBackup);
 js.post('/smile/backup', routes.handleBackup);
 js.get('/smile/backup', routes.handleBackup);
@@ -101,7 +207,8 @@ js.put('/smile/upload/image', routes.handleImageUpload);
 js.post('/smile/upload/image', routes.handleImageUpload);
 
 
-js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true);
+js.get('/smile/view/sessionstats', routes.handleSessionStats, true); // XXX No regex?
+js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true); // XXX No regex?
 
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);

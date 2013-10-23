@@ -2,6 +2,9 @@ var Game = require('../lib/smile/game').Game;
 var Student = require('../lib/smile/student').Student;
 var js = require('../lib/js');
 var fs = require('fs');
+var csv = require("csv");
+var Persisteus = require('../lib/smile/persisteus').Persisteus;
+var pdb = new Persisteus();
 
 OK = 'OK';
 
@@ -25,13 +28,22 @@ exports.handleQuestionGet = function(req, res) {
     }
 };
 
+/**
+    @method storeData
+
+    Used to save JSON data to the FS under <root>/storage/<date>.
+
+    This isn't completely useful, but we'll keep it around for historical value, and will use it to backup
+    our DB.
+**/
 function storeData(obj) {
     var json = JSON.stringify(obj);
-    fs.writeFile(__dirname + "/../storage/" + new Date().toISOString(), json, function(err) {
+    var filename = __dirname + "/../storage/" + new Date().toISOString();
+    fs.writeFile(filename, json, function(err) {
         if (err) {
             console.log(err);
         } else {
-            console.log("The file was saved!");
+            console.log("The file was saved in: " + filename);
         }
     });
 }
@@ -44,6 +56,69 @@ exports.handleStore = function(req, res) {
 exports.handleBackup = function(req, res) {
     storeData(game.messages.past);
     return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleGetAllIQSets = function(req, res) {
+    //
+    // Ideally we'd be getting parameters of the incoming request
+    //
+    pdb.getAllIQSets(null, null, null, function(err, result) {
+        if (err) {
+            return res.sendJSON(HTTP_STATUS_OK, {
+                'error': 'Unable to fetch IQSets'
+            });
+        } else {
+            res.sendJSON(HTTP_STATUS_OK, result);
+        }
+    });
+};
+
+exports.handleGetIQSet = function(req, res) {
+    //
+    // Ideally we'd be getting parameters of the incoming request
+    //
+    if (!req.id) {
+        return res.sendJSON(HTTP_STATUS_OK, {
+                'error': 'ID missing from request'
+            });
+    }
+
+    pdb.getIQSet(req.id, {}, function(err, result) {
+        res.sendJSON(HTTP_STATUS_OK, result);
+    });
+};
+
+exports.handlePostNewIQSet = function(req, res) {
+    // console.log(req);
+    var file = req.file;
+    var csvData = fs.readFileSync(file.path, 'utf8');
+        csv().from.string(csvData,
+        {comment: '#'} ).to.array( function(data){
+            // console.log(data);
+            var iqset = game.questions.parseCSVtoIQSetObj(data);
+            console.log(iqset);
+            if (iqset.error) {
+                console.debug('Error parsing CSV, reason: ' + iqset.error);
+                return res.sendJSON(HTTP_STATUS_OK, {
+                            'error': 'Error parsing CSV, reason: ' + iqset.error
+                        });
+            } else {
+                pdb.putIQSet(iqset, function(err, result) {
+                    if (!err) {
+                        return res.sendJSON(HTTP_STATUS_OK, iqset);
+                    } else {
+                        return res.sendJSON(HTTP_STATUS_OK, {
+                            'error': 'Unable to persist IQSet data'
+                        });
+                    }
+                });
+            }
+        }).on('error', function(error){
+            console.error(error.message);
+            return res.sendJSON(HTTP_STATUS_OK, {
+                'error': error.message
+            });
+        });
 };
 
 exports.handleImageUpload = function(req, res) {
@@ -84,6 +159,57 @@ exports.handleSmileRootGet = function(req, res) {
 
 exports.handleStartMakeQuestionPut = function(req, res) {
     game.setCurrentMessage(MESSAGE_START_MAKE_QUESTION);
+
+    //
+    // Extract Teacher specific Sesssion Data
+    //
+    // teacherName : <Any text or numerical name>
+    // sessionName : <Any text or numerical name>
+    // groupName   : <Any text or numerical name>
+    //
+    var teacherMeta = null;
+    var queryData;
+    if ((req.method == 'POST') || (req.method == 'PUT')) {
+        req.on('data', function(data) {
+            queryData += data;
+            if(queryData.length > 1e6) {
+                queryData = "";
+                res.writeHead(413, {'Content-Type': 'text/plain'}).end();
+                req.connection.destroy();
+            }
+        });
+
+        req.on('end', function() {
+            teacherMeta = querystring.parse(queryData);
+        });
+    }
+
+    if (teacherMeta === null || teacherMeta === "") {
+        // XXX TODO: Put our defaults somewhere
+            game.teacherName = "Teacher";
+            game.sessionName = "IQ Session " + new Date().toISOString();
+            game.groupName = "IQ Group";
+    } else {
+        // Validate our data or supply defaults
+        if (!teacherMeta.teacherName) {
+            game.teacherName = "Teacher";
+        } else {
+            game.teacherName = teacherMeta.teacherName;
+        }
+
+        if (!teacherMeta.sessionName) {
+            game.sessionName = "IQ Session " + new Date().toISOString();
+        } else {
+            game.sessionName = teacherMeta.sessionName;
+        }
+
+        if (!teacherMeta.groupName) {
+            game.groupName = "IQ Group";
+        } else {
+            game.groupName = teacherMeta.groupName;
+        }
+    }
+
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -166,7 +292,9 @@ exports.handleStudentPut = function(req, res) {
 };
 
 exports.handleResultsGet = function(req, res) {
-    return res.sendJSON(HTTP_STATUS_OK, game.calculateResults());
+    var results = game.calculateResults();
+    
+    return res.sendJSON(HTTP_STATUS_OK, results);
 };
 
 exports.handleSendShowResultsPut = function(req, res) {
@@ -181,8 +309,49 @@ exports.handleSendShowResultsPut = function(req, res) {
     message.RANSWER = result.rightAnswers;
     message.AVG_RATINGS = result.averageRatings;
     message.RPERCENT = result.questionsCorrectPercentage;
+    if (!game.resultsSaved) {
+        pdb.putSession(game.getAllSessionData(), function(err, result) {
+            if (err) { // XXX TODO: Add in logger instead of console logging
+                console.err(err);
+            } else {
+                console.log('Stored session successfully');
+                game.resultsSaved = true;
+            }
+        });
+    }
     game.setCurrentMessage(message);
     return res.sendText(HTTP_STATUS_OK, OK);
+};
+
+exports.handleCurrentSessionDataGet = function(req, res) {
+    return res.sendJSON(HTTP_STATUS_OK, game.getAllSessionData());
+};
+
+exports.handleAllSessionsGet = function(req, res) {
+    pdb.getAllSessions(null, null, null, function(err, result) {
+        if (err) {
+            return res.sendJSON(HTTP_STATUS_OK, {
+                error: 'Unable to get all sessions'
+            });
+        } else {
+            return res.sendJSON(HTTP_STATUS_OK, result);
+        }
+    });
+};
+
+exports.handleSessionsGet = function(req, res) {
+    //
+    // Ideally we'd be getting parameters of the incoming request
+    //
+    if (!req.id) {
+        return res.sendJSON(HTTP_STATUS_OK, {
+                'error': 'ID missing from request'
+            });
+    }
+
+    pdb.getSession(req.id, {}, function(err, result) {
+        res.sendJSON(HTTP_STATUS_OK, result);
+    });
 };
 
 exports.handleAllMessagesGet = function(req, res) {
@@ -210,6 +379,7 @@ exports.handleCsvPushQuestions = function(req, res) {
         error = new Error("No questions to parse.");
         return res.handleError(error);
     }
+
     rawQuestions.forEach(function(rawQuestion) {
         var question = {};
         question.NAME = "teacher";
@@ -233,9 +403,10 @@ exports.handlePushMessage = function(req, res) {
     var message = req.body;
     game.registerMessage(message);
     var type = message.TYPE || null;
-    if (type.indexOf("RE_TAKE") != -1) {
+    if (type.indexOf("RE_TAKE") != -1) { // XXX What the heck is this?
         type = 'RE_TAKE';
     }
+    // console.log(message);
     var error = null;
     switch (type) {
     case null:
@@ -283,7 +454,6 @@ exports.handlePushMsgPost = function(req, res) {
     } catch (e) {
         res.handleError("Can't parse Incoming JSON");
     }
-
 };
 
 exports.handleStudentStatusGetByIP = function(req, res) {
@@ -293,6 +463,10 @@ exports.handleStudentStatusGetByIP = function(req, res) {
     } else {
         return res.sendJSON(HTTP_STATUS_OK, studentStatus);
     }
+};
+
+exports.handleSessionStats = function(req, res) {
+    return res.sendJSON(HTTP_STATUS_OK, game.getSessionStats());
 };
 
 exports.handleMonitoringHtmlGet = function(req, res) {
@@ -384,7 +558,7 @@ exports.handleQuestionHtmlGet = function(req, res) {
 	
 // Setup the request.  The options parameter is the object defined above.
 var http = require('http');
-var req = http.request(options, function(res) {
+req = http.request(options, function(res) {
   res.setEncoding('utf-8');
 
   var responseString = '';
@@ -533,7 +707,7 @@ exports.handleQuestionResultHtmlGet = function(req, res) {
 	
 // Setup the request.  The options parameter is the object defined above.
 var http = require('http');
-var req = http.request(options, function(res) {
+req = http.request(options, function(res) {
   res.setEncoding('utf-8');
 
   var responseString = '';
@@ -551,6 +725,7 @@ req.on('error', function(e) {
   // TODO: handle error.
 });
 
+// XXX What is this for??
 console.log('JSON request ==> '+detail_resultString);
 	
 	/*  #### TODO => This code will be removed soon #####

@@ -1,6 +1,6 @@
 /**
  #
- #Copyright (c) 2011 Razortooth Communications, LLC. All rights reserved.
+ #Copyright (c) 2011-2013 Razortooth Communications, LLC. All rights reserved.
  #
  #Redistribution and use in source and binary forms, with or without modification,
  #are permitted provided that the following conditions are met:
@@ -38,9 +38,18 @@ var CLIENTIP = '127.0.0.1';
 var EVENTLOOPCYCLE = 1500; // LOOP WAIT TIME in MILLISECONDS
 var EVENTLOOPINTERVAL = null;
 var SMILEROUTES = {
-    "pushmsg": "/JunctionServerExecution/pushmsg.php", "smsg": "/JunctionServerExecution/current/MSG/smsg.txt", "mystate": "/JunctionServerExecution/current/MSG/%s.txt", "postinquiry": "/smile/question", "getinquiry": "/smile/questionview/%s.json", "submitanswers": "/smile/pushmsg.php", "echoclientip": "/smile/echoclientip", "defaultpicurl": "/images/1x1-pixel.png", "getresults": "/smile/student/%s/result"
+    "pushmsg": "/JunctionServerExecution/pushmsg.php",
+    "smsg": "/JunctionServerExecution/current/MSG/smsg.txt",
+    "mystate": "/JunctionServerExecution/current/MSG/%s.txt", 
+    "postinquiry": "/smile/question",
+    "getinquiry": "/smile/questionview/%s.json",
+    "submitanswers": "/smile/pushmsg.php",
+    "echoclientip": "/smile/echoclientip",
+    "defaultpicurl": "/images/1x1-pixel.png",
+    "getresults": "/smile/student/%s/result"
 }
-var VERSION = '0.9.23';
+
+var VERSION = '0.9.24';
 
 //
 // 1 - login screen
@@ -336,17 +345,28 @@ $(document).ready(function() {
     //
     // Init Handlers
     //
-    $('dl.tabs dd a.wizard').on('click.fndtn', function(e) {
+    $('section a.wizard').on('click.fndtn', function(e) {
         e.stopPropagation();
-        var $activetab = $(this).parent().parent().find('dd.active a');
+        var $activetab = $(this).parent().parent().parent().find('section.active');
+
         if ($(this).hasClass('disabled')) {
             var txt = $activetab.text().split('.'); // XXX This is non-defensive
             smileAlert('#globalstatus', 'Please wait for phase <em>' + txt[1].trim() + '</em> to complete.', '', 5000);
             return false; // Do something else in here if required
         } else {
             // smileAlert('#globalstatus', 'Bubble ' + $(this).text(), 'green');
-            $(this).removeClass('disabled');
+
+            //
+            // Toggle the activate tab into disabled state
+            //
+            $activetab.removeClass('active');
             $activetab.addClass('disabled');
+
+            //
+            // Toggle the next state tab into activate state
+            //
+            $(this).removeClass('disabled');
+            $(this).parent().parent().addClass('active');
             console.log('clicked ' + $(this).attr('href'));
             window.location.href = $(this).attr('href');
         }
@@ -497,7 +517,8 @@ function doPostInquiry(inquirydata, cb) {
 // {"MYRATING":[1,5,5,5,5,5,5,5,5,5,5,5],"MYANSWER":[1,4,4,4,4,4,4,4,4,4,4,4],
 // "NAME":"default.102","TYPE":"ANSWER","IP":"10.0.0.102"}
 function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
-    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({ "MYRATING": ratingsarray,
+    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({ 
+        "MYRATING": ratingsarray,
         "MYANSWER": answersarray,
         "NAME": username,
         "TYPE": "ANSWER",
@@ -613,7 +634,7 @@ function statechange(from, to, data, cb) {
             smileAlert('#globalstatus', 'Cannot move to phase ' + to + ' yet.', 'red', 5000);
         } else { // Move to 2. Get Ready Phase
             SMILESTATE = 2;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["2"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["2"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.', 2500);
                 console.log('go to href = ' + $next.attr('href'));
@@ -637,7 +658,7 @@ function statechange(from, to, data, cb) {
         if (to == 3) { // Enter Make Questions Phase
             SMILESTATE = 3;
             $('div#inquiry-form-area').unblock();
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["3"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["3"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["3"].label + ' phase.', 2500);
                 console.log('go to href = ' + $next.attr('href'));
@@ -652,7 +673,7 @@ function statechange(from, to, data, cb) {
         if (to == 4) { // Enter Answer Questions Phase
             SMILESTATE = 4;
             $('div#answer-form-area').unblock();
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["4"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
                 console.log('go to href = ' + $next.attr('href'));
@@ -673,7 +694,7 @@ function statechange(from, to, data, cb) {
         }
         if (to == 5) {
             SMILESTATE = 5;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["5"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
@@ -701,7 +722,7 @@ function statechange(from, to, data, cb) {
         } // Not sure why this would happen
         if (to == 4) { // Enter Answer Questions Phase
             SMILESTATE = 4;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["4"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["4"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["4"].label + ' phase.', 2500);
@@ -723,7 +744,7 @@ function statechange(from, to, data, cb) {
         }
         if (to == 5) { // Enter Show Results Phase
             SMILESTATE = 5;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["5"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
@@ -751,7 +772,7 @@ function statechange(from, to, data, cb) {
         } // Not sure why this would happen
         if (to == 5) { // Enter Show Results Phase
             SMILESTATE = 5;
-            var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["5"].id + '"]');
+            var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["5"].id + '"]');
             if ($next) {
                 // XXX This is a copy paste of the same block of code 'from state == 2', refactor
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["5"].label + ' phase.', 2500);
@@ -817,9 +838,9 @@ function displayResults(data) {
         } catch (e) {
             percentage = 'N/A';
         }
-        resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage + "%)<H1>\n";
-        resultsHTML = resultsHTML + "<div class='eight columns'>\n";
-
+        resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage + "%)</H1>\n";
+        // resultsHTML = resultsHTML + "<div class='large-6 small-6 columns'>\n";
+        // resultsHTML = resultsHTML + "<div class='large-9 columns'>\n";
         //
         // Show results for each answer
         // XXX Improve this
@@ -831,13 +852,27 @@ function displayResults(data) {
                 resultstr = "&#x2717; Wrong";
                 resultclass = 'wronganswer';
             }
-            resultsHTML = resultsHTML + "<div class='row display'><div class='two columns'>Q: " + (i + 1) + "</div><div class='four columns " + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "</div><div class='two columns'><a class='tiny button' id='iq" + i + "' onclick='showIQ(" + i + ")' href='javascript:void(0);'>Details</a></div></div><!-- row -->\n";
+            // resultsHTML = resultsHTML + "<div class='row display'><div class='large-2 small-2 columns'>Q: " + (i + 1) + "</div><div class='large-2 small-2 columns " + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "</div><div class='large-2 small-2 columns'><a class='tiny button' id='iq" + i + "' onclick='showIQ(" + i + ")' href='javascript:void(0);'>Details</a></div></div><!-- row -->\n";
+            
+            resultsHTML+= 
+             "<div class=''>\n \
+                <div class='row display'><div class='" + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "&nbsp;&nbsp;&nbsp;<a class='tiny button' id='iq" + i + "' onclick='showIQ2(" + i + ")' href='javascript:void(0);'>Details</a></div></div> \
+             </div><!-- row -->\n";
+            
         }
-        resultsHTML = resultsHTML + "</div><!-- eight columns-->\n";
+        resultsHTML = resultsHTML + "</div><!-- 9 columns-->\n"; 
+        console.log(resultsHTML);
     } else {
         resultsHTML = "<H1>No Questions Answered, No Score Available</H1>\n"; // XXX LOCALIZE IT
     }
     $('#results-area').append(resultsHTML);
+}
+
+function showIQ2(qnum) {
+    doGetInquiry(qnum, function(data) {
+        GlobalViewModel.answer("a" + GlobalViewModel.rightanswer());
+        $('#iq-area').addClass('reveal-modal').foundation('reveal', 'open');
+    });
 }
 
 function showIQ(qnum) {
@@ -860,7 +895,8 @@ function showIQ(qnum) {
         $.blockUI({
             message: $('#iq-area'),
             css: {
-                top: '20%'
+                top: '20%',
+                width: '80%'
             }
         });
         $('.blockOverlay').attr('title', 'Click to return to results').click($.unblockUI);
@@ -870,7 +906,7 @@ function restoreLoginState() {
     //
     // XXX This needs to clean up the sidebar area too
     //
-    var $next = $('dl.tabs dd').find('a[href="' + STATEMACHINE["1"].id + '"]');
+    var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["1"].id + '"]');
     $('#logoutarea').hide();
     if ($next) {
         stopSmileEventLoop();

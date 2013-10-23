@@ -1,4 +1,5 @@
 var assert = require('assert');
+var csv = require("csv");
 
 var Questions = require('../../lib/smile/question').Questions;
 
@@ -40,6 +41,38 @@ var qNoName = {
     "O3" : "O Pato",
     "O4" : "O Tigre",
     "A" : 2
+};
+
+// var csvdata = "question,choice1,choice2,choice3,choice4,has_image,answers\nWhat color is the sky?,Blue,Green,Yellow,Orange,,choice1\nQual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1";
+var csvdata = [ [ 'question',
+    'choice1',
+    'choice2',
+    'choice3',
+    'choice4',
+    'has_image',
+    'answers' ],
+  [ 'What color is the sky?',
+    'Blue',
+    'Green',
+    'Yellow',
+    'Orange',
+    '',
+    'choice1' ],
+  [ 'Qual a cor do céu?',
+    'Azul',
+    'Verde',
+    'Amarelo',
+    'Laranja',
+    '',
+    'choice1' ] ];
+
+var iqset = {
+        'ducktype': 'iqdoc',
+        'date': new Date().toISOString(),
+        'title': new Date().toISOString() + '-IQSet',
+        'teachername': 'Teacher',
+        'groupname': 'General',
+        'iqdata': []
 };
 
 exports.testEmptyQuestions = function(test) {
@@ -105,5 +138,37 @@ exports.testIgnoreDuplicatedQuestions = function(test) {
     //    console.log("getQuestions('marco')");
     //    console.log(myQuestions.getQuestions("marco"));
     test.equal(1, myQuestions.getNumberOfQuestions());
+    test.done();
+};
+
+exports.testIQSet = function(test) {
+    test.expect(7);
+    var question = new Questions();
+    var iqset2 = question.getCommonIQSetObj();
+
+    test.ok(true, iqset2 !== null);
+    test.equal("iqsetdoc", iqset2.ducktype);
+    test.ok(true, iqset2.date !== null);
+    test.ok(true, iqset2.title !== null);
+    test.equal("Teacher", iqset2.teachername);
+    test.equal("General", iqset2.groupname);
+    test.equal(0, iqset2.iqdata.length);
+    test.done();
+};
+
+exports.testParseCSVToIQSet = function(test) {
+    test.expect(8);
+    var question = new Questions();
+    var iqset2 = question.parseCSVtoIQSetObj(csvdata);
+
+    test.ok(true, iqset2 !== null);
+    test.equal("iqsetdoc", iqset2.ducktype);
+    test.ok(true, iqset2.date !== null);
+    test.ok(true, iqset2.title !== null);
+    test.equal("Teacher", iqset2.teachername);
+    test.equal("General", iqset2.groupname);
+    test.ok(true, iqset2.iqdata !== null);
+    test.equal(2, iqset2.iqdata.length);
+    console.log(iqset2);
     test.done();
 };
