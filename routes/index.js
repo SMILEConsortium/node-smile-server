@@ -403,9 +403,10 @@ exports.handlePushMessage = function(req, res) {
     var message = req.body;
     game.registerMessage(message);
     var type = message.TYPE || null;
-    if (type.indexOf("RE_TAKE") != -1) {
+    if (type.indexOf("RE_TAKE") != -1) { // XXX What the heck is this?
         type = 'RE_TAKE';
     }
+    // console.log(message);
     var error = null;
     switch (type) {
     case null:
