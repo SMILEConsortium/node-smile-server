@@ -47,7 +47,7 @@ var SMILEROUTES = {
     "echoclientip": "/smile/echoclientip",
     "defaultpicurl": "/images/1x1-pixel.png",
     "getresults": "/smile/student/%s/result"
-}
+};
 
 var VERSION = '0.9.24';
 
@@ -457,6 +457,10 @@ function setClientIP() {
                 // I've no idea why this would happen, other than on localhost without a real
                 // ip address assigned.  But the game doesn't really function if there are multiple
                 // duplicate IPs.  To avoid this during testing scenarios generate fake IPs.
+                // If the server host cannot handle things properly when trying to figure out a client's IP
+                // address, then they'll getback a fake address
+                // XXX Note, this is not safe against duplicates.  This is as random as the pseudo-random number
+                // generation ... so will be 1 in 255 chance of returning a dup
                 CLIENTIP = randomIPGen();
                 smileAlert('#globalstatus', 'Using fake IP address ' + CLIENTIP, 'blue', 5000);
             }
@@ -584,11 +588,13 @@ function doSMSG() {
             msg = data["TYPE"];
             // console.log(data); // XXX Remove debug
             if (msg === "START_MAKE") {
-                statechange(2, 3);
+                if (SMILESTATE !== 3) {
+                    statechange(2, 3);
+                }
             }
             if (msg === "WAIT_CONNECT") {
             }
-            ;
+            
             if (msg === "START_SOLVE") {
                 statechange(SMILESTATE, 4, data, function() {
                     clearAnswerState();
@@ -601,10 +607,21 @@ function doSMSG() {
                     doGetResults(data);
                 });
             }
-            ;
+            
             if (msg === "WARN") {
             }
-            ;
+            
+            if (msg === "RESET") {
+                // Only do reset if we aren't just sitting at the login screen
+                if (SMILESTATE !== 1) {
+                    statechange(SMILESTATE, 1, { msg: 'RESET' }, function() {
+                        console.log("RESET, log out");
+                        GlobalViewModel.sessionstatemsg("Session Reset by Teacher.  Logging Out"); // XXX I don't this this is shown
+                        smileAlert('#globalstatus', 'Session Reset by Teacher.  Logging Out', 'blue', 5000);
+                    });
+                }
+            }
+
             if ((msg === "") || (msg === null) || (msg === undefined)) {
                 // XXX Why in the world was I doing this?  I don't think we want to bump back to state 1
                 // Leave this around for a bit until I remember what of this
@@ -634,6 +651,7 @@ function statechange(from, to, data, cb) {
             smileAlert('#globalstatus', 'Cannot move to phase ' + to + ' yet.', 'red', 5000);
         } else { // Move to 2. Get Ready Phase
             SMILESTATE = 2;
+            console.log('SMILESTATE = 2');
             var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["2"].id + '"]');
             if ($next) {
                 smileAlert('#globalstatus', 'Jump to: ' + STATEMACHINE["2"].label + ' phase.', 2500);
@@ -839,8 +857,7 @@ function displayResults(data) {
             percentage = 'N/A';
         }
         resultsHTML = resultsHTML + "<H1>Your Score: " + data.NUM_RIGHT + "/" + data.NUMQ + "  (" + percentage + "%)</H1>\n";
-        // resultsHTML = resultsHTML + "<div class='large-6 small-6 columns'>\n";
-        // resultsHTML = resultsHTML + "<div class='large-9 columns'>\n";
+
         //
         // Show results for each answer
         // XXX Improve this
@@ -852,7 +869,6 @@ function displayResults(data) {
                 resultstr = "&#x2717; Wrong";
                 resultclass = 'wronganswer';
             }
-            // resultsHTML = resultsHTML + "<div class='row display'><div class='large-2 small-2 columns'>Q: " + (i + 1) + "</div><div class='large-2 small-2 columns " + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "</div><div class='large-2 small-2 columns'><a class='tiny button' id='iq" + i + "' onclick='showIQ(" + i + ")' href='javascript:void(0);'>Details</a></div></div><!-- row -->\n";
             
             resultsHTML+= 
              "<div class=''>\n \
@@ -875,33 +891,6 @@ function showIQ2(qnum) {
     });
 }
 
-function showIQ(qnum) {
-    $.blockUI({
-        message: '<h1>Loading Question Details</h1>',
-        css: {
-            border: 'none',
-            padding: '15px',
-            backgroundColor: '#000',
-            '-webkit-border-radius': '10px',
-            '-moz-border-radius': '10px',
-            opacity: .5,
-            color: '#fff'
-        }
-    });
-
-    doGetInquiry(qnum, function(data) {
-        $.unblockUI();
-        GlobalViewModel.answer("a" + GlobalViewModel.rightanswer());
-        $.blockUI({
-            message: $('#iq-area'),
-            css: {
-                top: '20%',
-                width: '80%'
-            }
-        });
-        $('.blockOverlay').attr('title', 'Click to return to results').click($.unblockUI);
-    });
-}
 function restoreLoginState() {
     //
     // XXX This needs to clean up the sidebar area too
@@ -922,6 +911,7 @@ function restoreLoginState() {
         GlobalViewModel.loginstatusmsg("Please Login.  Then the teacher will tell you instructions."); // XXX Need to pull out localization msgs
         GlobalViewModel.othermsg("");
     }
+    SMILESTATE = 1;
 }
 
 /* 

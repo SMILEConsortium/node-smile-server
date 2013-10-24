@@ -361,7 +361,11 @@ exports.handleAllMessagesGet = function(req, res) {
 reset = function() {
     oldGame = game;
     game = new Game(); // XXX Point to ponder, do we need to save before we destroy the server?
-    game.setCurrentMessage(message);
+    game.setCurrentMessage({ TYPE: 'RESET' , TIMESTAMP: (new Date()).toUTCString(), EXPIRY: 1500});
+    setTimeout(function() {
+        console.log("Remove RESET");
+        game.setCurrentMessage({});
+    }, 2000);
 };
 
 exports.handleResetGet = function(req, res) {
