@@ -126,6 +126,7 @@ js.post('/smile/iqset', routes.handlePostNewIQSet);
     @method /smile/iqset
 **/
 js.get('/smile/iqsets', routes.handleGetAllIQSets);
+/* js.get("/smile/iqmanager", js.staticHandler("smile-iqmanager.html")); */
 
 js.put('/smile/question/:id', routes.handlePushMessage, true);
 js.post('/smile/question/:id', routes.handlePushMessage, true);

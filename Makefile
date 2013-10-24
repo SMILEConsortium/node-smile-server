@@ -15,6 +15,7 @@ lint:
 	$(JSLINT) lib/smile/question.js
 	$(JSLINT) lib/smile/student.js
 	$(JSLINT) tests/functional/csv.test.js
+	$(JSLINT) static/js/smileiqmanager.js
 	$(JSLINT) static/js/smilestudent.js
 
 test: 
