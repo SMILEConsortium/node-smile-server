@@ -79,7 +79,8 @@ function doShowIQSetUploadSummaryModal(resp) {
     viewModel.groupname(resp.groupname);
     viewModel.teachername(resp.teachername);
     viewModel.iqid(resp._id);
-    viewModel.iqdata(resp.iqdata);
+    ko.utils.arrayPushAll(viewModel.iqdata(), resp.iqdata);
+    viewModel.iqdata.valueHasMutated();
 
     ko.applyBindings(viewModel);
     $('#iqsetupload-summary').foundation('reveal', 'open');
