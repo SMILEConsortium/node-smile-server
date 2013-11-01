@@ -56,33 +56,52 @@ function createIQSetUploader() {
 // window.onload = createUploader;
 
 function doShowIQSetUploadSummaryModal(resp) {
-    var viewModel = {
-        title: ko.observable(""),
-        createdate: ko.observable(""),
-        groupname: ko.observable(""),
-        teachername: ko.observable(""),
-        iqid: ko.observable(""),
-        iqdata: ko.observableArray([]),
-        questionscount: ko.computed(function() {
-            // Knockout tracks dependencies automatically
+    // XXX Should generalize the app view model to wrap the required child models and use :with binding
+    function viewModel() {
+        var self = this;
+        self.title = ko.observable("");
+        self.createdate = ko.observable("");
+        self.groupname = ko.observable("");
+        self.teachername = ko.observable("");
+        self.iqid = ko.observable("");
+        self.iqdata = ko.observableArray(["foo"]);
+        self.boo = ko.observable(4);
+        self.bbb = ko.computed(function() {
+            return this.boo() + " " + this.boo();
+        }, this);
+        self.foo = ko.computed(function() {
             var self = this;
+            return self.boo() + self.boo();
+        }, this);
+
+        self.questionscount = ko.computed(function() {
+            // Knockout tracks dependencies automatically
+            return self.iqdata().length;
             if (self.iqdata) {
                 return self.iqdata.length;
             } else {
                 return 0;
             }
-        }, self)
-    };
+        }).extend({ notify: 'always' });
+    }
 
-    viewModel.title(resp.title);
-    viewModel.createdate(resp.date);
-    viewModel.groupname(resp.groupname);
-    viewModel.teachername(resp.teachername);
-    viewModel.iqid(resp._id);
-    ko.utils.arrayPushAll(viewModel.iqdata(), resp.iqdata);
-    viewModel.iqdata.valueHasMutated();
 
-    ko.applyBindings(viewModel);
+    var fvm = new viewModel();
+
+    ko.applyBindings(fvm);
+    fvm.title(resp.title);
+    fvm.createdate(resp.date);
+    fvm.groupname(resp.groupname);
+    fvm.teachername(resp.teachername);
+    fvm.iqid(resp._id);
+    ko.utils.arrayPushAll(fvm.iqdata(), resp.iqdata);
+    console.log('viewmodel iqdata().length = ' + fvm.iqdata().length);
+    fvm.iqdata.valueHasMutated();
+    console.log('valueHasMutated');
+    console.log('viewModel questionscount = ' + fvm.questionscount());
+    console.log(fvm.createdate());
+    console.log(fvm.foo());
+    console.log(fvm.iqdata()[0]);
     $('#iqsetupload-summary').foundation('reveal', 'open');
 }
 

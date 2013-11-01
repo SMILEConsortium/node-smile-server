@@ -133,7 +133,30 @@ var SMILEInquiry2 = function(question, answer1, answer2, answer3, answer4, right
  *
  */
 var GlobalViewModel = {
-    username: ko.observable(nameGen(8)).extend({ required: "Please enter a username" }), realname: ko.observable(""), clientip: ko.observable(""), loginstatusmsg: ko.observable(""), sessionstatemsg: ko.observable(""), othermsg: ko.observable(""), hasSubmitted: ko.observable(false), iqx: ko.observableArray([new SMILEInquiry2()]), answer: ko.observable(""), question: ko.observable(""), a1: ko.observable(""), a2: ko.observable(""), a3: ko.observable(""), a4: ko.observable(""), rightanswer: ko.observable(""), numq: ko.observable(""), curq: ko.observable(0), qidx: ko.observable(0), picurl: ko.observable(""), pic: ko.observable(""), rating: ko.observable(""), answersarray: ko.observableArray([]), ratingsarray: ko.observableArray([]), version: VERSION
+    username: ko.observable(nameGen(8)).extend({ required: "Please enter a username" }),
+    realname: ko.observable(""),
+    clientip: ko.observable(""),
+    loginstatusmsg: ko.observable(""),
+    sessionstatemsg: ko.observable(""),
+    othermsg: ko.observable(""),
+    hasSubmitted: ko.observable(false),
+    iqx: ko.observableArray([new SMILEInquiry2()]),
+    answer: ko.observable(""),
+    question: ko.observable(""),
+    a1: ko.observable(""),
+    a2: ko.observable(""),
+    a3: ko.observable(""),
+    a4: ko.observable(""),
+    rightanswer: ko.observable(""),
+    numq: ko.observable(""),
+    curq: ko.observable(0),
+    qidx: ko.observable(0),
+    picurl: ko.observable(""),
+    pic: ko.observable(""),
+    rating: ko.observable(""),
+    answersarray: ko.observableArray([]),
+    ratingsarray: ko.observableArray([]),
+    version: VERSION
 };
 
 GlobalViewModel.fullName = ko.computed(function() {
