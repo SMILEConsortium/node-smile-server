@@ -64,24 +64,10 @@ function doShowIQSetUploadSummaryModal(resp) {
         self.groupname = ko.observable("");
         self.teachername = ko.observable("");
         self.iqid = ko.observable("");
-        self.iqdata = ko.observableArray(["foo"]);
-        self.boo = ko.observable(4);
-        self.bbb = ko.computed(function() {
-            return this.boo() + " " + this.boo();
-        }, this);
-        self.foo = ko.computed(function() {
-            var self = this;
-            return self.boo() + self.boo();
-        }, this);
-
+        self.iqdata = ko.observableArray([]);
         self.questionscount = ko.computed(function() {
             // Knockout tracks dependencies automatically
             return self.iqdata().length;
-            if (self.iqdata) {
-                return self.iqdata.length;
-            } else {
-                return 0;
-            }
         }).extend({ notify: 'always' });
     }
 
@@ -100,8 +86,7 @@ function doShowIQSetUploadSummaryModal(resp) {
     console.log('valueHasMutated');
     console.log('viewModel questionscount = ' + fvm.questionscount());
     console.log(fvm.createdate());
-    console.log(fvm.foo());
-    console.log(fvm.iqdata()[0]);
+    // console.log(fvm.iqdata()[0]);
     $('#iqsetupload-summary').foundation('reveal', 'open');
 }
 
