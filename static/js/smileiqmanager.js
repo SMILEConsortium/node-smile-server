@@ -76,7 +76,7 @@ function doShowIQSetUploadSummaryModal(resp) {
 
     var globalViewModel = {
         iqsetSummary: new iqsetSummaryModel()
-    }
+    };
 
     var fvm = globalViewModel.iqsetSummary;
 
@@ -94,6 +94,20 @@ function doShowIQSetUploadSummaryModal(resp) {
     console.log(fvm.createdate());
     // console.log(fvm.iqdata()[0]);
     $('#iqsetupload-summary').foundation('reveal', 'open');
+}
+
+function pushSection(toID, fromID) {
+    if (!fromID) {
+        console.log("fromID is null");
+        // Use toID and hide the active section
+       var $from = $(toID).parent().find('section.active');
+       if ($from) {
+            fromID = $from.attr('id');
+       }
+    }
+    console.log("found fromID = " + fromID);
+    $('#' + fromID).removeClass("active").fadeOut();
+    $(toID).addClass("active").fadeIn();
 }
 
 $(document).ready(function() {

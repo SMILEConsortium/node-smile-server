@@ -48,20 +48,23 @@
 	        <!-- Right Nav Section -->
 	        <ul class="right">
 	          <li class="divider"></li>
-	          <li class=""><a href="/grid.php">IQSets</a></li>
+	          <li class=""><a href="#" onclick="pushSection('#home-section');">Home</a></li>
 	          <li class="divider"></li>
-	          <li class=""><a href="/templates.php">Sessions</a></li>
+	          <li class=""><a href="#" onclick="pushSection('#iqsets-section');">IQSets</a></li>
 	          <li class="divider"></li>
-	          <li class=""><a href="/case-jacquelinewest.php">Help</a></li>
+	          <li class=""><a href="#" onclick="pushSection('#sessions-section');">Sessions</a></li>
 	          <li class="divider"></li>
-	          <li class=""><a href="/docs/">Support</a></li>
+	          <li class=""><a href="#" onclick="pushSection('#help-section');">Help</a></li>
+	          <li class="divider"></li>
+	          <li class=""><a href="#" onclick="pushSection('#support-section');">Support</a></li>
 	          <li class="divider"></li>
 	        </ul>
 	      </section>
 	  </nav>
 
 	<!-- section -->
-	<section class="main-iqmanager">
+	<div class="section-container auto" data-section="" style="min-height: 51px;" data-section-resized="true">
+	<section class="active" id="home-section">
 		<div class="row">
 			<div class="large-12 small-12 columns">
 				<h1 class="header">
@@ -120,7 +123,18 @@
 		</div>
 	</section>
 	<!-- section.main -->
-
+	<section class="" id="iqsets-section" style="display: none">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h1 class="header">
+					IQSets
+				</h1>
+			</div>
+		</div>
+	</section>
+	<!-- section#iqsets-section -->
+	</div>
+	<!-- div.section-container -->
 
 	<!-- Included JS Files -->
 	<!-- Included JS Files -->
