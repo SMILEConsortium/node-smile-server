@@ -88,7 +88,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="iqsetupload-summary" class="reveal-modal" style="display: none">
+				<div id="iqsetupload-summary" class="reveal-modal" style="display: none" data-bind="with: iqsetSummary">
 					<div class="row">
 			          <div class="large-4 columns large-centered">
 			            <ul class="pricing-table">
@@ -97,7 +97,7 @@
 			              <li class="description"><span data-bind="text: groupname">Group Name</span></li>
 			              <li class="bullet-item"><span data-bind="text: createdate">Date</span></li>
 			              <li class="bullet-item"><span data-bind="text: teachername">Teacher Name</span></li>
-			              <li class="bullet-item"><a class="button" data-bind="attr: { href: url}">View Details</a></li>
+			              <li class="bullet-item"><a class="button">View Details</a></li>
 			            </ul>
 			          </div>
 			          <!-- NICE DEBUG TRICK -->

@@ -57,7 +57,7 @@ function createIQSetUploader() {
 
 function doShowIQSetUploadSummaryModal(resp) {
     // XXX Should generalize the app view model to wrap the required child models and use :with binding
-    function viewModel() {
+    function iqsetSummaryModel() {
         var self = this;
         self.title = ko.observable("");
         self.createdate = ko.observable("");
@@ -69,12 +69,18 @@ function doShowIQSetUploadSummaryModal(resp) {
             // Knockout tracks dependencies automatically
             return self.iqdata().length;
         }).extend({ notify: 'always' });
+        /* self.url = ko.computed(function() {
+            return '/smile/iqset/' + self.iqid;
+        }); */
     }
 
+    var globalViewModel = {
+        iqsetSummary: new iqsetSummaryModel()
+    }
 
-    var fvm = new viewModel();
+    var fvm = globalViewModel.iqsetSummary;
 
-    ko.applyBindings(fvm);
+    ko.applyBindings(globalViewModel);
     fvm.title(resp.title);
     fvm.createdate(resp.date);
     fvm.groupname(resp.groupname);
