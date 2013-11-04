@@ -50,7 +50,7 @@
 	          <li class="divider"></li>
 	          <li class=""><a href="#" onclick="pushSection('#home-section');">Home</a></li>
 	          <li class="divider"></li>
-	          <li class=""><a href="#" onclick="pushSection('#iqsets-section');">IQSets</a></li>
+	          <li class=""><a href="#" onclick="loadIQSets(pushSection('#iqsets-section'));">IQSets</a></li>
 	          <li class="divider"></li>
 	          <li class=""><a href="#" onclick="pushSection('#sessions-section');">Sessions</a></li>
 	          <li class="divider"></li>
@@ -131,7 +131,9 @@
 				</h1>
 				<div class="row">
 					<div class="large-12 small-12 columns">
-						<div class="panel smile-branded">
+						<div class="panel smile-branded" data-bind="with: iqsetCollection">
+							<br />
+							<br />
 							<br />
 							<br />
 							<br />
@@ -148,7 +150,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
+									<tr data-bind="foreach: iqsets">
 										<td>1</td>
 										<td>1/1/2013</td>
 										<td>History: Roman Empire</td>
@@ -162,6 +164,8 @@
 						<!-- div.panel -->
 					</div>
 				</div>
+				<!-- NICE DEBUG TRICK -->
+				<span data-bind="text: ko.toJSON($data)"></span>
 			</div>
 		</div>
 	</section>
