@@ -149,14 +149,17 @@
 									  <th>Action</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr data-bind="foreach: iqsets">
-										<td>1</td>
-										<td>1/1/2013</td>
-										<td>History: Roman Empire</td>
-										<td>Teacher Claire</td>
-										<td>Olive Elementary 5th Grade</td>
-										<td><a class="tiny button" href="#">View</a></td>
+								<tbody data-bind="foreach: iqsets">
+									<tr>
+										<td data-bind="text: $index">1</td>
+										<td data-bind="text: key">1/1/2013</td>
+										<td data-bind="text: value[0]">History: Roman Empire</td>
+										<td data-bind="text: value[1]">Teacher Claire</td>
+										<td data-bind="text: value[2]">Olive Elementary 5th Grade</td>
+										<td>
+											<a class="tiny button" href="#">View</a>
+											<a class="tiny alert button iqset-delete-btn" data-bind="attr: { id: id}" href="#"><img src="images/circlex_sm.png" /></a>
+										</td>
 									</tr>
 								</tbody>
 					        </table>
