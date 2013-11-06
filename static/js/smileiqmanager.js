@@ -152,12 +152,36 @@ $(document).ready(function() {
     // Init globals
     //
     ko.applyBindings(globalViewModel);
-    
+
     //
     // Init handlers
     //
     createIQSetUploader(); // fineuploader for IQSets
     $('#iqsetupload_btn').click(function() { 
         $('#fine-uploader input:file').trigger('click');
+    });
+
+    $('#iqsets-section').on('click', '.iqset-delete-btn', function() {
+        alert($(this).attr('id'));
+        $.blockUI({ message: $('#dialog1'), css: { width: '275px' } }); 
+    });
+ 
+    $('#dialog1-yes').click(function() { 
+            // update the block message 
+            $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet</h4>" }); 
+ 
+            /* $.ajax({ 
+                url: 'wait.php', 
+                cache: false, 
+                complete: function() { 
+                    // unblock when remote call returns 
+                    $.unblockUI(); 
+                } 
+            }); */
+    }); 
+ 
+    $('#dialog1-no').click(function() { 
+            $.unblockUI(); 
+            return false; 
     });
 });
