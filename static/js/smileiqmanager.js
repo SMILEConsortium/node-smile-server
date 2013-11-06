@@ -150,17 +150,29 @@ function pushSection(toID, fromID) {
 var handleDialog1 = function(data) {
     $('#dialog1-yes').click(function() { 
 
-            // update the block message 
-            $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet: " + data.attr('id') + "</h4>" }); 
+        // update the block message 
+        $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet: " + data.attr('id') + "</h4>" }); 
  
-            /* $.ajax({ 
-                url: 'wait.php', 
-                cache: false, 
-                complete: function() { 
-                    // unblock when remote call returns 
-                    $.unblockUI(); 
-                } 
-            }); */
+        $.ajax({ cache: false, type: "DELETE", dataType: "json", url: '/smile/iqset/' + data.attr('id'), data: {}, error: function(xhr, text, err) {
+        // TODO: XXX Decide what to do if this post fails
+        // smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
+            alert("Problem deleting iqset");
+        }, success: function(data) {
+            if (data) {
+                /*
+                var iqsets = data;
+                var total_rows = data.total_rows;
+                var rows = data.rows;
+
+                ko.utils.arrayPushAll(globalViewModel.iqsetCollection.iqsets, rows);
+                */
+                $.unblockUI(); 
+                if (cb) {
+                    cb();
+                }
+            }
+        }
+        });
     }); 
  
     $('#dialog1-no').click(function() { 

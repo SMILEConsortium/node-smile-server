@@ -120,6 +120,12 @@ js.get('/smile/iqset/:id', routes.handleGetIQSet, true);
 js.post('/smile/iqset', routes.handlePostNewIQSet);
 
 /**
+    Delete the IQSet based on an existing :id.  If :id does not exist
+    return { 'error': <Reason> }
+**/
+js.delete('/smile/iqset/:id', routes.handleDeleteIQSet, true);
+
+/**
     Get all the inquiry sets
 
     Returns all the IQSets

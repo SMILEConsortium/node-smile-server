@@ -88,6 +88,23 @@ exports.handleGetIQSet = function(req, res) {
     });
 };
 
+exports.handleDeleteIQSet = function(req, res) {
+    //
+    // Ideally we'd be getting parameters of the incoming request
+    //
+    if (!req.id) {
+        return res.sendJSON(HTTP_STATUS_OK, {
+                'error': 'ID missing from request'
+            });
+    }
+
+    pdb.getIQSet(req.id, {}, function(err, result) {
+        pdb.deleteIQSet(result, {}, function(err, result) {
+            res.sendJSON(HTTP_STATUS_OK, OK);
+        });
+    });
+};
+
 exports.handlePostNewIQSet = function(req, res) {
     // console.log(req);
     var file = req.file;
