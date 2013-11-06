@@ -147,28 +147,11 @@ function pushSection(toID, fromID) {
     $(toID).addClass("active").fadeIn();
 }
 
-$(document).ready(function() {
-    //
-    // Init globals
-    //
-    ko.applyBindings(globalViewModel);
-
-    //
-    // Init handlers
-    //
-    createIQSetUploader(); // fineuploader for IQSets
-    $('#iqsetupload_btn').click(function() { 
-        $('#fine-uploader input:file').trigger('click');
-    });
-
-    $('#iqsets-section').on('click', '.iqset-delete-btn', function() {
-        alert($(this).attr('id'));
-        $.blockUI({ message: $('#dialog1'), css: { width: '275px' } }); 
-    });
- 
+var handleDialog1 = function(data) {
     $('#dialog1-yes').click(function() { 
+
             // update the block message 
-            $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet</h4>" }); 
+            $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet: " + data.attr('id') + "</h4>" }); 
  
             /* $.ajax({ 
                 url: 'wait.php', 
@@ -184,4 +167,29 @@ $(document).ready(function() {
             $.unblockUI(); 
             return false; 
     });
+};
+
+$(document).ready(function() {
+    //
+    // Init globals
+    //
+    ko.applyBindings(globalViewModel);
+
+    //
+    // Init handlers
+    //
+    createIQSetUploader(); // fineuploader for IQSets
+    $('#iqsetupload_btn').click(function() { 
+        $('#fine-uploader input:file').trigger('click');
+    });
+
+    $('#iqsets-section').on('click', '.iqset-delete-btn', function() {
+        // alert($(this).attr('id'));
+        $.blockUI({ message: $('#dialog1'),
+                    css: { width: '275px' },
+                    onBlock: handleDialog1($(this))
+        }); 
+    });
+ 
+
 });
