@@ -177,9 +177,6 @@ var handleDialog1 = function(data) {
             }
             setTimeout(function() {
                     $.unblockUI(); 
-                    if (cb) {
-                        cb();
-                    }
             }, 4000);
         }
         });

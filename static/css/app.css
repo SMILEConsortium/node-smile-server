@@ -8,6 +8,11 @@
 /* -----------------------------------------
    Shared Styles
 ----------------------------------------- */
+/*
+tr:nth-child(even) {background: #CCC}
+tr:nth-child(odd) {background: #FFF}
+*/
+/* .iq-grid tr:nth-child(odd) { background-color: #DDD; } */
 
 /* -----------------------------------------
    smile-student

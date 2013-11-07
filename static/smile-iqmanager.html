@@ -150,7 +150,7 @@
 									</tr>
 								</thead>
 								<tbody data-bind="foreach: iqsets">
-									<tr>
+									<tr class="iq-grid">
 										<td data-bind="text: $index">1</td>
 										<td data-bind="text: key">1/1/2013</td>
 										<td data-bind="text: value[0]">History: Roman Empire</td>
@@ -168,7 +168,7 @@
 					</div>
 				</div>
 				<!-- NICE DEBUG TRICK -->
-				<span data-bind="text: ko.toJSON($data)"></span>
+				<!-- <span data-bind="text: ko.toJSON($data)"></span> -->
 			</div>
 		</div>
 		<div id="dialog1" style="display:none; cursor: default"> 
