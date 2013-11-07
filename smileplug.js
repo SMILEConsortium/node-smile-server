@@ -254,7 +254,8 @@ js.get('/smile/echoclientip', routes.handleEchoClientIP);
 var routeMap = {
     'PUT' : {},
     'GET' : {},
-    'POST' : {}
+    'POST' : {},
+    'DELETE': {}
 };
 
 Object.keys(js.ROUTE_MAP).forEach(function(method) {
@@ -270,7 +271,8 @@ Object.keys(js.ROUTE_MAP).forEach(function(method) {
 var reMap = {
     'PUT' : {},
     'GET' : {},
-    'POST' : {}
+    'POST' : {},
+    'DELETE': {}
 };
 
 Object.keys(js.RE_MAP).forEach(function(method) {
