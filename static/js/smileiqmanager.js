@@ -166,11 +166,21 @@ var handleDialog1 = function(data) {
 
                 ko.utils.arrayPushAll(globalViewModel.iqsetCollection.iqsets, rows);
                 */
-                $.unblockUI(); 
-                if (cb) {
-                    cb();
+                if (data.error) {
+                    // Let's write an error
+                    $.blockUI({ message: 'Error deleting IQSet, reason: ' + data.error }); 
+                } else {
+                    $.blockUI({ message: 'Success deleting IQSet'}); 
                 }
+            } else {
+                $.blockUI({ message: 'Error, no data returned, probably did not work'}); 
             }
+            setTimeout(function() {
+                    $.unblockUI(); 
+                    if (cb) {
+                        cb();
+                    }
+            }, 4000);
         }
         });
     }); 

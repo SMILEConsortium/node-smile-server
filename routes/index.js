@@ -100,7 +100,10 @@ exports.handleDeleteIQSet = function(req, res) {
 
     pdb.getIQSet(req.id, {}, function(err, result) {
         pdb.deleteIQSet(result, {}, function(err, result) {
-            res.sendJSON(HTTP_STATUS_OK, OK);
+            if (err) {
+                res.sendJSON(HTTP_STATUS_OK, err);
+            }
+            res.sendJSON(HTTP_STATUS_OK, result);
         });
     });
 };
