@@ -150,7 +150,7 @@
 									</tr>
 								</thead>
 								<tbody data-bind="foreach: iqsets">
-									<tr class="iq-grid">
+									<tr class="iq-grid" data-bind="attr: {id: $index}">
 										<td data-bind="text: $index">1</td>
 										<td data-bind="text: key">1/1/2013</td>
 										<td data-bind="text: value[0]">History: Roman Empire</td>

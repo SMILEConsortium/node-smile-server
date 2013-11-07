@@ -147,13 +147,13 @@ function pushSection(toID, fromID) {
     $(toID).addClass("active").fadeIn();
 }
 
-var handleDialog1 = function(data) {
+var handleDialog1 = function(evtdata) {
     $('#dialog1-yes').click(function() { 
 
         // update the block message 
-        $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet: " + data.attr('id') + "</h4>" }); 
+        $.blockUI({ message: "<h4 class='subheader'>Deleting IQSet: " + evtdata.attr('id') + "</h4>" }); 
  
-        $.ajax({ cache: false, type: "DELETE", dataType: "json", url: '/smile/iqset/' + data.attr('id'), data: {}, error: function(xhr, text, err) {
+        $.ajax({ cache: false, type: "DELETE", dataType: "json", url: '/smile/iqset/' + evtdata.attr('id'), data: {}, error: function(xhr, text, err) {
         // TODO: XXX Decide what to do if this post fails
         // smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
             alert("Problem deleting iqset");
@@ -170,6 +170,9 @@ var handleDialog1 = function(data) {
                     // Let's write an error
                     $.blockUI({ message: 'Error deleting IQSet, reason: ' + data.error }); 
                 } else {
+                    // Delete the row in question from the model
+                    var rowidx = evtdata.parent().parent().attr('id');
+                    globalViewModel.iqsetCollection.iqsets.splice(rowidx, 1);
                     $.blockUI({ message: 'Success deleting IQSet'}); 
                 }
             } else {
