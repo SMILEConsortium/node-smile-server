@@ -53,9 +53,26 @@ function iqsetsModel() {
     self.iqsets = ko.observableArray([]);
 }
 
+// XXX Need to decide if we will use this
+var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer, picurl) {
+    var self = this;
+    self.question = question;
+    self.answer1 = answer1;
+    self.answer2 = answer2;
+    self.answer3 = answer3;
+    self.answer4 = answer4;
+    self.rightanswer = rightanswer;
+    self.picurl = picurl;
+    if ((self.picurl === "") || (self.picurl === undefined)) {
+        self.type = "QUESTION";
+    } else {
+        self.type = "QUESTION_PIC";
+    }
+};
+
 var globalViewModel = {
     iqsetSummary: new iqsetSummaryModel(),
-    iqsetCollection: new iqsetsModel()
+    iqsetCollection: new iqsetsModel(),
 };
 
 function createIQSetUploader() {
@@ -130,7 +147,35 @@ function loadIQSets(cb, params) {
         }
     }
     });
+}
 
+function loadIQSet(evtdata, cb) {
+    $.ajax({ cache: false, type: "GET", dataType: "json", url: '/smile/iqset/' + evtdata.attr('id'), data: {}, error: function(xhr, text, err) {
+        // TODO: XXX Decide what to do if this post fails
+        // smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
+        alert("Problem getting iqset " + evtdata.attr('id'));
+    }, success: function(data) {
+        if (data) {
+            var iqsets = data;
+            var total_rows = data.total_rows;
+            var rows = data.rows;
+
+            var fvm = globalViewModel.iqsetSummary;
+
+            fvm.title(data.title);
+            fvm.createdate(data.date);
+            fvm.groupname(data.groupname);
+            fvm.teachername(data.teachername);
+            fvm.iqid(data._id);
+            ko.utils.arrayPushAll(fvm.iqdata(), data.iqdata);
+            fvm.iqdata.valueHasMutated();
+
+            if (cb) {
+                cb();
+            }
+        }
+    }
+    });
 }
 
 function pushSection(toID, fromID) {
@@ -143,6 +188,10 @@ function pushSection(toID, fromID) {
        }
     }
     console.log("found fromID = " + fromID);
+    if (!toID) {
+        console.log('toID is null');
+        return;
+    }
     $('#' + fromID).removeClass("active").fadeOut();
     $(toID).addClass("active").fadeIn();
 }
@@ -211,6 +260,10 @@ $(document).ready(function() {
                     css: { width: '275px' },
                     onBlock: handleDialog1($(this))
         }); 
+    });
+
+    $('#iqsets-section').on('click', '.iqset-view-btn', function() {
+        loadIQSet($(this), pushSection('#iqset-detail-section'));
     });
  
 
