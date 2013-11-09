@@ -53,6 +53,11 @@ function iqsetsModel() {
     self.iqsets = ko.observableArray([]);
 }
 
+function sessionsModel() {
+    var self = this;
+    self.iqsessions = ko.observableArray([]);
+}
+
 // XXX Need to decide if we will use this
 var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer, picurl) {
     var self = this;
@@ -73,6 +78,7 @@ var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer
 var globalViewModel = {
     iqsetSummary: new iqsetSummaryModel(),
     iqsetCollection: new iqsetsModel(),
+    sessionCollection: new sessionsModel()
 };
 
 function createIQSetUploader() {
@@ -140,6 +146,33 @@ function loadIQSets(cb, params) {
             var rows = data.rows;
 
             ko.utils.arrayPushAll(globalViewModel.iqsetCollection.iqsets, rows);
+
+            if (cb) {
+                cb();
+            }
+        }
+    }
+    });
+}
+
+function loadSessions(cb, params) {
+    //
+    // Ignore params
+    //
+    if (params) {
+        // Do something
+    }
+
+    $.ajax({ cache: false, type: "GET", dataType: "json", url: '/smile/sessions', data: {}, error: function(xhr, text, err) {
+        // TODO: XXX Decide what to do if this post fails
+        // smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
+        alert("Problem getting iqsets");
+    }, success: function(data) {
+        if (data) {
+            var total_rows = data.total_rows;
+            var rows = data.rows;
+
+            ko.utils.arrayPushAll(globalViewModel.sessionCollection.iqsessions, rows);
 
             if (cb) {
                 cb();

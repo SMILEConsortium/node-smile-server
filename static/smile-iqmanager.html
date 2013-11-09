@@ -52,7 +52,7 @@
 	          <li class="divider"></li>
 	          <li class=""><a href="#" onclick="loadIQSets(pushSection('#iqsets-section'));">IQSets</a></li>
 	          <li class="divider"></li>
-	          <li class=""><a href="#" onclick="pushSection('#sessions-section');">Sessions</a></li>
+	          <li class=""><a href="#" onclick="loadSessions(pushSection('#sessions-section'));">Sessions</a></li>
 	          <li class="divider"></li>
 	          <li class=""><a href="#" onclick="pushSection('#help-section');">Help</a></li>
 	          <li class="divider"></li>
@@ -178,6 +178,61 @@
 		</div> 
 	</section>
 	<!-- section#iqsets-section -->
+	<section class="" id="sessions-section" style="display: none">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h2 class="subheader">
+					IQ Sessions
+				</h2>
+				<div class="row">
+					<div class="large-12 small-12 columns">
+						<div class="panel smile-branded" data-bind="with: sessionCollection">
+							<br />
+							<br />
+							<br />
+							<br />
+							<br />
+							<br />
+							<table>
+								<thead>
+									<tr>
+									  <th>#</th>
+									  <th width="200">Date</th>
+									  <th>IQ Session Name</th>
+									  <th width="150">Teacher Name</th>
+									  <th width="150">Group Name</th>
+									  <th>Action</th>
+									</tr>
+								</thead>
+								<tbody data-bind="foreach: iqsessions">
+									<tr class="iq-grid" data-bind="attr: {id: $index}">
+										<td data-bind="text: $index">1</td>
+										<td data-bind="text: key">1/1/2013</td>
+										<td data-bind="text: value[0]">History: Roman Empire</td>
+										<td data-bind="text: value[1]">Teacher Claire</td>
+										<td data-bind="text: value[2]">Olive Elementary 5th Grade</td>
+										<td>
+											<a class="tiny button session-view-btn" data-bind="attr: { id: id}" href="#">View</a>
+											<a class="tiny alert button session-delete-btn" data-bind="attr: { id: id}" href="#"><img src="images/circlex_sm.png" /></a>
+										</td>
+									</tr>
+								</tbody>
+					        </table>
+						</div>
+						<!-- div.panel -->
+					</div>
+				</div>
+				<!-- NICE DEBUG TRICK -->
+				<!-- <span data-bind="text: ko.toJSON($data)"></span> -->
+			</div>
+		</div>
+		<div id="dialog1" style="display:none; cursor: default"> 
+        	<h4 class="subheader">Confirm deletion of this IQSet?</h4> 
+        	<input type="button" id="dialog1-yes" value="Delete" /> 
+        	<input type="button" id="dialog1-no" value="Cancel" /> 
+		</div> 
+	</section>
+	<!-- section#session-section -->
 	<section class="" id="iqset-detail-section" style="display: none">
 		<div class="row">
 			<div class="large-12 small-12 columns">
