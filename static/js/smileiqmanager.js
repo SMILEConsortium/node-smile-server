@@ -58,6 +58,18 @@ function sessionsModel() {
     self.iqsessions = ko.observableArray([]);
 }
 
+function sessionSummaryModel() {
+    var self = this;
+    self.title = ko.observable("");
+    self.sessionName = ko.observable("");
+    self.date = ko.observable("");
+    self.groupname = ko.observable("");
+    self.teachername = ko.observable("");
+    self._id = ko.observable("");
+    self.iqset = ko.observableArray([]);
+    self.results = ko.observable("");
+    self.sessionStats = ko.observable("");
+}
 // XXX Need to decide if we will use this
 var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer, picurl) {
     var self = this;
@@ -78,7 +90,8 @@ var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer
 var globalViewModel = {
     iqsetSummary: new iqsetSummaryModel(),
     iqsetCollection: new iqsetsModel(),
-    sessionCollection: new sessionsModel()
+    sessionCollection: new sessionsModel(),
+    sessionSummary: new sessionSummaryModel()
 };
 
 function createIQSetUploader() {
