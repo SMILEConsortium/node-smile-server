@@ -70,6 +70,14 @@ function sessionSummaryModel() {
     self.results = ko.observable("");
     self.sessionStats = ko.observable("");
 }
+
+var resultsModel = function() {
+    var self = this;
+};
+var sessionStatsModel = function (numberofstudents) {
+    var self = this;
+    self.numberofstudents = numberofstudents;
+};
 // XXX Need to decide if we will use this
 var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer, picurl) {
     var self = this;
@@ -91,7 +99,7 @@ var globalViewModel = {
     iqsetSummary: new iqsetSummaryModel(),
     iqsetCollection: new iqsetsModel(),
     sessionCollection: new sessionsModel(),
-    sessionSummary: new sessionSummaryModel()
+    sessionSummary: ko.mapping.fromJS({})
 };
 
 function createIQSetUploader() {
@@ -224,6 +232,22 @@ function loadIQSet(evtdata, cb) {
     });
 }
 
+function loadSession(evtdata, cb) {
+    $.ajax({ cache: false, type: "GET", dataType: "json", url: '/smile/session/' + evtdata.attr('id'), data: {}, error: function(xhr, text, err) {
+        // TODO: XXX Decide what to do if this post fails
+        alert("Problem getting session " + evtdata.attr('id'));
+    }, success: function(data) {
+        if (data) {
+            ko.mapping.fromJS(data, globalViewModel.sessionSummary);
+
+            if (cb) {
+                cb();
+            }
+        }
+    }
+    });
+}
+
 function pushSection(toID, fromID) {
     if (!fromID) {
         console.log("fromID is null");
@@ -312,5 +336,10 @@ $(document).ready(function() {
         loadIQSet($(this), pushSection('#iqset-detail-section'));
     });
  
+    $('#sessions-section').on('click', '.session-view-btn', function() {
+        loadSession($(this), pushSection('#session-detail-section'));
+    });
+
+    
 
 });

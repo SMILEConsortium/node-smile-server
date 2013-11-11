@@ -232,7 +232,60 @@
         	<input type="button" id="dialog1-no" value="Cancel" /> 
 		</div> 
 	</section>
-	<!-- section#session-section -->
+	<!-- section#sessions-section -->
+	<section class="" id="session-detail-section" style="display: none">
+		<div class="row">
+			<div class="large-12 small-12 columns">
+				<h2 class="subheader">
+					Session
+				</h2>
+				<div class="row">
+					<div class="large-12 small-12 columns">
+						<div class="panel smile-branded" data-bind="with: sessionSummary">
+							<br />
+							<br />
+							<br />
+							<br />
+							<br />
+							<br />
+							<!-- 
+							<table>
+								<thead>
+									<tr>
+									  <th>#</th>
+									  <th width="200">Date</th>
+									  <th>IQ Session Name</th>
+									  <th width="150">Teacher Name</th>
+									  <th width="150">Group Name</th>
+									  <th>Action</th>
+									</tr>
+								</thead>
+								<tbody data-bind="foreach: iqsessions">
+									<tr class="iq-grid" data-bind="attr: {id: $index}">
+										<td data-bind="text: $index">1</td>
+										<td data-bind="text: key">1/1/2013</td>
+										<td data-bind="text: value[0]">History: Roman Empire</td>
+										<td data-bind="text: value[1]">Teacher Claire</td>
+										<td data-bind="text: value[2]">Olive Elementary 5th Grade</td>
+										<td>
+											<a class="tiny button session-view-btn" data-bind="attr: { id: id}" href="#">View</a>
+											<a class="tiny alert button session-delete-btn" data-bind="attr: { id: id}" href="#"><img src="images/circlex_sm.png" /></a>
+										</td>
+									</tr>
+								</tbody>
+					        </table>
+					    	-->
+						</div>
+						<!-- div.panel -->
+					</div>
+				</div>
+				<!-- NICE DEBUG TRICK -->
+				<span data-bind="text: ko.toJSON($data)"></span>
+			</div>
+		</div>
+	</section>
+	<!-- section#session-detail-section -->
+
 	<section class="" id="iqset-detail-section" style="display: none">
 		<div class="row">
 			<div class="large-12 small-12 columns">
@@ -324,7 +377,8 @@
 	<script src="js/foundation.section.js"></script>
 	<script src="js/foundation.reveal.js"></script>
 	<!-- Switch to minified version after development -->
-	<script type='text/javascript' src='js/knockout-2.1.0.debug.js'></script>
+	<script type='text/javascript' src='js/knockout-3.0.0.debug.js'></script>
+	<script type='text/javascript' src='js/knockout.mapping.js'></script>
 	<script type='text/javascript' src='js/underscore-1.3.3.js'></script>
 	<script type='text/javascript' src='js/async-0.1.22.js'></script>
 	<!-- Got this from: http://www.diveintojavascript.com/projects/javascript-sprintf -->
