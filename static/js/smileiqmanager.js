@@ -58,6 +58,23 @@ function sessionsModel() {
     self.iqsessions = ko.observableArray([]);
 }
 
+function sessionStatsModel() {
+    var self = this;
+    self.numberOfStudents = ko.observable("");
+    self.numberOfQuestions = ko.observable("");
+    self.numberOfStudentsPostingAnswers = ko.observable("");
+}
+
+function sessionResultsModel() {
+    var self = this;
+    self.winnerScore = ko.observable("");
+    self.winnerRating = ko.observable("");
+    self.numberOfQuestions = ko.observable("");
+    self.rightAnswers = ko.observable("");
+    self.averageRatings = ko.observable("");
+    self.questionsCorrectPercentage = ko.observable("");
+}
+
 function sessionSummaryModel() {
     var self = this;
     self.title = ko.observable("");
@@ -67,17 +84,10 @@ function sessionSummaryModel() {
     self.teachername = ko.observable("");
     self._id = ko.observable("");
     self.iqset = ko.observableArray([]);
-    self.results = ko.observable("");
-    self.sessionStats = ko.observable("");
+    self.results = new sessionResultsModel();
+    self.sessionStats = new sessionStatsModel();
 }
 
-var resultsModel = function() {
-    var self = this;
-};
-var sessionStatsModel = function (numberofstudents) {
-    var self = this;
-    self.numberofstudents = numberofstudents;
-};
 // XXX Need to decide if we will use this
 var iqModel = function(question, answer1, answer2, answer3, answer4, rightanswer, picurl) {
     var self = this;
@@ -99,8 +109,8 @@ var globalViewModel = {
     iqsetSummary: new iqsetSummaryModel(),
     iqsetCollection: new iqsetsModel(),
     sessionCollection: new sessionsModel(),
-    sessionSummary: ko.mapping.fromJS({})
-};
+    sessionSummary: new sessionSummaryModel()
+}
 
 function createIQSetUploader() {
     var uploader = new qq.FineUploader({
@@ -238,11 +248,16 @@ function loadSession(evtdata, cb) {
         alert("Problem getting session " + evtdata.attr('id'));
     }, success: function(data) {
         if (data) {
-            ko.mapping.fromJS(data, globalViewModel.sessionSummary);
+            // console.log(data);
+            // ko.mapping.fromJS(data, globalViewModel.sessionSummary);
+            globalViewModel.sessionSummary.sessionName(data.sessionName);
+            ko.utils.arrayPushAll(globalViewModel.sessionSummary.iqset, data.iqset);
 
             if (cb) {
                 cb();
             }
+        } else {
+            console.log('no data');
         }
     }
     });
