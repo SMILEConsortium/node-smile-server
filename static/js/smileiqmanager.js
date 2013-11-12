@@ -70,9 +70,9 @@ function sessionResultsModel() {
     self.winnerScore = ko.observable("");
     self.winnerRating = ko.observable("");
     self.numberOfQuestions = ko.observable("");
-    self.rightAnswers = ko.observable("");
-    self.averageRatings = ko.observable("");
-    self.questionsCorrectPercentage = ko.observable("");
+    self.rightAnswers = ko.observableArray([]);
+    self.averageRatings = ko.observableArray([]);
+    self.questionsCorrectPercentage = ko.observableArray([]);
 }
 
 function sessionSummaryModel() {
@@ -199,6 +199,7 @@ function loadSessions(cb, params) {
         // smileAlert('#globalstatus', 'Unable to get inquiry.  Reason: ' + xhr.status + ':' + xhr.responseText + '.  Please verify your connection or server status.', 'trace');
         alert("Problem getting iqsets");
     }, success: function(data) {
+
         if (data) {
             var total_rows = data.total_rows;
             var rows = data.rows;
@@ -252,6 +253,22 @@ function loadSession(evtdata, cb) {
             // ko.mapping.fromJS(data, globalViewModel.sessionSummary);
             globalViewModel.sessionSummary.sessionName(data.sessionName);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.iqset, data.iqset);
+            globalViewModel.sessionSummary.title(data.title);
+            globalViewModel.sessionSummary.date(data.date);
+            globalViewModel.sessionSummary.groupname(data.date);
+            globalViewModel.sessionSummary.teachername(data.teachername);
+            globalViewModel.sessionSummary._id(data._id);
+
+            globalViewModel.sessionSummary.results.winnerScore(data.results.winnerScore);
+            globalViewModel.sessionSummary.results.winnerRating(data.results.winnerRating);
+            globalViewModel.sessionSummary.results.numberOfQuestions(data.results.numberOfQuestions);
+            ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.rightAnswers, data.results.rightAnswers);
+            ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.averageRatings, data.results.averageRatings);
+            ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.questionsCorrectPercentage, data.results.questionsCorrectPercentage);
+            
+            globalViewModel.sessionSummary.sessionStats.numberOfStudents(data.sessionstats.numberOfStudents);
+            globalViewModel.sessionSummary.sessionStats.numberOfQuestions(data.sessionstats.numberOfQuestions);
+            globalViewModel.sessionSummary.sessionStats.numberOfStudentsPostingAnswers(data.sessionstats.numberOfStudentsPostingAnswers);
 
             if (cb) {
                 cb();
