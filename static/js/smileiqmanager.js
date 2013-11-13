@@ -65,6 +65,16 @@ function sessionStatsModel() {
     self.numberOfStudentsPostingAnswers = ko.observable("");
 }
 
+function sessionMetadataModel() {
+    var self = this;
+    self.teacherName = ko.observable("");
+    self.groupName = ko.observable("");
+    self.iqid = ko.observable("");
+    self.iqtitle = ko.observable("");
+    // XXX Let's add this later
+    // "ratingScale":{"1":"Low Quality Question","2":"Adequate Question","3":"Average Question","4":"Good Question","5":"High Quality Question"}
+}
+
 function sessionResultsModel() {
     var self = this;
     self.winnerScore = ko.observable("");
@@ -83,9 +93,10 @@ function sessionSummaryModel() {
     self.groupname = ko.observable("");
     self.teachername = ko.observable("");
     self._id = ko.observable("");
-    self.iqset = ko.observableArray([]);
+    self.iqdata = ko.observableArray([]);
     self.results = new sessionResultsModel();
     self.sessionStats = new sessionStatsModel();
+    self.sessionMetadata = new sessionMetadataModel();
 }
 
 // XXX Need to decide if we will use this
@@ -252,7 +263,7 @@ function loadSession(evtdata, cb) {
             // console.log(data);
             // ko.mapping.fromJS(data, globalViewModel.sessionSummary);
             globalViewModel.sessionSummary.sessionName(data.sessionName);
-            ko.utils.arrayPushAll(globalViewModel.sessionSummary.iqset, data.iqset);
+            ko.utils.arrayPushAll(globalViewModel.sessionSummary.iqdata, data.iqset);
             globalViewModel.sessionSummary.title(data.title);
             globalViewModel.sessionSummary.date(data.date);
             globalViewModel.sessionSummary.groupname(data.date);
@@ -270,6 +281,11 @@ function loadSession(evtdata, cb) {
             globalViewModel.sessionSummary.sessionStats.numberOfQuestions(data.sessionstats.numberOfQuestions);
             globalViewModel.sessionSummary.sessionStats.numberOfStudentsPostingAnswers(data.sessionstats.numberOfStudentsPostingAnswers);
 
+            globalViewModel.sessionSummary.sessionMetadata.teacherName(data.metadata.teacherName);
+            globalViewModel.sessionSummary.sessionMetadata.groupName(data.metadata.groupName);
+            globalViewModel.sessionSummary.sessionMetadata.iqid(data.metadata.iqid);
+            globalViewModel.sessionSummary.sessionMetadata.iqtitle(data.metadata.iqtitle);
+            
             if (cb) {
                 cb();
             }
