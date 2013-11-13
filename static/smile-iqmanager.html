@@ -237,8 +237,9 @@
 		<div class="row">
 			<div class="large-12 small-12 columns" data-bind="with: sessionSummary">
 				<h2 class="subheader">
-					Session: <span data-bind="text: sessionName"></span>
+					Session: <span data-bind="text: sessionName">A Session</span>
 				</h2>
+				<h4><span data-bind="text: date">Session Date<span></h4>
 				<div class="row">
 					<div class="large-12 small-12 columns">
 						<div class="panel callout radius">
@@ -264,29 +265,55 @@
 									  <th width="150">Answer 2</th>
 									  <th width="150">Answer 3</th>
 									  <th width="150">Answer 4</th>
-									  <th width="">Correct Answer</th>
+									  <th width="">Correct</th>
 									  <th width="">Image</th>
 									</tr>
 								</thead>
 								<tbody data-bind="foreach: iqdata">
 									<tr class="iq-grid" data-bind="attr: {id: $index}">
 										<td data-bind="text: $index">1</td>
-										<td data-bind="text: Q">1/1/2013</td>
-										<td data-bind="text: O1">History: Roman Empire</td>
-										<td data-bind="text: O2">Teacher Claire</td>
-										<td data-bind="text: O3">Olive Elementary 5th Grade</td>
-										<td data-bind="text: O4">Olive Elementary 5th Grade</td>
-										<td data-bind="text: A"></td>
+										<td data-bind="text: Q">Where was it?</td>
+										<td data-bind="text: O1">Drawer</td>
+										<td data-bind="text: O2">Shelf</td>
+										<td data-bind="text: O3">TV</td>
+										<td data-bind="text: O4">Floor</td>
+										<td data-bind="text: A">3</td>
 										<td><a class="tiny button" href="#"><img src="images/photo-icon.png" /></a></td>
 									</tr>
 								</tbody>
 					        </table>
+					        <br />
+							<br />
+							<br />
+							
+							
+							<div class="student-results" data-bind="foreach: students">
+								<h4>Score: <span data-bind="text: name">Ralph</span> [<em><span data-bind="text: score">4</span>/<span data-bind="text: $parent.sessionStats.numberOfQuestions">5</span><em> Correct Answers]</h4>
+								
+								<table>
+									<caption>Results</caption>
+								<thead>
+									<tr>
+									  <th width="150">Q #</th>
+									  <th width="150">Answer</th>
+									</tr>
+								</thead>
+								<tbody data-bind="foreach: $data.answers">
+									<tr>
+										<td data-bind="text: $index">1</td>
+										<td data-bind="text: $data">3</td>
+									</tr>
+								</tbody>
+					        	</table>
+					        	
+					        </div>
+					        <!-- div.student-results -->
 						</div>
 						<!-- div.panel -->
 					</div>
 				</div>
 				<!-- NICE DEBUG TRICK -->
-				<span data-bind="text: ko.toJSON($data)"></span>
+				<!-- <span data-bind="text: ko.toJSON($data)"></span> -->
 			</div>
 		</div>
 	</section>

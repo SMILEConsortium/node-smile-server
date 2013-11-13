@@ -85,6 +85,19 @@ function sessionResultsModel() {
     self.questionsCorrectPercentage = ko.observableArray([]);
 }
 
+/*
+function sessionStudentResultsModel() {
+    var self = this;
+    self.name = ko.observable("");
+    self.ip = ko.observable("");
+    self.qmade = ko.observable("");
+    self.qsolved = ko.observable("");
+    self.answer = ko.observableArray([]);
+    self.ratings = ko.observableArray([]);
+    self.score = ko.observable("");
+}
+*/
+
 function sessionSummaryModel() {
     var self = this;
     self.title = ko.observable("");
@@ -97,6 +110,7 @@ function sessionSummaryModel() {
     self.results = new sessionResultsModel();
     self.sessionStats = new sessionStatsModel();
     self.sessionMetadata = new sessionMetadataModel();
+    self.students = new ko.observableArray([]);
 }
 
 // XXX Need to decide if we will use this
@@ -121,7 +135,7 @@ var globalViewModel = {
     iqsetCollection: new iqsetsModel(),
     sessionCollection: new sessionsModel(),
     sessionSummary: new sessionSummaryModel()
-}
+};
 
 function createIQSetUploader() {
     var uploader = new qq.FineUploader({
@@ -286,6 +300,14 @@ function loadSession(evtdata, cb) {
             globalViewModel.sessionSummary.sessionMetadata.iqid(data.metadata.iqid);
             globalViewModel.sessionSummary.sessionMetadata.iqtitle(data.metadata.iqtitle);
             
+            if (data.students) {
+                console.log("students found");
+                for (var student in data.students) {
+                    console.log("push student: " + student);
+                    globalViewModel.sessionSummary.students.push(data.students[student]);
+                }
+            }
+
             if (cb) {
                 cb();
             }
