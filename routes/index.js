@@ -483,6 +483,26 @@ exports.handlePushMessage = function(req, res) {
     }
 };
 
+/**
+	Creating a session with teacher name, session title, and group name
+**/
+exports.createSessionFromTeacherApp = function(req, res) {
+
+    try {
+
+	console.log('\n## JSON from "createSessionFromTeacherApp" ##');
+	console.log('\t>>> '+req.body);
+	console.log('\t>>> '+req.body.teacherName);
+	console.log('\t>>> '+req.body.sessionName);
+	console.log('\t>>> '+req.body.groupName+'\n');
+
+    } catch (e) {
+        res.handleError("Can't parse Incoming JSON in createSessionFromTeacherApp method");
+    }
+
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
 exports.handlePushMsgPost = function(req, res) {
     var message = req.body.MSG;
     try {

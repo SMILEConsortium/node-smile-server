@@ -73,6 +73,13 @@ js.get('/smile/metadata/rating', routes.handleRatingMetadataGet);
 
 js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
+
+/**
+    Create a session from smile_teacher_android app
+**/
+js.put('/smile/createsession', routes.createSessionFromTeacherApp);
+js.post('/smile/createsession', routes.createSessionFromTeacherApp);
+
 /**
     Get the questions from existing from existin session
     @method /smile/question
