@@ -607,6 +607,7 @@ var MESSAGE_RETAKE = JSON.stringify({
     'TIME_LIMIT': 10
 });
 
+
 var encodedRetake = 'MSG=' + encodeURIComponent('{"TYPE":"RE_TAKE1","NUMQ":2,"RANSWER":[3,2],"TIME_LIMIT":10}');
 
 
@@ -664,7 +665,6 @@ suite.addBatch({
         },
     }
 });
-
 
 // Reset
 

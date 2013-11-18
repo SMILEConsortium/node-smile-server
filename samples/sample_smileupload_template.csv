@@ -1,3 +1,3 @@
-question,choice1,choice2,choice3,choice4,has_image,answers
-What color is the sky?,Blue,Green,Yellow,Orange,,choice1
-Qual a cor do céu?,Azul,Verde,Amarelo,Laranja,,choice1
+question	choice1	choice2	choice3	choice4	has_image	answers	owner_name	owner_IP
+What color is the sky?	Blue	Green	Yellow	Orange		1	teacher	127.0.0.1
+Qual a cor do céu?	Azul	Verde	Amarelo	Laranja		3	teacher	127.0.0.1
