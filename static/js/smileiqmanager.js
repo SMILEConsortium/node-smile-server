@@ -153,7 +153,6 @@ function createIQSetUploader() {
         mode: 'custom',
         validation : {
             allowedExtensions : [ 'csv' ],
-            itemLimit: 1
         },
         request : {
             endpoint : '/smile/iqset'
