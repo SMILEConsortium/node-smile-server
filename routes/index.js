@@ -111,14 +111,47 @@ exports.handleDeleteIQSet = function(req, res) {
 exports.handlePostNewIQSet = function(req, res) {
     // console.log(req);
     var headers = req.headers;
-
+    var iqset;
     if (headers['content-type'] === 'applicaton/json; charset=UTF-8') {
         console.log('Handle post of iqset from json');
         //
         // Handle the upload from JSON
         //
-        /*
-        pdb.putIQSet(iqset, function(err, result) {
+        var queryData;
+        var isValid;
+        if ((req.method == 'POST') || (req.method == 'PUT')) {
+            req.on('data', function(data) {
+                queryData += data;
+                if(queryData.length > 1e6) {
+                    queryData = "";
+                    res.writeHead(413, {'Content-Type': 'text/plain'}).end();
+                    req.connection.destroy();
+                }
+            });
+
+            req.on('end', function() {
+                iqset = querystring.parse(queryData);
+            });
+        }
+
+        if (!iqset.title) {
+            // iqset.title = iqdoc.date + "-IQSet";
+        }
+
+        if (!iqset.teachername) {
+            // iqset.teachername = "Teacher";
+        }
+
+        if (!iqset.groupname) {
+            // iqset.groupname = "General";
+        }
+
+        if (!iqset.iqdata) {
+            isValid = false;
+        }
+
+        if (isValid) {
+            pdb.putIQSet(iqset, function(err, result) {
                     if (!err) {
                         iqset.success = true;
                         return res.sendJSON(HTTP_STATUS_OK, iqset);
@@ -128,15 +161,20 @@ exports.handlePostNewIQSet = function(req, res) {
                             'success': false
                         });
                     }
-                });
-        */
+            });
+        } else {
+            return res.sendJSON(HTTP_STATUS_OK, {
+            'error': 'Unable to persist IQSet data, missing IQSet iqdata',
+            'success': false
+            });
+        }
     } else {
         // XXX We wrongly assume this was a CSV upload
         var file = req.file;
         var csvData = fs.readFileSync(file.path, 'utf8');
         csv().from.string(csvData, {comment: '#'} ).to.array( function(data){
             // console.log(data);
-            var iqset = game.questions.parseCSVtoIQSetObj(data);
+            iqset = game.questions.parseCSVtoIQSetObj(data);
             console.log(iqset);
             //
             // Per Fineuploader spec, add the right handler response messages for success/failure
@@ -234,7 +272,7 @@ exports.handleStartMakeQuestionPut = function(req, res) {
             teacherMeta = querystring.parse(queryData);
         });
     }
-
+    console.log("TeacherMeta: " + teacherMeta);
     if (teacherMeta === null || teacherMeta === "") {
         // XXX TODO: Put our defaults somewhere
             game.teacherName = "Teacher";
