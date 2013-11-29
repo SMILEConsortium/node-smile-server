@@ -115,13 +115,65 @@ js.post('/smile/question/csv', routes.handleCsvPushQuestions);
 js.get('/smile/iqset/:id', routes.handleGetIQSet, true);
 
 /**
-    Post the IQSet as a CSV file, creating a new IQSet.  Duplicate posts will create
-    new IDs.
+    Post the IQSet as a CSV file or JSON IQSet, creating a new IQSet.  Duplicate posts will create
+    new IDs.  Note, there is no dup detection.  
 
-    Message body contains a CSV file
+    Format for CSV is
 
-    XXX TODO: add params to handle type=csv or json
-    Presumably this can be JSON data, but let's just handle the CSV situation for now
+    Teacher Name: <data>,
+    Title: <data>,
+    Group Name: <data>,
+    question, choice1, choice2, choice3, choice4, has_image, answers, owner_name, owner_IP
+    <data>, <data>, <data>, <data>, <data>, <data>, <data>, <data>, <data>
+
+    for the JSON format, be sure to pass with Content-Type:
+    applicaton/json; charset=UTF-8
+
+    And document structure:
+    {
+    "ducktype": "iqsetdoc",
+    "date": "2013-10-25T06:56:18.489Z",
+    "title": "JAMsj Barracks Set 2013",
+    "teachername": "Mrs. Parker",
+    "groupname": "MLK Elementary Grade 5",
+    "iqdata": [
+        {
+            "NAME": "teacher",
+            "IP": "127.0.0.1",
+            "Q": "question",
+            "O1": "choice1",
+            "O2": "choice2",
+            "O3": "choice3",
+            "O4": "choice4",
+            "TYPE": "QUESTION",
+            "A": "answers"
+        },
+        {
+            "NAME": "teacher",
+            "IP": "127.0.0.1",
+            "Q": "How did internees NOT solve the problem of dirt and sand blowing in through the spaces between the floorboards and walls?",
+            "O1": "They laid large tiles on the floors",
+            "O2": "They laid linoleum over floorboards",
+            "O3": "They stuffed toilet paper in the wall spaces",
+            "O4": "They laid carpeting to cover the floor spaces",
+            "TYPE": "QUESTION",
+            "A": "1"
+        },
+        {
+            "NAME": "teacher",
+            "IP": "127.0.0.1",
+            "Q": "What did the WRA NOT issue for each room in the barracks?",
+            "O1": "Tables and chairs",
+            "O2": "Metal Army cots (without mattresses) and at least two Army blankets per cot",
+            "O3": "One heating stove",
+            "O4": "One electric light",
+            "TYPE": "QUESTION",
+            "A": "1"
+        }
+    ]
+}
+
+
     @method /smile/iqset
 **/
 js.post('/smile/iqset', routes.handlePostNewIQSet);
