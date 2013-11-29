@@ -200,7 +200,7 @@ function loadIQSets(cb, params) {
             var iqsets = data;
             var total_rows = data.total_rows;
             var rows = data.rows;
-
+            globalViewModel.iqsetCollection.iqsets.removeAll(); // Remove all the sessions before we display more
             ko.utils.arrayPushAll(globalViewModel.iqsetCollection.iqsets, rows);
 
             if (cb) {
@@ -228,7 +228,7 @@ function loadSessions(cb, params) {
         if (data) {
             var total_rows = data.total_rows;
             var rows = data.rows;
-
+            globalViewModel.sessionCollection.iqsessions.removeAll(); // Remove them all before we display a new set
             ko.utils.arrayPushAll(globalViewModel.sessionCollection.iqsessions, rows);
 
             if (cb) {
