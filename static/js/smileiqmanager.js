@@ -319,6 +319,7 @@ function loadSession(evtdata, cb) {
 }
 
 function pushSection(toID, fromID) {
+    console.log("toID = " + toID);
     if (!fromID) {
         console.log("fromID is null");
         // Use toID and hide the active section
