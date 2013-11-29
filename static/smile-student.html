@@ -124,7 +124,7 @@
 												<form action="return false;">
 													<label>Question</label>
 													<textarea data-bind="value: question" rows="5" cols="20"></textarea>
-
+													<div id="iq-pic"></div>
 													<div class="row">
 														<div class="large-8 small-8 columns">
 															<label>Answer 1</label>
@@ -504,10 +504,15 @@
 	<script>
         function createUploader() {
             var uploader = new qq.FineUploader({
+            	// XXX We should add upload limits or this will crash the server (file size < 1MB)
                 element : $('#fine-uploader')[0],
                 callbacks : {
                     onComplete : function(id, name, response) {
+                    	$('#fine-uploader').fadeIn();
+                		$('div.qq-upload-button').hide();
+                		$('li.qq-upload-success').fadeOut(5000, "linear");
                         GlobalViewModel.pic(response.base64);
+                        $('#iq-pic').empty().append('<p>Image Uploaded</p>');
                     }
                 },
                 validation : {

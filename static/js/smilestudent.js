@@ -228,6 +228,7 @@ GlobalViewModel.doSubmitQ = function() {
         var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl(), self.pic());
         doPostInquiry(jsondata, function() {
             self.doInquiryReset();
+            $('#iq-pic').empty();
         });
     } else {
         console.log("Cannot validateInquiry");
@@ -249,7 +250,7 @@ GlobalViewModel.doSubmitQandDone = function() {
             console.log("waiting for next phase");
             self.doInquiryReset();
             // XXX Localize this
-
+            $('#iq-pic').empty();
             $('div#inquiry-form-area').block({
                 message: '<h1>Done.  Please wait for the rest of the students to finish Creating Questions</h1>',
                 css: { border: '3px solid #a00', width: '80%'
