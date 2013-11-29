@@ -172,6 +172,7 @@ function doShowIQSetUploadSummaryModal(resp) {
     fvm.groupname(resp.groupname);
     fvm.teachername(resp.teachername);
     fvm.iqid(resp._id);
+    fvm.iqdata.removeAll(); // Don't forget to clean up the pre-existing iqsets
     ko.utils.arrayPushAll(fvm.iqdata(), resp.iqdata);
     console.log('viewmodel iqdata().length = ' + fvm.iqdata().length);
     fvm.iqdata.valueHasMutated();

@@ -110,16 +110,37 @@ exports.handleDeleteIQSet = function(req, res) {
 
 exports.handlePostNewIQSet = function(req, res) {
     // console.log(req);
-    var file = req.file;
-    var csvData = fs.readFileSync(file.path, 'utf8');
-        csv().from.string(csvData,
-        {comment: '#'} ).to.array( function(data){
+    var headers = req.headers;
+
+    if (headers['content-type'] === 'applicaton/json; charset=UTF-8') {
+        console.log('Handle post of iqset from json');
+        //
+        // Handle the upload from JSON
+        //
+        /*
+        pdb.putIQSet(iqset, function(err, result) {
+                    if (!err) {
+                        iqset.success = true;
+                        return res.sendJSON(HTTP_STATUS_OK, iqset);
+                    } else {
+                        return res.sendJSON(HTTP_STATUS_OK, {
+                            'error': 'Unable to persist IQSet data',
+                            'success': false
+                        });
+                    }
+                });
+        */
+    } else {
+        // XXX We wrongly assume this was a CSV upload
+        var file = req.file;
+        var csvData = fs.readFileSync(file.path, 'utf8');
+        csv().from.string(csvData, {comment: '#'} ).to.array( function(data){
             // console.log(data);
             var iqset = game.questions.parseCSVtoIQSetObj(data);
             console.log(iqset);
             //
             // Per Fineuploader spec, add the right handler response messages for success/failure
-            // http://docs.fineuploader.com/branch/master/endpoint_handlers/traditional.html
+            // http://docs.fineuploader.com/branccharset=UTF-8h/master/endpoint_handlers/traditional.html
             //
             //
             if (iqset.error) {
@@ -148,6 +169,7 @@ exports.handlePostNewIQSet = function(req, res) {
                 'success': false
             });
         });
+    }
 };
 
 exports.handleImageUpload = function(req, res) {
