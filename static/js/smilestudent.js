@@ -49,7 +49,7 @@ var SMILEROUTES = {
     "getresults": "/smile/student/%s/result"
 };
 
-var VERSION = '0.9.24';
+var VERSION = '0.9.25';
 
 //
 // 1 - login screen

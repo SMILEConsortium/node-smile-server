@@ -272,33 +272,36 @@ exports.handleStartMakeQuestionPut = function(req, res) {
             teacherMeta = querystring.parse(queryData);
         });
     }
-    console.log("TeacherMeta: " + teacherMeta);
-    if (teacherMeta === null || teacherMeta === "") {
-        // XXX TODO: Put our defaults somewhere
-            game.teacherName = "Teacher";
-            game.sessionName = "IQ Session " + new Date().toISOString();
-            game.groupName = "IQ Group";
-    } else {
-        // Validate our data or supply defaults
-        if (!teacherMeta.teacherName) {
-            game.teacherName = "Teacher";
-        } else {
-            game.teacherName = teacherMeta.teacherName;
-        }
 
-        if (!teacherMeta.sessionName) {
-            game.sessionName = "IQ Session " + new Date().toISOString();
+    if (game.teacherName === null || game.sessionName === null || game.groupName === null) {
+        
+        if (teacherMeta === null || teacherMeta === "") {
+            // XXX TODO: Put our defaults somewhere
+                game.teacherName = "Teacher";
+                game.sessionName = "IQ Session " + new Date().toISOString();
+                game.groupName = "IQ Group";
         } else {
-            game.sessionName = teacherMeta.sessionName;
-        }
+            console.log("TeacherMeta: " + teacherMeta);
+            // Validate our data or supply defaults
+            if (!teacherMeta.teacherName) {
+                game.teacherName = "Teacher";
+            } else {
+                game.teacherName = teacherMeta.teacherName;
+            }
 
-        if (!teacherMeta.groupName) {
-            game.groupName = "IQ Group";
-        } else {
-            game.groupName = teacherMeta.groupName;
-        }
-    }
+            if (!teacherMeta.sessionName) {
+                game.sessionName = "IQ Session " + new Date().toISOString();
+            } else {
+                game.sessionName = teacherMeta.sessionName;
+            }
 
+            if (!teacherMeta.groupName) {
+                game.groupName = "IQ Group";
+            } else {
+                game.groupName = teacherMeta.groupName;
+            }
+        }
+    }    
     return res.sendText(HTTP_STATUS_OK, OK);
 };
 
@@ -399,11 +402,13 @@ exports.handleSendShowResultsPut = function(req, res) {
     message.AVG_RATINGS = result.averageRatings;
     message.RPERCENT = result.questionsCorrectPercentage;
     if (!game.resultsSaved) {
+        console.log("About to store session");
         pdb.putSession(game.getAllSessionData(), function(err, result) {
             if (err) { // XXX TODO: Add in logger instead of console logging
                 console.err(err);
             } else {
                 console.log('Stored session successfully');
+                console.log(result);
                 game.resultsSaved = true;
             }
         });
@@ -549,13 +554,23 @@ exports.handlePushMessage = function(req, res) {
 exports.createSessionFromTeacherApp = function(req, res) {
 
     try {
+        // console.log('\n## JSON from "createSessionFromTeacherApp" ##');
+        // console.log('\t>>> '+req.body);
+        console.log('\t>>> '+req.body.teacherName);
+        console.log('\t>>> '+req.body.sessionName);
+        console.log('\t>>> '+req.body.groupName+'\n');
 
-	console.log('\n## JSON from "createSessionFromTeacherApp" ##');
-	console.log('\t>>> '+req.body);
-	console.log('\t>>> '+req.body.teacherName);
-	console.log('\t>>> '+req.body.sessionName);
-	console.log('\t>>> '+req.body.groupName+'\n');
+        if (req.body.teacherName) {
+            game.teacherName = req.body.teacherName;
+        }
 
+        if (req.body.sessionName) {
+            game.sessionName = req.body.sessionName;
+        }
+
+        if (req.body.groupName) {
+            game.groupName = req.body.groupName;
+        }
     } catch (e) {
         res.handleError("Can't parse Incoming JSON in createSessionFromTeacherApp method");
     }
