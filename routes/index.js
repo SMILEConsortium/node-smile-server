@@ -548,6 +548,24 @@ exports.handlePushMessage = function(req, res) {
     }
 };
 
+
+/**
+	Save a new iqset from teacher app
+**/
+exports.saveNewIQSet = function(req, res) {
+
+    try {
+	// console.log('\n## JSON from "saveNewIQSet" ##');
+	console.log('\n\t>> '+req.body.title);
+	console.log('\t>> %j\n', req.body.iqdata);
+
+    } catch (e) {
+        res.handleError('Can\'t parse Incoming JSON in "saveNewIQSet" method');
+    }
+
+    return res.sendText(HTTP_STATUS_OK, OK);
+};
+
 /**
 	Creating a session with teacher name, session title, and group name
 **/
@@ -555,10 +573,10 @@ exports.createSessionFromTeacherApp = function(req, res) {
 
     try {
         // console.log('\n## JSON from "createSessionFromTeacherApp" ##');
-        // console.log('\t>>> '+req.body);
-        console.log('\t>>> '+req.body.teacherName);
-        console.log('\t>>> '+req.body.sessionName);
-        console.log('\t>>> '+req.body.groupName+'\n');
+        console.log('\n\t>> %j', req.body);
+        console.log('\t>> '+req.body.teacherName);
+        console.log('\t>> '+req.body.sessionName);
+        console.log('\t>> '+req.body.groupName+'\n');
 
         if (req.body.teacherName) {
             game.teacherName = req.body.teacherName;

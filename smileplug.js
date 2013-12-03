@@ -75,6 +75,12 @@ js.put('/smile/question', routes.handlePushMessage);
 js.post('/smile/question', routes.handlePushMessage);
 
 /**
+    Save a new iqset from teacher app
+**/
+js.put('/smile/saveiqset', routes.saveNewIQSet);
+js.post('/smile/saveiqset', routes.saveNewIQSet);
+
+/**
     Create a session from smile_teacher_android app
 **/
 js.put('/smile/createsession', routes.createSessionFromTeacherApp);
