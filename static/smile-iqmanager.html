@@ -151,7 +151,7 @@
 								</thead>
 								<tbody data-bind="foreach: iqsets">
 									<tr class="iq-grid" data-bind="attr: {id: $index}">
-										<td data-bind="text: $index">1</td>
+										<td data-bind="text: $index()+1">1</td>
 										<td data-bind="text: key">1/1/2013</td>
 										<td data-bind="text: value[0]">History: Roman Empire</td>
 										<td data-bind="text: value[1]">Teacher Claire</td>
@@ -206,14 +206,14 @@
 								</thead>
 								<tbody data-bind="foreach: iqsessions">
 									<tr class="iq-grid" data-bind="attr: {id: $index}">
-										<td data-bind="text: $index">1</td>
+										<td data-bind="text: $index()+1">1</td>
 										<td data-bind="text: key">1/1/2013</td>
 										<td data-bind="text: value[0]">History: Roman Empire</td>
 										<td data-bind="text: value[1]">Teacher Claire</td>
 										<td data-bind="text: value[2]">Olive Elementary 5th Grade</td>
 										<td>
 											<a class="tiny button session-view-btn" data-bind="attr: { id: id}" href="#">View</a>
-											<a class="tiny alert button session-delete-btn" data-bind="attr: { id: id}" href="#"><img src="images/circlex_sm.png" /></a>
+											<a class="tiny alert button session-delete-btn" data-bind="attr: { id: id}" href="#" onclick="alert('Delete Sessions Feature is not available'); return false;"><img src="images/circlex_sm.png" /></a>
 										</td>
 									</tr>
 								</tbody>
@@ -237,16 +237,20 @@
 		<div class="row">
 			<div class="large-12 small-12 columns" data-bind="with: sessionSummary">
 				<h2 class="subheader">
-					Session: <span data-bind="text: sessionName">A Session</span>
+					Session Name: <span data-bind="text: sessionName">A Session</span>
 				</h2>
-				<h4><span data-bind="text: date">Session Date<span></h4>
+				<h4>Date: <span data-bind="text: date">Session Date<span></h4>
 				<div class="row">
 					<div class="large-12 small-12 columns">
 						<div class="panel callout radius">
-							<h5>IQSet Title: <span data-bind="text: sessionMetadata.iqtitle">Title</span></h5>
-							<p>IQSet ID: <span data-bind="text: sessionMetadata.iqid"></span></p><!-- Link this -->
+							<!-- "numberOfStudents":1,"numberOfQuestions":1,"numberOfStudentsPostingAnswers":1 -->
+							<h5>Overview</h5>
 							<p>Teacher Name: <span data-bind="text: sessionMetadata.teacherName">Mrs. Jones</span></p>
 							<p>Group Name: <span data-bind="text: sessionMetadata.groupName">5th Grade Section 1</span></p>
+							<p># of Students: <span data-bind="text: sessionStats.numberOfStudents">5th Grade Section 1</span></p>
+							<p># of Questions: <span data-bind="text: sessionStats.numberOfQuestions">5th Grade Section 1</span></p>
+							<p># of Posted Results: <span data-bind="text: sessionStats.numberOfStudentsPostingAnswers">5th Grade Section 1</span></p>
+							<p>IQSet ID: <span data-bind="text: sessionMetadata.iqid"></span></p><!-- Link this -->
 						</div>
 						<div class="panel smile-branded">
 							<br />
@@ -271,14 +275,14 @@
 								</thead>
 								<tbody data-bind="foreach: iqdata">
 									<tr class="iq-grid" data-bind="attr: {id: $index}">
-										<td data-bind="text: $index">1</td>
+										<td data-bind="text: $index()+1">1</td>
 										<td data-bind="text: Q">Where was it?</td>
 										<td data-bind="text: O1">Drawer</td>
 										<td data-bind="text: O2">Shelf</td>
 										<td data-bind="text: O3">TV</td>
 										<td data-bind="text: O4">Floor</td>
 										<td data-bind="text: A">3</td>
-										<td><a class="tiny button" href="#"><img src="images/photo-icon.png" /></a></td>
+										<td><a class="tiny button" href="#" onclick="alert('No Images Available'); return false;"><img src="images/photo-icon.png" /></a></td>
 									</tr>
 								</tbody>
 					        </table>
@@ -300,7 +304,7 @@
 								</thead>
 								<tbody data-bind="foreach: $data.answers">
 									<tr>
-										<td data-bind="text: $index">1</td>
+										<td data-bind="text: $index()+1">1</td>
 										<td data-bind="text: $data">3</td>
 									</tr>
 								</tbody>
@@ -355,14 +359,14 @@
 								</thead>
 								<tbody data-bind="foreach: iqdata">
 									<tr class="iq-grid" data-bind="attr: {id: $index}">
-										<td data-bind="text: $index">1</td>
+										<td data-bind="text: $index()+1">1</td>
 										<td data-bind="text: Q">1/1/2013</td>
 										<td data-bind="text: O1">History: Roman Empire</td>
 										<td data-bind="text: O2">Teacher Claire</td>
 										<td data-bind="text: O3">Olive Elementary 5th Grade</td>
 										<td data-bind="text: O4">Olive Elementary 5th Grade</td>
 										<td data-bind="text: A"></td>
-										<td><a class="tiny button" href="#"><img src="images/photo-icon.png" /></a></td>
+										<td><a class="tiny button" href="#" onclick="alert('No Images Available'); return false;"><img src="images/photo-icon.png" /></a></td>
 									</tr>
 								</tbody>
 					        </table>
