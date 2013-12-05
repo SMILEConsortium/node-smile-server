@@ -108,11 +108,27 @@ exports.handleDeleteIQSet = function(req, res) {
     });
 };
 
+
+/**
+	 Save a new iqset from teacher app
+**/
 exports.handlePostNewIQSet = function(req, res) {
-    // console.log(req);
+    
+    console.log("\n\n[BODY of json request]");
+    console.log("\t>> %j\n", req.body);
+    console.log("[HEADERS of json request]");
+    console.log("\t>> %j\n\n", req.headers);
+
     var headers = req.headers;
     var iqset;
+
+    console.log("\theaders['content-type'] >> %j", headers['content-type']);
+    console.log("\theaders['content-type'] >> " + headers['content-type'] + "\n\n");
+
     if (headers['content-type'] === 'applicaton/json; charset=UTF-8') {
+    //if (headers['content-type'] === 'applicaton/json') {
+	
+	console.log('/!\\ THE CONDITION IS TRUE');
         console.log('Handle post of iqset from json');
         //
         // Handle the upload from JSON
@@ -546,24 +562,6 @@ exports.handlePushMessage = function(req, res) {
             return res.sendText(HTTP_STATUS_OK, OK);
         }
     }
-};
-
-
-/**
-	Save a new iqset from teacher app
-**/
-exports.saveNewIQSet = function(req, res) {
-
-    try {
-	// console.log('\n## JSON from "saveNewIQSet" ##');
-	console.log('\n\t>> '+req.body.title);
-	console.log('\t>> %j\n', req.body.iqdata);
-
-    } catch (e) {
-        res.handleError('Can\'t parse Incoming JSON in "saveNewIQSet" method');
-    }
-
-    return res.sendText(HTTP_STATUS_OK, OK);
 };
 
 /**
