@@ -125,29 +125,15 @@ exports.handlePostNewIQSet = function(req, res) {
     console.log("\theaders['content-type'] >> %j", headers['content-type']);
     console.log("\theaders['content-type'] >> " + headers['content-type'] + "\n\n");
 
-    if (headers['content-type'] === 'applicaton/json; charset=UTF-8') {
-    //if (headers['content-type'] === 'applicaton/json') {
-	
-	console.log('/!\\ THE CONDITION IS TRUE');
+    if (headers['content-type'] === 'application/json; charset=UTF-8') {	
         console.log('Handle post of iqset from json');
         //
         // Handle the upload from JSON
         //
         var queryData;
-        var isValid;
+        var isValid = true;
         if ((req.method == 'POST') || (req.method == 'PUT')) {
-            req.on('data', function(data) {
-                queryData += data;
-                if(queryData.length > 1e6) {
-                    queryData = "";
-                    res.writeHead(413, {'Content-Type': 'text/plain'}).end();
-                    req.connection.destroy();
-                }
-            });
-
-            req.on('end', function() {
-                iqset = querystring.parse(queryData);
-            });
+            iqset = req.body;
         }
 
         if (!iqset.title) {
@@ -166,19 +152,21 @@ exports.handlePostNewIQSet = function(req, res) {
             isValid = false;
         }
 
-        if (isValid) {
+        if (isValid === true) {
+            console.log('IQSet is valid, commit');
             pdb.putIQSet(iqset, function(err, result) {
-                    if (!err) {
-                        iqset.success = true;
-                        return res.sendJSON(HTTP_STATUS_OK, iqset);
-                    } else {
-                        return res.sendJSON(HTTP_STATUS_OK, {
-                            'error': 'Unable to persist IQSet data',
-                            'success': false
-                        });
-                    }
+                if (!err) {
+                    iqset.success = true;
+                    return res.sendJSON(HTTP_STATUS_OK, iqset);
+                } else {
+                    return res.sendJSON(HTTP_STATUS_OK, {
+                        'error': 'Unable to persist IQSet data',
+                        'success': false
+                    });
+                }
             });
         } else {
+            console.log('IQSet is not valid, don\'t persist');
             return res.sendJSON(HTTP_STATUS_OK, {
             'error': 'Unable to persist IQSet data, missing IQSet iqdata',
             'success': false
