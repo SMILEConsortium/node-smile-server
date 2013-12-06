@@ -122,9 +122,6 @@ exports.handlePostNewIQSet = function(req, res) {
     var headers = req.headers;
     var iqset;
 
-    console.log("\theaders['content-type'] >> %j", headers['content-type']);
-    console.log("\theaders['content-type'] >> " + headers['content-type'] + "\n\n");
-
     if (headers['content-type'] === 'application/json; charset=UTF-8') {	
         console.log('Handle post of iqset from json');
         //
