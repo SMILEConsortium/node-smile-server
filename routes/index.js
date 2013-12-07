@@ -110,7 +110,7 @@ exports.handleDeleteIQSet = function(req, res) {
 
 
 /**
-	 Save a new iqset from teacher app
+    Save a new iqset from teacher app
 **/
 exports.handlePostNewIQSet = function(req, res) {
     
@@ -775,6 +775,34 @@ exports.handleQuestionJSONGet = function(req, res) {
     }
 
     res.sendJSON(HTTP_STATUS_OK, question);
+};
+exports.handleQuestionJSONDelete = function(req, res) {
+    var questionNumber = parseInt(req.id, 10);
+    var question = game.questions.getList()[questionNumber];
+
+    //
+    // Is the Question ID existing
+    //
+    if (!question) {
+        return res.handleError(HTTP_STATUS_OK, {'error': 'ID missing from request'
+        });
+    }
+
+    //
+    // Is it Make Questions State?
+    //
+    if (!game.getCurrentMessage().equals("START_MAKE")) {
+        return res.handleError(HTTP_STATUS_OK, {'error': 'Can only delete a question during START_MAKE phase'
+        });
+    }
+
+    //
+    // Handle deletion
+    //
+    var status = game.questions.deleteQuestion(questionNumber);
+
+
+    res.sendJSON(HTTP_STATUS_OK, {'status': status});
 };
 
 exports.handleQuestionImageGet = function(req, res) {

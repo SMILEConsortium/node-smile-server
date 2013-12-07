@@ -198,6 +198,11 @@ js.delete('/smile/iqset/:id', routes.handleDeleteIQSet, true);
 js.get('/smile/iqsets', routes.handleGetAllIQSets);
 /* js.get("/smile/iqmanager", js.staticHandler("smile-iqmanager.html")); */
 
+/**
+    get question where :id =  username 
+
+    not really good API design, this is misleading
+**/
 js.put('/smile/question/:id', routes.handlePushMessage, true);
 js.post('/smile/question/:id', routes.handlePushMessage, true);
 js.get('/smile/question/:id', routes.handleQuestionGet, true);
@@ -284,6 +289,7 @@ js.get('/smile/view/monitoring.html', routes.handleMonitoringHtmlGet, true); // 
 js.get('/smile/questionview/:id_result.html', routes.handleQuestionResultHtmlGet, true);
 js.get('/smile/questionview/:id.html', routes.handleQuestionHtmlGet, true);
 js.get('/smile/questionview/:id.json', routes.handleQuestionJSONGet, true);
+js.delete('/smile/questionview/:id.json', routes.handleQuestionJSONDelete, true);
 js.get('/smile/questionview/:id.jpg', routes.handleQuestionImageGet, true);
 
 // Compatibility with newer SMILE Student MULTILANG
