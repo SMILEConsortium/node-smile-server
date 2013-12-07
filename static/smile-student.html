@@ -508,8 +508,8 @@
                 element : $('#fine-uploader')[0],
                 callbacks : {
                     onComplete : function(id, name, response) {
-                    	$('#fine-uploader').fadeIn();
-                		$('div.qq-upload-button').hide();
+                    	// $('#fine-uploader').fadeIn();
+                		// $('div.qq-upload-button').hide();
                 		$('li.qq-upload-success').fadeOut(5000, "linear");
                         GlobalViewModel.pic(response.base64);
                         $('#iq-pic').empty().append('<p>Image Uploaded</p>');
