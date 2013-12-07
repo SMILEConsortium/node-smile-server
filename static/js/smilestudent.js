@@ -829,6 +829,20 @@ function statechange(from, to, data, cb) {
                 }
             }
         }
+    } else if (from == 5) { // FROM 5
+        if (SMILESTATE != 5) {
+            return;
+        }
+        if (to == 1) {
+            restoreLoginState();
+            return;
+        } // Teacher reset game, we should logout
+        if (to == 2) {
+            return;
+        } // Not sure why this would happen
+        if (to == 5) { // Enter Show Results Phase
+            // Ignore
+        }
     }
 
 }
