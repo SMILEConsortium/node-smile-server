@@ -943,6 +943,8 @@ function restoreLoginState() {
     //
     // XXX This needs to clean up the sidebar area too
     //
+    GlobalViewModel.doInquiryReset();
+
     var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["1"].id + '"]');
     $('#logoutarea').hide();
     if ($next) {
