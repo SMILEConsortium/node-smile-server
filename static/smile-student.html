@@ -124,7 +124,9 @@
 												<form action="return false;">
 													<label>Question</label>
 													<textarea data-bind="value: question" rows="5" cols="20"></textarea>
-													<div id="iq-pic"></div>
+													<P>
+														<img data-bind="attr: { src: pic }" />
+													</P>
 													<div class="row">
 														<div class="large-8 small-8 columns">
 															<label>Answer 1</label>
@@ -511,12 +513,12 @@
                     	// $('#fine-uploader').fadeIn();
                 		// $('div.qq-upload-button').hide();
                 		$('li.qq-upload-success').fadeOut(5000, "linear");
-                        GlobalViewModel.pic(response.base64);
+                        GlobalViewModel.pic('data:image/png;base64,' + response.base64);
                         $('#iq-pic').empty().append('<p>Image Uploaded</p>');
                     }
                 },
                 validation : {
-                    allowedExtensions : [ 'jpeg', 'jpg', 'gif', 'png' ],
+                    allowedExtensions : [ 'jpeg', 'jpg'],
                     sizeLimit: 1032246,
                 },
                 request : {
