@@ -125,7 +125,7 @@
 													<label>Question</label>
 													<textarea data-bind="value: question" rows="5" cols="20"></textarea>
 													<P>
-														<img data-bind="attr: { src: pic }" />
+														<img data-bind="attr: { src: picdatauri}" />
 													</P>
 													<div class="row">
 														<div class="large-8 small-8 columns">
@@ -513,7 +513,8 @@
                     	// $('#fine-uploader').fadeIn();
                 		// $('div.qq-upload-button').hide();
                 		$('li.qq-upload-success').fadeOut(5000, "linear");
-                        GlobalViewModel.pic('data:image/png;base64,' + response.base64);
+                        GlobalViewModel.pic(response.base64);
+                        GlobalViewModel.picdatauri('data:image/png;base64,' + response.base64);
                         $('#iq-pic').empty().append('<p>Image Uploaded</p>');
                     }
                 },

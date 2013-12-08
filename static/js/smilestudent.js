@@ -153,6 +153,7 @@ var GlobalViewModel = {
     qidx: ko.observable(0),
     picurl: ko.observable(""),
     pic: ko.observable(""),
+    picdatauri: ko.observable("data:image/png;base64,"),
     rating: ko.observable(""),
     answersarray: ko.observableArray([]),
     ratingsarray: ko.observableArray([]),
@@ -171,6 +172,14 @@ GlobalViewModel.curq = ko.computed(function() {
     return self.qidx + 1;
 }, self);
 
+/* XXX This doesn't notify
+GlobalViewModel.picdatauri = ko.computed(function() {
+    var self = this;
+    // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
+    console.log(self.pic);
+    return 'data:image/png;base64,' + self.pic;
+}, self).extend({ notify: 'always' });
+*/
 
 GlobalViewModel.doLogin = function() {
     var self = this;
@@ -219,6 +228,7 @@ GlobalViewModel.doInquiryReset = function() {
     self.question("");
     self.picurl("");
     self.pic("");
+    self.picdatauri("");
 }
 
 GlobalViewModel.doSubmitQ = function() {
