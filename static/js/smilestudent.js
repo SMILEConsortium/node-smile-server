@@ -405,6 +405,17 @@ $(document).ready(function() {
             window.location.href = $(this).attr('href');
         }
     });
+
+    //
+    // Fix for #50 (github), though we don't know why this is necessary
+    // 
+    $("input[type='radio'].css-checkbox").change(function () {
+        var selection=$(this).val();
+        $(this).prop('checked', true);
+        GlobalViewModel.answer($(this).val());
+    });
+
+
 });
 
 //
@@ -859,7 +870,7 @@ function statechange(from, to, data, cb) {
 
 function clearAnswerState() {
     GlobalViewModel.question("");
-    GlobalViewModel.answer("a1");
+    GlobalViewModel.answer("");
     GlobalViewModel.a1("");
     GlobalViewModel.a2("");
     GlobalViewModel.a3("");

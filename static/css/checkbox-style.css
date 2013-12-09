@@ -1,3 +1,9 @@
+/*
+	Attribution: http://csscheckbox.com/radio-buttons.php
+
+	Sources; http://csscheckbox.com/download-upload.php?id=1281
+	 
+*/
 input[type=radio].css-checkbox {
 				display:none;
 			}
@@ -9,7 +15,7 @@ input[type=radio].css-checkbox {
 				line-height:30px;
 				background-repeat:no-repeat;
 				background-position: 0 0;
-				font-size:22px;
+				font-size:16px;
 				vertical-align:middle;
 				cursor:pointer;
 
