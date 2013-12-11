@@ -735,6 +735,7 @@ function statechange(from, to, data, cb) {
         }
         if (to == 4) { // Enter Answer Questions Phase
             SMILESTATE = 4;
+            $('div#inquiry-form-area').unblock();
             $('div#answer-form-area').unblock();
             var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["4"].id + '"]');
             if ($next) {
