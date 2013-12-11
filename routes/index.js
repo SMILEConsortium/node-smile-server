@@ -791,7 +791,7 @@ exports.handleQuestionJSONDelete = function(req, res) {
     //
     // Is it Make Questions State?
     //
-    if (!game.getCurrentMessage().equals("START_MAKE")) {
+    if (!game.getCurrentMessage() === "START_MAKE") {
         return res.handleError(HTTP_STATUS_OK, {'error': 'Can only delete a question during START_MAKE phase'
         });
     }
@@ -800,7 +800,7 @@ exports.handleQuestionJSONDelete = function(req, res) {
     // Handle deletion
     //
     var status = game.questions.deleteQuestion(questionNumber);
-
+    console.log("question delete status: " + status);
 
     res.sendJSON(HTTP_STATUS_OK, {'status': status});
 };
