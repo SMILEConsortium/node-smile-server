@@ -150,6 +150,31 @@ exports.handlePostNewIQSet = function(req, res) {
         }
 
         if (isValid === true) {
+            //
+            // Quickly pre-process the iqsets to inject the PIC and reorder the PICURL if it exists
+            //
+            for (var i = 0; i < iqset.iqdata.length; i++) {
+                // Is it a PICURL?
+                console.log("Question TYPE = " + iqset.iqdata[i].TYPE);
+                if (iqset.iqdata[i].TYPE === "QUESTION_PIC") {
+                    //
+                    // PICURL
+                    // 1. Get the original index of the image
+                    // 2. Change the PICURL to match the new index 
+                    //
+                    
+                    if (iqset.iqdata[i].PICURL) {
+                        // /smile/questionview/1.jpg
+                        var tmpidx = parseInt(iqset.iqdata[i].PICURL.split('/')[3].split('.')[0]);
+                        console.log("Handle PIC data at tmpidx = " + tmpidx);
+                        // console.log(game.questions.getList());
+                        iqset.iqdata[i].PIC = game.questions.getQuestionPicture(tmpidx);
+                        iqset.iqdata[i].PICURL = '/smile/questionview/' + tmpidx + '.jpg';
+                        console.log("New PICURL = " + iqset.iqdata[i].PICURL);
+                        console.log(iqset.iqdata[i].PIC);
+                    }
+                }
+            }
             console.log('IQSet is valid, commit');
             pdb.putIQSet(iqset, function(err, result) {
                 if (!err) {
@@ -162,6 +187,9 @@ exports.handlePostNewIQSet = function(req, res) {
                     });
                 }
             });
+
+            
+            
         } else {
             console.log('IQSet is not valid, don\'t persist');
             return res.sendJSON(HTTP_STATUS_OK, {
@@ -170,7 +198,7 @@ exports.handlePostNewIQSet = function(req, res) {
             });
         }
     } else {
-        // XXX We wrongly assume this was a CSV upload
+        // XXX We wrongly assume this was a CSV upload, need to verify the submission is multipart/mime
         var file = req.file;
         var csvData = fs.readFileSync(file.path, 'utf8');
         csv().from.string(csvData, {comment: '#'} ).to.array( function(data){
@@ -712,60 +740,8 @@ req.on('error', function(e) {
 console.log('JSON request ==> '+solving_questions);
 
 res.write(solving_questions);
-
-	/* Should be removed soon
-	
-    res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
-    res.write("<p>(Question created by " + studentName + ")</p>\n");
-    res.write("<P>Question:\n");
-    res.write(question.Q);
-    res.write("\n</P>\n");
-
-    if (question.TYPE == "QUESTION_PIC") {
-        res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
-    }
-
-    res.write("<P>\n");
-    res.write("(1) " + question.O1 + "<br>\n");
-    res.write("(2) " + question.O2 + "<br>\n");
-    res.write("(3) " + question.O3 + "<br>\n");
-    res.write("(4) " + question.O4 + "<br>\n");
-    res.write("</P>\n</body></html>\n");
-	*/
     res.end();
 };
-
-/* Already existing just above this comment. Should be removed after a while i
-
-exports.handleQuestionHtmlGet = function(req, res) {
-    var questionNumber = parseInt(req.id, 10);
-    var question = game.questions.getList()[questionNumber];
-    if (!question) {
-        return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
-    }
-    var studentName = question.NAME; // XXX
-    res.writeHead(200, {
-        'Content-Type' : 'text/html; charset=utf-8',
-    });
-    res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
-    res.write("<p>(Question created by " + studentName + ")</p>\n");
-    res.write("<P>Question:\n");
-    res.write(question.Q);
-    res.write("\n</P>\n");
-
-    if (question.TYPE == "QUESTION_PIC") {
-        res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
-    }
-
-    res.write("<P>\n");
-    res.write("(1) " + question.O1 + "<br>\n");
-    res.write("(2) " + question.O2 + "<br>\n");
-    res.write("(3) " + question.O3 + "<br>\n");
-    res.write("(4) " + question.O4 + "<br>\n");
-    res.write("</P>\n</body></html>\n");
-    res.end();
-};
-*/
 
 exports.handleQuestionJSONGet = function(req, res) {
     var questionNumber = parseInt(req.id, 10);
@@ -791,7 +767,7 @@ exports.handleQuestionJSONDelete = function(req, res) {
     //
     // Is it Make Questions State?
     //
-    if (!game.getCurrentMessage() === "START_MAKE") {
+    if (game.getCurrentMessage() !== "START_MAKE") {
         return res.handleError(HTTP_STATUS_OK, {'error': 'Can only delete a question during START_MAKE phase'
         });
     }
@@ -888,32 +864,6 @@ req.on('error', function(e) {
 
 // XXX What is this for??
 console.log('JSON request ==> '+detail_resultString);
-	
-	/*  #### TODO => This code will be removed soon #####
-	
-    res.write("<html>\n<head>Question No." + (questionNumber + 1) + " </head>\n<body>\n");
-    res.write("<p>(Question created by " + studentName + ")</p>\n");
-    res.write("<P>Question:\n");
-    res.write(question.Q);
-    res.write("\n</P>\n");
-
-    if (question.TYPE == "QUESTION_PIC") {
-        res.write("<img class=\"main\" src=\"" + questionNumber + ".jpg\" width=\"200\" height=\"180\"/>\n");
-    }
-
-    res.write("<P>\n");
-    res.write("(1) " + question.O1 + (parseInt(question.A, 10) === 1 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("(2) " + question.O2 + (parseInt(question.A, 10) === 2 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("(3) " + question.O3 + (parseInt(question.A, 10) === 3 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("(4) " + question.O4 + (parseInt(question.A, 10) === 4 ? "<font color = red>&nbsp; &#10004;</font>" : "") + "<br>\n");
-    res.write("</P>\n");
-    res.write("Correct Answer: " + question.A + "<br>\n");
-    var numCorrectPeople = game.questionCorrectCountMap[questionNumber];
-    res.write("<P> Num correct people: " + numCorrectPeople + " / " + game.students.getNumberOfStudents() + "<br>\n");
-    res.write("Average rating: " + game.getQuestionAverageRating(questionNumber) + "<br>\n");
-
-    res.write("</body></html>\n");
-	*/
 	res.write(detail_resultString);
     res.end();
 };
