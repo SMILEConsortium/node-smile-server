@@ -957,6 +957,9 @@ function restoreLoginState() {
     //
     GlobalViewModel.doInquiryReset();
 
+    $('div#inquiry-form-area').unblock();
+    $('div#answer-form-area').unblock();
+    
     var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["1"].id + '"]');
     $('#logoutarea').hide();
     if ($next) {
