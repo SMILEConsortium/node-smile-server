@@ -257,6 +257,7 @@ function loadIQSet(evtdata, cb) {
             fvm.groupname(data.groupname);
             fvm.teachername(data.teachername);
             fvm.iqid(data._id);
+            fvm.iqdata.removeAll();
             ko.utils.arrayPushAll(fvm.iqdata(), data.iqdata);
             fvm.iqdata.valueHasMutated();
 
