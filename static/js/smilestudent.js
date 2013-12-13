@@ -49,7 +49,7 @@ var SMILEROUTES = {
     "getresults": "/smile/student/%s/result"
 };
 
-var VERSION = '0.9.25';
+var VERSION = '0.9.26';
 
 //
 // 1 - login screen
@@ -157,7 +157,7 @@ var GlobalViewModel = {
     rating: ko.observable(""),
     answersarray: ko.observableArray([]),
     ratingsarray: ko.observableArray([]),
-    version: VERSION
+    version: ko.observable(VERSION)
 };
 
 GlobalViewModel.fullName = ko.computed(function() {
@@ -374,6 +374,8 @@ $(document).ready(function() {
     //
     // Init UI
     //
+    $(document).attr("title", "SMILE Student Web " + GlobalViewModel.version());
+
     restoreLoginState();
 
     //
