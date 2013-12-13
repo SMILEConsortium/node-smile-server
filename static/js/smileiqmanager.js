@@ -396,6 +396,10 @@ $(document).ready(function() {
         $('#fine-uploader input:file').trigger('click');
     });
 
+    //
+    // Init UI
+    //
+    $('#app-version').append(VERSION);
     $('#iqsets-section').on('click', '.iqset-delete-btn', function() {
         // alert($(this).attr('id'));
         $.blockUI({ message: $('#dialog1'),
