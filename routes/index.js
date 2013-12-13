@@ -760,14 +760,16 @@ exports.handleQuestionJSONDelete = function(req, res) {
     // Is the Question ID existing
     //
     if (!question) {
-        return res.handleError(HTTP_STATUS_OK, {'error': 'ID missing from request'
+        console.log("no question found matching ID = " + req.id);
+        return res.handleError(HTTP_STATUS_OK, {'error': 'Cannot find question matching ID, cannot delete'
         });
     }
 
     //
     // Is it Make Questions State?
     //
-    if (game.getCurrentMessage() !== "START_MAKE") {
+    if (game.getCurrentMessage().TYPE !== "START_MAKE") {
+        console.log("Can only delete in START_MAKE, current phase: " + game.getCurrentMessage().TYPE);
         return res.handleError(HTTP_STATUS_OK, {'error': 'Can only delete a question during START_MAKE phase'
         });
     }
