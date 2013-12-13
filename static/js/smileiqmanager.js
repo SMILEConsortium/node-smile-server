@@ -407,6 +407,11 @@ $(document).ready(function() {
     $('#iqsets-section').on('click', '.iqset-view-btn', function() {
         loadIQSet($(this), pushSection('#iqset-detail-section'));
     });
+
+    $('#iqsetupload-summary').on('click', '.iqset-view-btn', function() {
+        loadIQSet($(this), pushSection('#iqset-detail-section'));
+        $('#iqsetupload-summary').foundation('reveal', 'close');
+    });
  
     $('#sessions-section').on('click', '.session-view-btn', function() {
         loadSession($(this), pushSection('#session-detail-section'));
