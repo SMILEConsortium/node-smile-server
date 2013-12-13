@@ -138,6 +138,25 @@ a.smile-logo {
     display:none;
 }
 
+.thumbsup-rating input[type=radio]:checked + label>img {
+  border: 1px solid #fff;
+  box-shadow: 0 0 3px 3px #090;
+}
+
+
+..thumbsup-rating input[type=radio] + label>img {
+  border: 1px dashed #444;
+  width: 150px;
+  height: 150px;
+  transition: 500ms all;
+}
+
+.thumbsup-rating input[type=radio]:checked + label>img {
+  transform: 
+    rotateZ(-10deg) 
+    rotateX(10deg);
+}
+
 .thumbsup-rating label {
     display:inline-block;
     background-color:#ddd;
@@ -148,26 +167,4 @@ a.smile-logo {
 
 .thumbsup-rating input[type="radio"]:checked + label {
     background-color:#bbb;
-}
-
-
-/* Not used yet */
-label#thumbs-down {
-	background-image:url(../images/thumbsdown_48x48.png);
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-label#thumbs-up {
-	background-image:url(../images/thumbsup_48x48.png);
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
