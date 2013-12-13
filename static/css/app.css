@@ -134,13 +134,40 @@ a.smile-logo {
     width: 47px;
 }
 
-
-/*.smile-links .footer-link-block span {
-    color: #727272;
-    display: block;
-    font-size: 0.9rem !important;
-    line-height: 20px;
-    margin-bottom: 24px;
-    padding-left: 0;
+.thumbsup-rating input[type="radio"] {
+    display:none;
 }
-*/
+
+.thumbsup-rating label {
+    display:inline-block;
+    background-color:#ddd;
+    padding:4px 11px;
+    font-family:Arial;
+    font-size:16px;
+}
+
+.thumbsup-rating input[type="radio"]:checked + label {
+    background-color:#bbb;
+}
+
+
+/* Not used yet */
+label#thumbs-down {
+	background-image:url(../images/thumbsdown_48x48.png);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+label#thumbs-up {
+	background-image:url(../images/thumbsup_48x48.png);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

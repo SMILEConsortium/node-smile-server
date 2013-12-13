@@ -285,6 +285,7 @@
 															<em>Rating:</em>
 														</P>
 
+														<!--
 														<div id="star-rating">
 															<input data-bind="checked: rating" type="radio"
 																name="rating" class="rating" value="1" />
@@ -296,6 +297,13 @@
 																name="rating" class="rating" value="4" />
 															<input data-bind="checked: rating" type="radio"
 																name="rating" class="rating" value="5" />
+														</div>
+														-->
+														<div class="thumbsup-rating">
+															<input data-bind="checked: rating" type="radio"
+																name="rating" class="rating" id="thumbs-down" value="1" /><label for="thumbs-down">Thumbs-Down :(</label>
+															<input data-bind="checked: rating" type="radio"
+																name="rating" class="rating" id="thumbs-up" value="5" /><label for="thumbs-up">Thumbs-Up :)</label>
 														</div>
 														<br />
 														<ul class="button-group even two-up">

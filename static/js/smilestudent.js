@@ -229,6 +229,7 @@ GlobalViewModel.doInquiryReset = function() {
     self.picurl("");
     self.pic("");
     self.picdatauri("");
+    self.rating("5");
 }
 
 GlobalViewModel.doSubmitQ = function() {
@@ -879,12 +880,11 @@ function clearAnswerState() {
     GlobalViewModel.a3("");
     GlobalViewModel.a4("");
     GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
-    GlobalViewModel.rating("");
     GlobalViewModel.rating("5");
-    $('#star-rating').rating(function(vote, event) {
+    /* $('#star-rating').rating(function(vote, event) {
         console.log(vote, event);
         GlobalViewModel.rating(vote);
-    });
+    }); */
 }
 
 /* 
