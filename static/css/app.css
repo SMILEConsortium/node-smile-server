@@ -58,3 +58,89 @@ tr:nth-child(odd) {background: #FFF}
 	opacity:0.4;
 	filter:alpha(opacity=40);
 }
+
+ul.smile-links {
+    display: inline-block;
+    margin: 0;
+    white-space:nowrap;
+}
+
+ul.zurb-links li {
+    display: block;
+    float: left;
+    font-size: 0.77778rem;
+    font-weight: 700;
+    margin-left: 6px;
+    text-transform: uppercase;
+}
+
+
+ul.smile-links li a {
+    color: #666666;
+    padding: 3px 6px;
+}
+
+ul.smile-links li a:hover {
+    color: #777777;
+}
+p.copyright {
+    color: #666666;
+    font-size: 0.66667rem;
+    margin: 6px 0 0;
+}
+
+/* attribution: Borrow styles from Foundation 4 Docs */
+.smile-links li {
+	display: inline-block;
+    font-family: "Open Sans","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+    line-height: 1;
+    margin-left: 0;
+}
+
+.smile-links {
+	height: 10px;
+    margin-left: 0;
+    width: 60px;
+}
+
+.smile-links img {
+	margin-top: -4px;
+    width: 60px;
+}
+
+.smile-links li a {
+	color: #727272 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 5px !important;
+    text-transform: uppercase;
+}
+
+.smile-links ul.pillars {
+    list-style: none outside none;
+}
+
+a.smile-logo {
+    padding: 25px 0 0;
+}
+
+a.smile-logo {
+    background: url("../images/smile_grey_48x23.png") no-repeat scroll 0 3px rgba(0, 0, 0, 0);
+    color: #858585;
+    display: inline-block;
+    font-size: 0.88889rem;
+    font-weight: normal;
+    padding: 25px 0 0;
+    width: 47px;
+}
+
+
+/*.smile-links .footer-link-block span {
+    color: #727272;
+    display: block;
+    font-size: 0.9rem !important;
+    line-height: 20px;
+    margin-bottom: 24px;
+    padding-left: 0;
+}
+*/
