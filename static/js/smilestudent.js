@@ -601,6 +601,7 @@ function doGetInquiry(qnum, cb) {
             GlobalViewModel.a2(data.O2);
             GlobalViewModel.a3(data.O3);
             GlobalViewModel.a4(data.O4);
+            GlobalViewModel.qidx(qnum);
             GlobalViewModel.othermsg((GlobalViewModel.qidx() + 1) + "/" + GlobalViewModel.numq());
             if (GlobalViewModel.answersarray()[GlobalViewModel.qidx()]) {
                 GlobalViewModel.answer("a" + GlobalViewModel.answersarray()[GlobalViewModel.qidx()]);
