@@ -49,7 +49,7 @@ var SMILEROUTES = {
     "getresults": "/smile/student/%s/result"
 };
 
-var VERSION = '0.9.25';
+var VERSION = '1.0.0';
 
 //
 // 1 - login screen
@@ -157,7 +157,7 @@ var GlobalViewModel = {
     rating: ko.observable(""),
     answersarray: ko.observableArray([]),
     ratingsarray: ko.observableArray([]),
-    version: VERSION
+    version: ko.observable(VERSION)
 };
 
 GlobalViewModel.fullName = ko.computed(function() {
@@ -229,6 +229,7 @@ GlobalViewModel.doInquiryReset = function() {
     self.picurl("");
     self.pic("");
     self.picdatauri("");
+    self.rating("5");
 }
 
 GlobalViewModel.doSubmitQ = function() {
@@ -374,6 +375,8 @@ $(document).ready(function() {
     //
     // Init UI
     //
+    $(document).attr("title", "SMILE Student Web " + GlobalViewModel.version());
+
     restoreLoginState();
 
     //
@@ -598,6 +601,7 @@ function doGetInquiry(qnum, cb) {
             GlobalViewModel.a2(data.O2);
             GlobalViewModel.a3(data.O3);
             GlobalViewModel.a4(data.O4);
+            GlobalViewModel.qidx(qnum);
             GlobalViewModel.othermsg((GlobalViewModel.qidx() + 1) + "/" + GlobalViewModel.numq());
             if (GlobalViewModel.answersarray()[GlobalViewModel.qidx()]) {
                 GlobalViewModel.answer("a" + GlobalViewModel.answersarray()[GlobalViewModel.qidx()]);
@@ -877,12 +881,11 @@ function clearAnswerState() {
     GlobalViewModel.a3("");
     GlobalViewModel.a4("");
     GlobalViewModel.picurl(SMILEROUTES["defaultpicurl"]);
-    GlobalViewModel.rating("");
     GlobalViewModel.rating("5");
-    $('#star-rating').rating(function(vote, event) {
+    /* $('#star-rating').rating(function(vote, event) {
         console.log(vote, event);
         GlobalViewModel.rating(vote);
-    });
+    }); */
 }
 
 /* 
@@ -912,7 +915,7 @@ function displayResults(data) {
         // Add a Score
         //
         try {
-            percentage = (data.SCORE_AS_PERCENTAGE * 100).toPrecision(2);
+            percentage = (data.SCORE_AS_PERCENTAGE * 100).toFixed(2);
         } catch (e) {
             percentage = 'N/A';
         }
@@ -957,6 +960,9 @@ function restoreLoginState() {
     //
     GlobalViewModel.doInquiryReset();
 
+    $('div#inquiry-form-area').unblock();
+    $('div#answer-form-area').unblock();
+    
     var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["1"].id + '"]');
     $('#logoutarea').hide();
     if ($next) {

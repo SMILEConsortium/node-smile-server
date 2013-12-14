@@ -28,7 +28,7 @@
  #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-var VERSION = '0.0.1';
+var VERSION = '1.0.0prealpha1';
 
 // XXX Should generalize the app view model to wrap the required child models and use :with binding
 function iqsetSummaryModel() {
@@ -257,6 +257,7 @@ function loadIQSet(evtdata, cb) {
             fvm.groupname(data.groupname);
             fvm.teachername(data.teachername);
             fvm.iqid(data._id);
+            fvm.iqdata.removeAll();
             ko.utils.arrayPushAll(fvm.iqdata(), data.iqdata);
             fvm.iqdata.valueHasMutated();
 
@@ -277,6 +278,7 @@ function loadSession(evtdata, cb) {
             // console.log(data);
             // ko.mapping.fromJS(data, globalViewModel.sessionSummary);
             globalViewModel.sessionSummary.sessionName(data.sessionName);
+            globalViewModel.sessionSummary.iqdata.removeAll();
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.iqdata, data.iqset);
             globalViewModel.sessionSummary.title(data.title);
             globalViewModel.sessionSummary.date(data.date);
@@ -287,6 +289,9 @@ function loadSession(evtdata, cb) {
             globalViewModel.sessionSummary.results.winnerScore(data.results.winnerScore);
             globalViewModel.sessionSummary.results.winnerRating(data.results.winnerRating);
             globalViewModel.sessionSummary.results.numberOfQuestions(data.results.numberOfQuestions);
+            globalViewModel.sessionSummary.results.rightAnswers.removeAll();
+            globalViewModel.sessionSummary.results.rightAnswers.removeAll();
+            globalViewModel.sessionSummary.results.questionsCorrectPercentage.removeAll();
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.rightAnswers, data.results.rightAnswers);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.averageRatings, data.results.averageRatings);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.questionsCorrectPercentage, data.results.questionsCorrectPercentage);
@@ -302,6 +307,7 @@ function loadSession(evtdata, cb) {
             
             if (data.students) {
                 console.log("students found");
+                globalViewModel.sessionSummary.students.removeAll();
                 for (var student in data.students) {
                     console.log("push student: " + student);
                     globalViewModel.sessionSummary.students.push(data.students[student]);
@@ -395,6 +401,10 @@ $(document).ready(function() {
         $('#fine-uploader input:file').trigger('click');
     });
 
+    //
+    // Init UI
+    //
+    $('#app-version').append(VERSION);
     $('#iqsets-section').on('click', '.iqset-delete-btn', function() {
         // alert($(this).attr('id'));
         $.blockUI({ message: $('#dialog1'),
@@ -405,6 +415,11 @@ $(document).ready(function() {
 
     $('#iqsets-section').on('click', '.iqset-view-btn', function() {
         loadIQSet($(this), pushSection('#iqset-detail-section'));
+    });
+
+    $('#iqsetupload-summary').on('click', '.iqset-view-btn', function() {
+        loadIQSet($(this), pushSection('#iqset-detail-section'));
+        $('#iqsetupload-summary').foundation('reveal', 'close');
     });
  
     $('#sessions-section').on('click', '.session-view-btn', function() {
