@@ -289,6 +289,9 @@ function loadSession(evtdata, cb) {
             globalViewModel.sessionSummary.results.winnerScore(data.results.winnerScore);
             globalViewModel.sessionSummary.results.winnerRating(data.results.winnerRating);
             globalViewModel.sessionSummary.results.numberOfQuestions(data.results.numberOfQuestions);
+            globalViewModel.sessionSummary.results.rightAnswers.removeAll();
+            globalViewModel.sessionSummary.results.rightAnswers.removeAll();
+            globalViewModel.sessionSummary.results.questionsCorrectPercentage.removeAll();
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.rightAnswers, data.results.rightAnswers);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.averageRatings, data.results.averageRatings);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.questionsCorrectPercentage, data.results.questionsCorrectPercentage);
@@ -304,6 +307,7 @@ function loadSession(evtdata, cb) {
             
             if (data.students) {
                 console.log("students found");
+                globalViewModel.sessionSummary.students.removeAll();
                 for (var student in data.students) {
                     console.log("push student: " + student);
                     globalViewModel.sessionSummary.students.push(data.students[student]);
