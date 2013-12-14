@@ -914,7 +914,7 @@ function displayResults(data) {
         // Add a Score
         //
         try {
-            percentage = (data.SCORE_AS_PERCENTAGE * 100).toPrecision(2);
+            percentage = (data.SCORE_AS_PERCENTAGE * 100).toFixed(2);
         } catch (e) {
             percentage = 'N/A';
         }
