@@ -278,6 +278,7 @@ function loadSession(evtdata, cb) {
             // console.log(data);
             // ko.mapping.fromJS(data, globalViewModel.sessionSummary);
             globalViewModel.sessionSummary.sessionName(data.sessionName);
+            globalViewModel.sessionSummary.iqdata.removeAll();
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.iqdata, data.iqset);
             globalViewModel.sessionSummary.title(data.title);
             globalViewModel.sessionSummary.date(data.date);
