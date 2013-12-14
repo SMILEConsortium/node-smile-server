@@ -747,7 +747,7 @@ exports.handleQuestionJSONGet = function(req, res) {
     var questionNumber = parseInt(req.id, 10);
     var question = game.questions.getList()[questionNumber];
     if (!question) {
-        return res.handleError(js.JumboError.notFound('Question not found: ' + questionNumber));
+        return res.sendJSON(HTTP_STATUS_OK, {'error': 'Question not found: ' + questionNumber});
     }
 
     res.sendJSON(HTTP_STATUS_OK, question);
@@ -761,7 +761,7 @@ exports.handleQuestionJSONDelete = function(req, res) {
     //
     if (!question) {
         console.log("no question found matching ID = " + req.id);
-        return res.handleError(HTTP_STATUS_OK, {'error': 'Cannot find question matching ID, cannot delete'
+        return res.sendJSON(HTTP_STATUS_OK, {'error': 'Cannot find question matching ID, cannot delete'
         });
     }
 
@@ -770,7 +770,7 @@ exports.handleQuestionJSONDelete = function(req, res) {
     //
     if (game.getCurrentMessage().TYPE !== "START_MAKE") {
         console.log("Can only delete in START_MAKE, current phase: " + game.getCurrentMessage().TYPE);
-        return res.handleError(HTTP_STATUS_OK, {'error': 'Can only delete a question during START_MAKE phase'
+        return res.sendJSON(HTTP_STATUS_OK, {'error': 'Can only delete a question during START_MAKE phase'
         });
     }
 
