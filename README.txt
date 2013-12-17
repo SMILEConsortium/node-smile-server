@@ -2,7 +2,7 @@ Application
 ===========
 
  * Pre-requisites:
-  - NodeJS >= 0.8.16
+  - NodeJS >= 0.8.16 (haven't tested on 0.10.x yet)
   - NPM >= 1.0
 
  * Run application
@@ -11,9 +11,9 @@ Application
 Bundled Client Applications
 ===========================
 
-* SMILE Student for Android 2.1.9
-* SMILE Teacher for Android 0.2.9
-* SMILE Teacher for Java 0.5
+* SMILE Student Web 1.0.0
+* SMILE IQManager 1.0.0
+* SMILE Teacher for Android 0.9.6
 * Plugmin 0.5.1 for Android
 
 Tests
