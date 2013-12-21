@@ -778,8 +778,20 @@ exports.handleQuestionJSONDelete = function(req, res) {
     // Handle deletion
     //
     var status = game.questions.deleteQuestion(questionNumber);
-    console.log("question delete status: " + status);
 
+    console.log(status);
+
+    // Verify we get back an mSessionID of the deleted question
+    if (status !== 0) {
+        var msgs = game.messages.past;
+
+        for (var i = 0; i < msgs.length; i++) {
+            if (msgs[i].mSessionID === status.mSessionID) {
+                console.log("Deleting message with mSessionID = " + status.mSessionID);
+                game.messages.past.splice(i, 1); // Delete the question from the ghost of messages past
+            }
+        }
+    }
     res.sendJSON(HTTP_STATUS_OK, {'status': status});
 };
 

@@ -43,7 +43,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
     'PORT' : process.env.PORT || 80,
     'HOST' : '0.0.0.0',
-    'VERSION_TAG' : '1.0.0',
+    'VERSION_TAG' : '1.0.1',
     'VERSION_DESCRIPTION' : 'SMILE Plug Server',
 };
 
@@ -81,7 +81,10 @@ js.put('/smile/createsession', routes.createSessionFromTeacherApp);
 js.post('/smile/createsession', routes.createSessionFromTeacherApp);
 
 /**
-    Get the questions from existing from existin session
+    Get ALL the questions from existing from existin session, without providing any extra session information
+    as provided by /smile/all
+    
+    XXX Yes, it is misnamed, in that it overloads use of /smile/question horribly.
     @method /smile/question
 **/
 js.get('/smile/question', routes.handleQuestionGetAll);
