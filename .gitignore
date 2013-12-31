@@ -1,3 +1,5 @@
 node_modules
 .monitor
 *.js~
+
+smiledb-test/
