@@ -171,7 +171,7 @@ exports.handlePostNewIQSet = function(req, res) {
                         iqset.iqdata[i].PIC = game.questions.getQuestionPicture(tmpidx);
                         iqset.iqdata[i].PICURL = '/smile/questionview/' + tmpidx + '.jpg';
                         console.log("New PICURL = " + iqset.iqdata[i].PICURL);
-                        console.log(iqset.iqdata[i].PIC);
+                        // console.log(iqset.iqdata[i].PIC);
                     }
                 }
             }
