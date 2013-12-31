@@ -183,6 +183,10 @@ GlobalViewModel.picdatauri = ko.computed(function() {
 
 GlobalViewModel.doLogin = function() {
     var self = this;
+    if (!self.username() || self.username() === "") {
+        smileAlert('#globalstatus', 'Please Enter a username', 'red', 5000);
+        return false;
+    }
     if (!self.hasSubmitted()) {
         console.log('doLogin');
         smileAlert('#globalstatus', 'Logging in ' + self.username(), 'green', 5000);

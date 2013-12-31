@@ -165,7 +165,7 @@ exports.handlePostNewIQSet = function(req, res) {
                     
                     if (iqset.iqdata[i].PICURL) {
                         // /smile/questionview/1.jpg
-                        var tmpidx = parseInt(iqset.iqdata[i].PICURL.split('/')[3].split('.')[0]);
+                        var tmpidx = parseInt(iqset.iqdata[i].PICURL.split('/')[3].split('.')[0], 10);
                         console.log("Handle PIC data at tmpidx = " + tmpidx);
                         // console.log(game.questions.getList());
                         iqset.iqdata[i].PIC = game.questions.getQuestionPicture(tmpidx);
