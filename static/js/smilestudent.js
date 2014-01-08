@@ -238,13 +238,16 @@ GlobalViewModel.doInquiryReset = function() {
 
 GlobalViewModel.doSubmitQ = function() {
     var self = this;
-    console.log(">>>>>>>>>>doSubmitQ");
+    console.log(">>>> >>> >> > doSubmitQ");
     if (self.validateInquirySubmission()) {
+
+	$('#submit-inquiry-area').hide();
         var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl(), self.pic());
         doPostInquiry(jsondata, function() {
             self.doInquiryReset();
             $('#iq-pic').empty();
-        });
+	});
+	$('#submit-inquiry-area').show();
     } else {
         console.log("Cannot validateInquiry");
         $('div#inquiry-form-area').block({
@@ -254,12 +257,15 @@ GlobalViewModel.doSubmitQ = function() {
             timeout: 7000
         });
     }
+    
 }
 
 GlobalViewModel.doSubmitQandDone = function() {
     var self = this;
     console.log("doSubmitQandDone");
     if (self.validateInquirySubmission()) {
+	
+	$('#submit-inquiry-area').hide();
         var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl(), self.pic());
         doPostInquiry(jsondata, function() {
             console.log("waiting for next phase");
