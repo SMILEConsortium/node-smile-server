@@ -55,7 +55,7 @@ tr:nth-child(odd) {background: #FFF}
 .panel.smile-branded {
 	background-image:url('../images/smile_grey_small.png');
 	background-repeat: no-repeat;
-	opacity:0.4;
+	/*opacity:0.4;*/
 	filter:alpha(opacity=40);
 }
 
