@@ -28,7 +28,7 @@
  #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-var VERSION = '1.0.0prealpha1';
+var VERSION = '1.0.2';
 
 // XXX Should generalize the app view model to wrap the required child models and use :with binding
 function iqsetSummaryModel() {
