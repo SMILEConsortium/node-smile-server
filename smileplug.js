@@ -43,7 +43,7 @@ var starttime = (new Date()).getTime();
 js.CONFIG = {
     'PORT' : process.env.PORT || 80,
     'HOST' : '0.0.0.0',
-    'VERSION_TAG' : '1.0.1',
+    'VERSION_TAG' : '1.0.2-jamsj',
     'VERSION_DESCRIPTION' : 'SMILE Plug Server',
 };
 
