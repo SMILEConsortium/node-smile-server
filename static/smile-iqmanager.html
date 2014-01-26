@@ -282,7 +282,7 @@
 										<td data-bind="text: O3">TV</td>
 										<td data-bind="text: O4">Floor</td>
 										<td data-bind="text: A">3</td>
-										<td><!-- <a class="tiny button" href="#" onclick="alert('No Images Available'); return false;"><img src="images/photo-icon.png" /></a> --><img data-bind="attr: { src: PICURL}" /></td>
+										<td><a class="reveal-link tiny button" href="#"  data-reveal-id="myModal" data-reveal><img src="images/photo-icon.png" /></a><input type="hidden" name="hidden_picurl" data-bind="attr: { value: PICURL}" /></td>
 									</tr>
 								</tbody>
 					        </table>
@@ -437,12 +437,6 @@
 	<script type='text/javascript' src='js/jquery.blockUI-2.66.0.js'></script>
 	<script type="text/javascript" src="js/rating.js"></script>
 	<script type="text/javascript" src="js/jquery.fineuploader-3.5.0.min.js"></script>
-	<script>
-	// jQuery.noConflict();
-
-	// initialize foundation
-	$(document).foundation();
-	</script>
 
 	<!-- Modal to display the picture -->
 	<div id="myModal" class="reveal-modal" data-reveal>
@@ -450,10 +444,12 @@
 	    <a class="close-reveal-modal">&#215;</a>
 	</div>	
 	<script>
+	    // jQuery.noConflict();
 
-		$(function(){
-		});
+	    // initialize foundation
+	    $(document).foundation();
 
+	    // Opening picture in modal
 	    $("body").on("click", 'a.reveal-link', function(){
 		  
 		// We load the url in the reveal/modal to display the image
@@ -464,6 +460,7 @@
 		$('#myModal').foundation('reveal', 'open');
 	    });
 	    
+	    // Closing modal
 	    $("body").on("click", 'a.close-reveal-modal', function(){
 		
 	        $('#modalImg').attr('src','');		
