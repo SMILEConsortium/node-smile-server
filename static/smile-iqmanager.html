@@ -282,13 +282,17 @@
 										<td data-bind="text: O3">TV</td>
 										<td data-bind="text: O4">Floor</td>
 										<td data-bind="text: A">3</td>
-										<td>
-										<!-- ko if: TYPE === "QUESTION_PIC" -->
-										<!--div data-bind="if: PICURL"-->
-											<a class="reveal-link tiny button" href="#"  data-reveal-id="myModal" data-reveal><img src="images/photo-icon.png" /></a>
-										<!-- /ko -->
-										<!--input type="hidden" name="hidden_picurl" data-bind="attr: { value: PICURL}" />
-										</div-->
+										<td><div data-bind="if: $data.PICURL">
+												<!-- data:image/png;base64, -->
+												<a class="reveal-link tiny button" href="#"  data-reveal-id="myModal" data-reveal>
+												<img src="images/photo-icon.png" />
+												<!-- Modal to display the picture -->
+												<div id="myModal" class="reveal-modal" data-reveal>
+	    											<img  data-bind="attr: { src: 'data:image/png;base64,' + $data.PIC}" />
+	    											<a class="close-reveal-modal">&#215;</a>
+												</div>	
+												</a><!-- <input type="hidden" name="hidden_picurl" /> --><!-- <input type="hidden" name="hidden_picurl" data-bind="attr: { value: PICURL}" /> -->
+											</div>
 										</td>
 									</tr>
 								</tbody>
@@ -373,17 +377,18 @@
 										<td data-bind="text: O3">Olive Elementary 5th Grade</td>
 										<td data-bind="text: O4">Olive Elementary 5th Grade</td>
 										<td data-bind="text: A"></td>
-										<td><div data-bind="if: PICURL">
-											<!-- data:image/png;base64, -->
-											<a class="reveal-link tiny button" href="#"  data-reveal-id="myModal" data-reveal>
+										<td><div data-bind="if: $data.PICURL">
+												<!-- data:image/png;base64, -->
+												<a class="reveal-link tiny button" href="#"  data-reveal-id="myModal" data-reveal>
 												<img src="images/photo-icon.png" />
 												<!-- Modal to display the picture -->
 												<div id="myModal" class="reveal-modal" data-reveal>
-	    											<img  data-bind="attr: { src: 'data:image/png;base64,' + PIC}" />
+	    											<img  data-bind="attr: { src: 'data:image/png;base64,' + $data.PIC}" />
 	    											<a class="close-reveal-modal">&#215;</a>
 												</div>	
 												</a><!-- <input type="hidden" name="hidden_picurl" /> --><!-- <input type="hidden" name="hidden_picurl" data-bind="attr: { value: PICURL}" /> -->
-										</div></td>
+											</div>
+										</td>
 									</tr>
 								</tbody>
 					        </table>
