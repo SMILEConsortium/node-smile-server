@@ -969,7 +969,7 @@ function restoreLoginState() {
     // XXX This needs to clean up the sidebar area too
     //
     GlobalViewModel.doInquiryReset();
-
+    $('#submit-inquiry-area').show();
     $('div#inquiry-form-area').unblock();
     $('div#answer-form-area').unblock();
     

@@ -170,7 +170,7 @@ exports.handlePostNewIQSet = function(req, res) {
                         // console.log(game.questions.getList());
                         iqset.iqdata[i].PIC = game.questions.getQuestionPicture(tmpidx);
                         iqset.iqdata[i].PICURL = '/smile/questionview/' + tmpidx + '.jpg';
-                        console.log("New PICURL = " + iqset.iqdata[i].PICURL);
+                        // console.log("New PICURL = " + iqset.iqdata[i].PICURL);
                         // console.log(iqset.iqdata[i].PIC);
                     }
                 }
@@ -432,7 +432,22 @@ exports.handleSendShowResultsPut = function(req, res) {
     message.RPERCENT = result.questionsCorrectPercentage;
     if (!game.resultsSaved) {
         console.log("About to store session");
-        pdb.putSession(game.getAllSessionData(), function(err, result) {
+
+        //
+        // Save out the image data too
+        // We ought to have a way to serve up images directly out of the DB keyed by the IQSet KEY and the question #
+        // but we don't have that yet, so just keep it silly
+        //
+        var sessiondata = game.getAllSessionData();
+        var iqset = sessiondata.iqset;
+        for (var i = 0; i < iqset.length; i++) {
+            if (iqset[i].TYPE == "QUESTION_PIC") {
+                // iqset[i].PIC = (new Buffer(game.questions.getQuestionPicture(i), 'base64')).toJSON();
+                iqset[i].PIC = game.questions.getQuestionPicture(i);
+            }
+        }
+        sessiondata.iqset = iqset;
+        pdb.putSession(sessiondata, function(err, result) {
             if (err) { // XXX TODO: Add in logger instead of console logging
                 console.err(err);
             } else {
