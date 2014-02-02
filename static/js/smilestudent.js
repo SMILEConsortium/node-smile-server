@@ -1,6 +1,6 @@
 /**
  #
- #Copyright (c) 2011-2013 Razortooth Communications, LLC. All rights reserved.
+ #Copyright (c) 2011-2014 Razortooth Communications, LLC. All rights reserved.
  #
  #Redistribution and use in source and binary forms, with or without modification,
  #are permitted provided that the following conditions are met:
@@ -40,7 +40,7 @@ var EVENTLOOPINTERVAL = null;
 var SMILEROUTES = {
     "pushmsg": "/JunctionServerExecution/pushmsg.php",
     "smsg": "/JunctionServerExecution/current/MSG/smsg.txt",
-    "mystate": "/JunctionServerExecution/current/MSG/%s.txt", 
+    "mystate": "/JunctionServerExecution/current/MSG/%s.txt",
     "postinquiry": "/smile/question",
     "getinquiry": "/smile/questionview/%s.json",
     "submitanswers": "/smile/pushmsg.php",
@@ -49,7 +49,7 @@ var SMILEROUTES = {
     "getresults": "/smile/student/%s/result"
 };
 
-var VERSION = '1.0.2';
+var VERSION = '1.0.3';
 
 //
 // 1 - login screen
@@ -70,7 +70,7 @@ var SMILESTATE = "1";
 
 //
 // KO Extenders
-// 
+//
 // This adds the required extender for validation
 ko.extenders.required = function(target, overrideMessage) {
     //add some sub-observables to our observable
@@ -98,7 +98,7 @@ ko.extenders.required = function(target, overrideMessage) {
 // Data Models
 //
 // Multimodel approach: See fiddle here: http://jsfiddle.net/npJZM/10/
-// Another good approach:  http://bit.ly/QzIgHP 
+// Another good approach:  http://bit.ly/QzIgHP
 //
 
 /**
@@ -257,14 +257,14 @@ GlobalViewModel.doSubmitQ = function() {
             timeout: 7000
         });
     }
-    
+
 }
 
 GlobalViewModel.doSubmitQandDone = function() {
     var self = this;
     console.log("doSubmitQandDone");
     if (self.validateInquirySubmission()) {
-	
+
 	$('#submit-inquiry-area').hide();
         var jsondata = generateJSONInquiry(self.clientip(), self.username(), self.question(), self.a1(), self.a2(), self.a3(), self.a4(), self.rightanswer(), self.picurl(), self.pic());
         doPostInquiry(jsondata, function() {
@@ -421,7 +421,7 @@ $(document).ready(function() {
 
     //
     // Fix for #50 (github), though we don't know why this is necessary
-    // 
+    //
     $("input[type='radio'].css-checkbox").change(function () {
         var selection=$(this).val();
         $(this).prop('checked', true);
@@ -434,7 +434,7 @@ $(document).ready(function() {
 //
 // App functions
 //
-// alerttype 
+// alerttype
 //	- by default, none is required if you don't intend to use lifetime
 //	- trace : use the stacktrace in the error message
 //  - red : display a red color alert
@@ -574,12 +574,12 @@ function doPostInquiry(inquirydata, cb) {
 
 //
 // Post the answers
-// 
+//
 // Format:
 // {"MYRATING":[1,5,5,5,5,5,5,5,5,5,5,5],"MYANSWER":[1,4,4,4,4,4,4,4,4,4,4,4],
 // "NAME":"default.102","TYPE":"ANSWER","IP":"10.0.0.102"}
 function doPostAnswers(answersarray, ratingsarray, username, clientip, cb) {
-    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({ 
+    $.ajax({ cache: false, type: "POST", dataType: "text", url: SMILEROUTES["submitanswers"], data: {"MSG": JSON.stringify({
         "MYRATING": ratingsarray,
         "MYANSWER": answersarray,
         "NAME": username,
@@ -653,7 +653,7 @@ function doSMSG() {
             }
             if (msg === "WAIT_CONNECT") {
             }
-            
+
             if (msg === "START_SOLVE") {
                 statechange(SMILESTATE, 4, data, function() {
                     clearAnswerState();
@@ -666,10 +666,10 @@ function doSMSG() {
                     doGetResults(data);
                 });
             }
-            
+
             if (msg === "WARN") {
             }
-            
+
             if (msg === "RESET") {
                 // Only do reset if we aren't just sitting at the login screen
                 if (SMILESTATE !== 1) {
@@ -898,7 +898,7 @@ function clearAnswerState() {
     }); */
 }
 
-/* 
+/*
  {"NAME":"vsundoaq8620",
  "MADE":"N","SOLVED":"Y","NUMQ":12,
  "YOUR_ANSWERS":["1","1","4","1","1","4","2","4","3","2","3","4"],
@@ -942,14 +942,14 @@ function displayResults(data) {
                 resultstr = "&#x2717; Wrong";
                 resultclass = 'wronganswer';
             }
-            
-            resultsHTML+= 
+
+            resultsHTML+=
              "<div class=''>\n \
                 <div class='row display'><div class='" + resultclass + "'>" + resultstr + " : Your answer: " + answers[i] + "&nbsp;&nbsp;&nbsp;<a class='tiny button' id='iq" + i + "' onclick='showIQ2(" + i + ")' href='javascript:void(0);'>Details</a></div></div> \
              </div><!-- row -->\n";
-            
+
         }
-        resultsHTML = resultsHTML + "</div><!-- 9 columns-->\n"; 
+        resultsHTML = resultsHTML + "</div><!-- 9 columns-->\n";
         console.log(resultsHTML);
     } else {
         resultsHTML = "<H1>No Questions Answered, No Score Available</H1>\n"; // XXX LOCALIZE IT
@@ -972,7 +972,7 @@ function restoreLoginState() {
     $('#submit-inquiry-area').show();
     $('div#inquiry-form-area').unblock();
     $('div#answer-form-area').unblock();
-    
+
     var $next = $('div.section-container section p.title').find('a[href="' + STATEMACHINE["1"].id + '"]');
     $('#logoutarea').hide();
     if ($next) {
@@ -992,10 +992,10 @@ function restoreLoginState() {
     SMILESTATE = 1;
 }
 
-/* 
+/*
  * This is brittle and awful - XXX TODO refactor, inquiry should be an object we pass in
  * We won't validdate anything here, let the server do it
- * That's dangerous, and we should plan to encode any funky unicode input or other malicious attempts to break 
+ * That's dangerous, and we should plan to encode any funky unicode input or other malicious attempts to break
  * something
  */
 function generateJSONInquiry(clientip, username, question, answer1, answer2, answer3, answer4, rightanswer, picurl, pic) {
