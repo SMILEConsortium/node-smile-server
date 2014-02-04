@@ -599,10 +599,7 @@ exports.createSessionFromTeacherApp = function(req, res) {
 
     try {
         // console.log('\n## JSON from "createSessionFromTeacherApp" ##');
-        console.log('\n\t>> %j', req.body);
-        console.log('\t>> '+req.body.teacherName);
-        console.log('\t>> '+req.body.sessionName);
-        console.log('\t>> '+req.body.groupName+'\n');
+        console.log('\n%j\n', req.body);
 
         if (req.body.teacherName) {
             game.teacherName = req.body.teacherName;
