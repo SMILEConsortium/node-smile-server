@@ -11,9 +11,9 @@ Application
 Bundled Client Applications
 ===========================
 
-* SMILE Student Web 1.0.0
-* SMILE IQManager 1.0.0
-* SMILE Teacher for Android 0.9.6
+* SMILE Student Web 1.0.4
+* SMILE IQManager 1.0.4
+* SMILE Teacher for Android 0.9.9b3
 * Plugmin 0.5.1 for Android
 
 Tests
