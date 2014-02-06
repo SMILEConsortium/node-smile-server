@@ -271,6 +271,7 @@
 									  <th width="150">Answer 4</th>
 									  <th width="">Correct</th>
 									  <th width="">Image</th>
+									  <th width="">Likes</th>
 									</tr>
 								</thead>
 								<tbody data-bind="foreach: iqdata">
@@ -294,6 +295,7 @@
 												</a><!-- <input type="hidden" name="hidden_picurl" /> --><!-- <input type="hidden" name="hidden_picurl" data-bind="attr: { value: PICURL}" /> -->
 											</div>
 										</td>
+										<td><span data-bind="text: ($parent.results.likes()[$index()]/$parent.sessionStats.numberOfStudentsPostingAnswers()*100).toFixed(2)">90</span>%</td>
 									</tr>
 								</tbody>
 					        </table>

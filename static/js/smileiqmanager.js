@@ -83,6 +83,7 @@ function sessionResultsModel() {
     self.rightAnswers = ko.observableArray([]);
     self.averageRatings = ko.observableArray([]);
     self.questionsCorrectPercentage = ko.observableArray([]);
+    self.likes = ko.observableArray([]);
 }
 
 /*
@@ -275,6 +276,7 @@ function loadSession(evtdata, cb) {
         alert("Problem getting session " + evtdata.attr('id'));
     }, success: function(data) {
         if (data) {
+            var i;
             // console.log(data);
             // ko.mapping.fromJS(data, globalViewModel.sessionSummary);
             globalViewModel.sessionSummary.sessionName(data.sessionName);
@@ -292,6 +294,7 @@ function loadSession(evtdata, cb) {
             globalViewModel.sessionSummary.results.rightAnswers.removeAll();
             globalViewModel.sessionSummary.results.rightAnswers.removeAll();
             globalViewModel.sessionSummary.results.questionsCorrectPercentage.removeAll();
+            globalViewModel.sessionSummary.results.likes.removeAll();
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.rightAnswers, data.results.rightAnswers);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.averageRatings, data.results.averageRatings);
             ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.questionsCorrectPercentage, data.results.questionsCorrectPercentage);
@@ -299,11 +302,18 @@ function loadSession(evtdata, cb) {
             globalViewModel.sessionSummary.sessionStats.numberOfStudents(data.sessionstats.numberOfStudents);
             globalViewModel.sessionSummary.sessionStats.numberOfQuestions(data.sessionstats.numberOfQuestions);
             globalViewModel.sessionSummary.sessionStats.numberOfStudentsPostingAnswers(data.sessionstats.numberOfStudentsPostingAnswers);
-
+            
             globalViewModel.sessionSummary.sessionMetadata.teacherName(data.metadata.teacherName);
             globalViewModel.sessionSummary.sessionMetadata.groupName(data.metadata.groupName);
             globalViewModel.sessionSummary.sessionMetadata.iqid(data.metadata.iqid);
             globalViewModel.sessionSummary.sessionMetadata.iqtitle(data.metadata.iqtitle);
+
+            // Pre-init likes ... we can do this on the server, and we should, but save this for later if there is time
+            var likes = [];
+            for (i = 0; i < data.sessionstats.numberOfQuestions; i++) {
+                likes.push(0);
+            }
+            console.log(likes);
 
             if (data.students) {
                 console.log("students found");
@@ -311,8 +321,16 @@ function loadSession(evtdata, cb) {
                 for (var student in data.students) {
                     console.log("push student: " + student);
                     globalViewModel.sessionSummary.students.push(data.students[student]);
+                    var ratings = data.students[student].ratings; // array of ratings, hopefully it's just empty array if the student didn't post answers
+                    for (i = 0; i < ratings.length; i++) {
+                        if (ratings[i] === "5") { // XXX This can break if we post numbers and not strings
+                            likes[i] += 1;
+                        }
+                    }
                 }
             }
+            console.log(likes);
+            ko.utils.arrayPushAll(globalViewModel.sessionSummary.results.likes, likes);
 
             if (cb) {
                 cb();
